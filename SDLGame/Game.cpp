@@ -18,6 +18,7 @@ void DeInit(int error) {
 	if (ren != NULL) SDL_DestroyRenderer(ren);
 	if (win != NULL) SDL_DestroyWindow(win);
 	TTF_Quit();
+	IMG_Quit();
 	SDL_Quit();
 	exit(error);
 }
@@ -28,6 +29,10 @@ void Init() {
 		DeInit(1);
 	}
 	
+	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0) {
+		printf_s("Error: %s!", SDL_GetError());
+		DeInit(1);
+	}
 	if (TTF_Init() != 0) {
 		printf_s("Error: %s!", SDL_GetError());
 		DeInit(1);
@@ -74,7 +79,7 @@ int main(int argc, char* argv[]) {
 	
 
 
-	isRunning = startMenu();
+	isRunning = startMenu(player);
 	while(isRunning){
 
 		while (SDL_PollEvent(&ev)) {

@@ -2,4 +2,4 @@
 #include "Basic.h"
 #include "Drawer.h"
 
-bool startMenu();
+bool startMenu(Player& player);

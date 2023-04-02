@@ -9,7 +9,16 @@ Coordinates fromMapCoordinatesToScreen(Coordinates mapCoord) {
 
 }
 
-
+SDL_Texture* generateTextureFromPNG(const char* file) {
+	SDL_Surface* surf = IMG_Load(file);
+	if (surf == NULL) {
+		printf_s("Error with loading img!!!");
+		exit(1);
+	}
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surf);
+	SDL_FreeSurface(surf);
+	return texture;
+}
 SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect &rect, SDL_Color fg) {
 
 	SDL_Surface* surfaceFont = TTF_RenderText_Blended(font, str, fg);
@@ -130,3 +139,89 @@ void drawStartMenu(int coursorPosition) {
 	TTF_CloseFont(headerFont);
 	TTF_CloseFont(choicesFont);
 }
+
+void drawHeroCreatingMenu(Player &player, int heroNum, int coursorPosition) {
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
+	SDL_Rect pngRect;
+	SDL_Rect ttfRect;
+	SDL_Rect classChoice = {0, 0, 500, 450};
+	SDL_SetRenderDrawColor(ren, 255, 242, 100, 255);
+	SDL_RenderClear(ren);
+	SDL_Texture* heroClass;
+	char headerText[31];
+	sprintf_s(headerText, "CHOOSE A CLASS FOR YOUR %d HERO", heroNum);
+	
+	SDL_Texture* header = generateTextureFromText(headerText, headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 50;
+	SDL_RenderCopy(ren, header, NULL, &ttfRect);
+	SDL_DestroyTexture(header);
+	
+	
+	heroClass = generateTextureFromPNG("Textures\\ClassKnight.png");
+	pngRect.x = 300;
+	pngRect.y = 200;
+	pngRect.w = 400;
+	pngRect.h = 400;
+	SDL_RenderCopy(ren, heroClass, NULL, &pngRect);
+	SDL_DestroyTexture(heroClass);
+
+	heroClass = generateTextureFromPNG("Textures\\ClassRogue.png");
+	pngRect.x = 1100;
+	pngRect.y = 200;
+	pngRect.w = 500;
+	pngRect.h = 400;
+	SDL_RenderCopy(ren, heroClass, NULL, &pngRect);
+	SDL_DestroyTexture(heroClass);
+
+	heroClass = generateTextureFromPNG("Textures\\ClassMage.png");
+	pngRect.x = 150;
+	pngRect.y = 500;
+	pngRect.w = 700;
+	pngRect.h = 700;
+	SDL_RenderCopy(ren, heroClass, NULL, &pngRect);
+	SDL_DestroyTexture(heroClass);
+
+
+	heroClass = generateTextureFromPNG("Textures\\ClassHealer.png");
+	pngRect.x = 1050;
+	pngRect.y = 625;
+	pngRect.w = 600;
+	pngRect.h = 425;
+	SDL_RenderCopy(ren, heroClass, NULL, &pngRect);
+	SDL_DestroyTexture(heroClass);
+
+	if (coursorPosition == 0) {
+		classChoice.x = 250;
+		classChoice.y = 175;
+
+	}
+	if (coursorPosition == 1) {
+		classChoice.x = 1095;
+		classChoice.y = 175;
+
+	}
+	if (coursorPosition == 2) {
+		classChoice.x = 245;
+		classChoice.y = 625;
+
+	}
+	if (coursorPosition == 3) {
+		classChoice.x = 1095;
+		classChoice.y = 625;
+
+	}
+	SDL_SetRenderDrawColor(ren, 0, 0, 255, 255);
+
+	for (int i = 0; i < 8; i++) {
+		classChoice.x += 1;
+		classChoice.y += 1;
+		classChoice.w -= 2;
+		classChoice.h -= 2;
+		SDL_RenderDrawRect(ren, &classChoice);
+	}
+
+
+	SDL_RenderPresent(ren);
+}
+
