@@ -9,6 +9,20 @@ Coordinates fromMapCoordinatesToScreen(Coordinates mapCoord) {
 
 }
 
+
+SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect &rect, SDL_Color fg) {
+
+	SDL_Surface* surfaceFont = TTF_RenderText_Blended(font, str, fg);
+	rect.w = surfaceFont->w;
+	rect.h = surfaceFont->h;
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surfaceFont);
+	SDL_FreeSurface(surfaceFont);
+
+	return texture;
+
+
+}
+
 void drawScreen(char** map, Coordinates playerPos) {
 
 
@@ -64,4 +78,55 @@ void drawPlayer(Coordinates playerPosition) {
 
 	SDL_RenderFillRectF(ren, &playerUnit);
 
+}
+
+
+void drawStartMenu(int coursorPosition) {
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 100);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
+	SDL_Rect rect;
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 255, 242, 100, 255);
+	SDL_RenderClear(ren);
+
+
+	//название игры
+	texture = generateTextureFromText("GAME", headerFont, rect, { 0,0,0,255 });
+	rect.x = WINDOW_WIDTH / 2 - rect.w/2;
+	rect.y = 50;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+
+	//пункты]
+	if (coursorPosition == 0) texture = generateTextureFromText(">New Game", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("New Game", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 300;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 1) texture = generateTextureFromText(">Load Game", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Load Game", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 400;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 2) texture = generateTextureFromText(">Guide", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Guide", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 500;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 3) texture = generateTextureFromText(">Exit", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Exit", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 600;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+
+
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
 }

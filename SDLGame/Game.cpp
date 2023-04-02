@@ -1,6 +1,10 @@
 #include "Basic.h"
 #include "Drawer.h"
 #include "Mover.h"
+#include "Menues.h"
+
+
+#define SPEED 3.f
 
 
 SDL_Window* win = NULL;
@@ -13,12 +17,18 @@ bool isRunning = true;
 void DeInit(int error) {
 	if (ren != NULL) SDL_DestroyRenderer(ren);
 	if (win != NULL) SDL_DestroyWindow(win);
+	TTF_Quit();
 	SDL_Quit();
 	exit(error);
 }
 
 void Init() {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) {
+		printf_s("Error: %s!", SDL_GetError());
+		DeInit(1);
+	}
+	
+	if (TTF_Init() != 0) {
 		printf_s("Error: %s!", SDL_GetError());
 		DeInit(1);
 	}
@@ -48,6 +58,8 @@ char** createMapArray(int size_x, int size_y) {
 int main(int argc, char* argv[]) {
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	
+
+
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;
 	Player player;
@@ -55,11 +67,16 @@ int main(int argc, char* argv[]) {
 	player.position = { 3.f, 1.f };
 	readMap(map, "GlobalMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
 	Init();
-	SDL_SetRenderDrawColor(ren, 255, 242, 100, 255);
-	SDL_RenderClear(ren);
+
+	int lasttime = SDL_GetTicks();
+	int newtime;
+	int dt = 0;
+	
 
 
+	isRunning = startMenu();
 	while(isRunning){
+
 		while (SDL_PollEvent(&ev)) {
 			switch (ev.type) {
 			case SDL_QUIT:
@@ -78,17 +95,20 @@ int main(int argc, char* argv[]) {
 			}
 		}
 
-		if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, -0.05f });
-		if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, 0.05f });
-		if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -0.05f, 0 });
-		if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { 0.05f, 0 });
+		newtime = SDL_GetTicks();
+		dt = newtime - lasttime;
+		lasttime = newtime;
+
+		if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, -SPEED * dt / 1000 });
+		if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0,  SPEED * dt / 1000 });
+		if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
+		if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
 		
 		
 		drawScreen(map, player.position);
 		drawPlayer(player.position);
 
 		SDL_RenderPresent(ren);
-		SDL_Delay(10);
 	}
 	DeInit(0);
 	return 0;
