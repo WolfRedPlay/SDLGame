@@ -34,10 +34,6 @@ void drawCircledAngle(double x1, double y1, double radius, double left, double r
 }
 
 
-
-
-
-
 void drawCircledRect(double x, double y, double w, double h, double rad) {
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
@@ -68,6 +64,8 @@ void drawCircledRect(double x, double y, double w, double h, double rad) {
 
 
 }
+
+
 
 SDL_Texture* generateTextureFromPNG(const char* file) {
 	SDL_Surface* surf = IMG_Load(file);
@@ -135,7 +133,6 @@ void drawScreen(char** map, Coordinates playerPos) {
 	}
 
 }
-
 void drawPlayer(Coordinates playerPosition) {
 
 	playerPosition = fromMapCoordinatesToScreen(playerPosition);
@@ -199,6 +196,7 @@ void drawStartMenu(int coursorPosition) {
 	TTF_CloseFont(headerFont);
 	TTF_CloseFont(choicesFont);
 }
+
 
 void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
@@ -284,7 +282,6 @@ void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 
 	SDL_RenderPresent(ren);
 }
-
 void drawHeroNameChoice(int coursorPosition) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
@@ -322,7 +319,6 @@ void drawHeroNameChoice(int coursorPosition) {
 	TTF_CloseFont(headerFont);
 	TTF_CloseFont(choicesFont);
 }
-
 void drawPlayerNameChoosing(char* name) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
@@ -359,7 +355,6 @@ void drawPlayerNameChoosing(char* name) {
 	TTF_CloseFont(headerFont);
 	TTF_CloseFont(choicesFont);
 }
-
 void drawRandomNameChoosing(char* name) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	SDL_Rect ttfRect;
@@ -400,5 +395,172 @@ void drawRandomNameChoosing(char* name) {
 	SDL_RenderPresent(ren);
 	TTF_CloseFont(headerFont);
 	TTF_CloseFont(choicesFont);
+}
+
+void drawPlayerMenu(int coursorPosition) {
+	SDL_Rect window = {100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100};
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+	
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+	
+
+
+	texture = generateTextureFromText("PLAYER MENU", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	if (coursorPosition == 0)texture = generateTextureFromText(">Heros' stats", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Heros' stats", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 300;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 1)texture = generateTextureFromText(">Weapons", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Weapons", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 350;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 2)texture = generateTextureFromText(">Armors", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Armors", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 400;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 3)texture = generateTextureFromText(">Potions", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Potions", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 450;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 4)texture = generateTextureFromText(">Abilities", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Abilities", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 500;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 5)texture = generateTextureFromText(">Quests list", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Quests List", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 550;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 6)texture = generateTextureFromText(">Quest items", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Quest items", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 700;
+	ttfRect.y = 600;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	SDL_RenderPresent(ren);
+
+}
+
+void drawHeroesStats(Player& player) {
+	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("HEROES' STATS", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	char heroStats[100];
+
+	for (int i = 0; i < 4; i++) {
+		sprintf_s(heroStats, "NAME: %s", player.team[i].name);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 400;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(heroStats, "HP: %d", player.team[i].health);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 440;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(heroStats, "MP: %d", player.team[i].mana);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 480;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(heroStats, "SP: %d", player.team[i].stamina);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 520;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+		
+		sprintf_s(heroStats, "Protection: %d", player.team[i].armor);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 560;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+		
+		sprintf_s(heroStats, "Basic damage: %d", player.team[i].damage);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 600;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+		
+		sprintf_s(heroStats, "Weapon: %s | DMG: %d", player.team[i].equipedWeapon.name, player.team[i].equipedWeapon.damage);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 640;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+		
+		sprintf_s(heroStats, "Armor: %s | PRT: %d", player.team[i].equipedArmor.name, player.team[i].equipedArmor.armor);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 680;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(heroStats, "LVL: %d", player.team[i].lvl);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 720;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(heroStats, "EXP: %d", player.team[i].exp);
+		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = 200 + i * 400;
+		ttfRect.y = 760;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+	
+	SDL_RenderPresent(ren);
+
 }
 

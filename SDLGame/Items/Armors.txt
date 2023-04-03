@@ -1,0 +1,5 @@
+4
+-200 HeavyArmor 10 10
+-201 LightArmor 5 7
+-202 Robe 2 5
+-203 LeaderArmor 15 20

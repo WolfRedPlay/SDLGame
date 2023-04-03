@@ -1,0 +1,6 @@
+5
+-100 Sword 7 5
+-101 Bow 15 5
+-102 MageStaff 10 5
+-103 HealerWond 2 5
+-104 LeadersKnife 20 30

@@ -11,7 +11,16 @@ SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
 
 bool isRunning = true;
-
+int qountOfWeapons;
+int qountOfArmors;
+int qountOfPotions;
+//int qountOfQustItems;
+//int qountOfAbilities;
+Weapon* ALLWeaponsList = createAllWeapons(qountOfWeapons);
+Armor* ALLArmorsList = createAllArmors(qountOfArmors);
+Potion* ALLPotionsList = createAllPotions(qountOfPotions);
+//QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+//Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
 
 
 void DeInit(int error) {
@@ -92,9 +101,14 @@ int main(int argc, char* argv[]) {
 				case SDL_SCANCODE_ESCAPE:
 					isRunning = false;
 					break;
+				case SDL_SCANCODE_TAB:
+					playerMenu(player);
+					break;
+
+
+
 
 				}
-
 				break;
 
 			}
@@ -109,8 +123,7 @@ int main(int argc, char* argv[]) {
 		if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
 		if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
 
-		for (int i = 0; i < 4; i++)
-			printf_s("NAME: %s\n", player.team[i].name);
+	
 		drawScreen(map, player.position);
 		drawPlayer(player.position);
 
@@ -119,3 +132,5 @@ int main(int argc, char* argv[]) {
 	DeInit(0);
 	return 0;
 }
+			//printf_s("NAME: %s\n", player.team[i].name);
+

@@ -28,7 +28,8 @@ bool createHeroesMenu(Player& player) {
 	bool inHeroMenu = true;
 	bool choosingName = false;
 	bool fillingName = false;
-	
+	clearPlayer(player);
+
 	SDL_Event ev;
 	for (int i = 0; i < 4; i++)
 	{
@@ -39,7 +40,7 @@ bool createHeroesMenu(Player& player) {
 			while (SDL_PollEvent(&ev)) {
 				switch (ev.type) {
 				case SDL_QUIT:
-					return false;
+					DeInit(0);
 					break;
 
 				case SDL_KEYDOWN:
@@ -61,6 +62,9 @@ bool createHeroesMenu(Player& player) {
 						inHeroMenu = false;
 						choosingName = true;
 						break;
+					case SDL_SCANCODE_ESCAPE:
+						return false;
+						break;
 					}
 					break;
 
@@ -80,10 +84,10 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].stamina = player.team[i].maxStamina;
 			player.team[i].damage = 8;
 			player.team[i].heroClass = KNIGHT;
-			/*player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -100, qountOfWeapons);
+			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -100, qountOfWeapons);
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -200, qountOfArmors);
-			setStartingAbilities(player.team[i], heroClass);
-			*/
+			//setStartingAbilities(player.team[i], heroClass);
+
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
 			break;
@@ -97,10 +101,10 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].stamina = player.team[i].maxStamina;
 			player.team[i].damage = 16;
 			player.team[i].heroClass = ROGUE;
-			/*player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -100, qountOfWeapons);
-			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -200, qountOfArmors);
-			setStartingAbilities(player.team[i], heroClass);
-			*/
+			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -101, qountOfWeapons);
+			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -201, qountOfArmors);
+			//setStartingAbilities(player.team[i], heroClass);
+
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
 			break;
@@ -114,10 +118,10 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].stamina = player.team[i].maxStamina;
 			player.team[i].damage = 16;
 			player.team[i].heroClass = MAGE;
-			/*player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -100, qountOfWeapons);
-			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -200, qountOfArmors);
-			setStartingAbilities(player.team[i], heroClass);
-			*/
+			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -102, qountOfWeapons);
+			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -202, qountOfArmors);
+			//setStartingAbilities(player.team[i], heroClass);
+
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
 			break;
@@ -131,10 +135,10 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].stamina = player.team[i].maxStamina;
 			player.team[i].damage = 2;
 			player.team[i].heroClass = HEALER;
-			/*player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -100, qountOfWeapons);
-			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -200, qountOfArmors);
-			setStartingAbilities(player.team[i], heroClass);
-			*/
+			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -103, qountOfWeapons);
+			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -203, qountOfArmors);
+			//setStartingAbilities(player.team[i], heroClass);
+
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
 			break;
@@ -160,6 +164,11 @@ bool createHeroesMenu(Player& player) {
 						choice = coursorPosition;
 						choosingName = false;
 						fillingName = true;
+						break;
+					case SDL_SCANCODE_ESCAPE:
+						choosingName = false;
+						inHeroMenu = true;
+						i--;
 						break;
 					}
 					break;
@@ -192,7 +201,11 @@ bool createHeroesMenu(Player& player) {
 							strcpy_s(player.team[i].name, name);
 							fillingName = false;
 							inHeroMenu = true;
-
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							choosingName = true;
+							fillingName = false;
+							i--;
 							break;
 
 						}
@@ -205,7 +218,7 @@ bool createHeroesMenu(Player& player) {
 			break;
 		case 1:
 
-				strncpy_s(name, randomName() , MAX_NAME_LENGTH);
+			strncpy_s(name, randomName(), MAX_NAME_LENGTH);
 			while (fillingName) {
 
 				while (SDL_PollEvent(&ev)) {
@@ -223,6 +236,11 @@ bool createHeroesMenu(Player& player) {
 							strcpy_s(player.team[i].name, name);
 							fillingName = false;
 							inHeroMenu = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							choosingName = true;
+							fillingName = false;
+							i--;
 							break;
 
 						}
@@ -254,7 +272,7 @@ bool startMenu(Player& player) {
 			{
 				switch (ev.type) {
 				case SDL_QUIT:
-					return false;
+					DeInit(0);
 					break;
 				case SDL_KEYDOWN:
 					switch (ev.key.keysym.scancode) {
@@ -281,6 +299,7 @@ bool startMenu(Player& player) {
 		switch (choice) {
 		case 0:
 			if (createHeroesMenu(player)) return true;
+			else inStartMenu = true;
 			break;
 		case 1: break;
 		case 2: break;
@@ -292,6 +311,98 @@ bool startMenu(Player& player) {
 		}
 
 	}
+
+
+}
+
+
+bool playerMenu(Player& player) {
+	bool inPlayerMenu, inHeroesStats;
+	int coursorPosition, choice;
+	SDL_Event ev;
+
+	while (true) {
+		inPlayerMenu = true;
+		coursorPosition = 0;
+		while (inPlayerMenu) {
+
+			while (SDL_PollEvent(&ev))
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+
+					case SDL_SCANCODE_UP:
+						if (coursorPosition != 0) coursorPosition--;
+						break;
+
+					case SDL_SCANCODE_DOWN:
+						if (coursorPosition != 6) coursorPosition++;
+						break;
+
+					case SDL_SCANCODE_RETURN:
+						choice = coursorPosition;
+						inPlayerMenu = false;
+						inHeroesStats = true;
+						break;
+
+					case SDL_SCANCODE_TAB:
+						inPlayerMenu = false;
+						return true;
+						break;
+
+					case SDL_SCANCODE_ESCAPE:
+						inPlayerMenu = false;
+						return true;
+						break;
+
+					}
+					break;
+				}
+			drawPlayerMenu(coursorPosition);
+
+		}
+		switch (choice) {
+		case 0:
+			while (inHeroesStats) {
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+
+						case SDL_SCANCODE_TAB:
+							inPlayerMenu = true;
+							inHeroesStats = false;
+							break;
+
+						case SDL_SCANCODE_ESCAPE:
+							inPlayerMenu = true;
+							inHeroesStats = false;
+							break;
+
+						}
+						break;
+					}
+				}
+
+				drawHeroesStats(player);
+			}
+
+			break;
+		case 1:break;
+		case 2:break;
+		case 3:break;
+		case 4:break;
+		case 5:break;
+		case 6:break;
+		}
+	}
+
 
 
 }

@@ -1,0 +1,7 @@
+6
+-300 BigHP 150 0 4
+-301 MeediumHP 100 0 3
+-302 SmallHP 50 0 2
+-303 BigMP 0 100 4
+-304 MediumMP 0 50 4
+-305 SmallMP 0 25 4
