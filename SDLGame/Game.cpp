@@ -28,7 +28,7 @@ void Init() {
 		printf_s("Error: %s!", SDL_GetError());
 		DeInit(1);
 	}
-	
+
 	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0) {
 		printf_s("Error: %s!", SDL_GetError());
 		DeInit(1);
@@ -62,7 +62,7 @@ char** createMapArray(int size_x, int size_y) {
 
 int main(int argc, char* argv[]) {
 	const Uint8* state = SDL_GetKeyboardState(NULL);
-	
+
 
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
@@ -76,11 +76,11 @@ int main(int argc, char* argv[]) {
 	int lasttime = SDL_GetTicks();
 	int newtime;
 	int dt = 0;
-	
+
 
 
 	isRunning = startMenu(player);
-	while(isRunning){
+	while (isRunning) {
 
 		while (SDL_PollEvent(&ev)) {
 			switch (ev.type) {
@@ -94,9 +94,9 @@ int main(int argc, char* argv[]) {
 					break;
 
 				}
-				
+
 				break;
-			
+
 			}
 		}
 
@@ -108,8 +108,9 @@ int main(int argc, char* argv[]) {
 		if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0,  SPEED * dt / 1000 });
 		if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
 		if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
-		
-		
+
+		for (int i = 0; i < 4; i++)
+			printf_s("NAME: %s\n", player.team[i].name);
 		drawScreen(map, player.position);
 		drawPlayer(player.position);
 
@@ -118,5 +119,3 @@ int main(int argc, char* argv[]) {
 	DeInit(0);
 	return 0;
 }
-
-	//printf_s("x: %f, y: %f\n", player.position.X, player.position.Y);

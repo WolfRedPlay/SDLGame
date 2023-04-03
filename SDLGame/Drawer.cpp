@@ -8,6 +8,66 @@ Coordinates fromMapCoordinatesToScreen(Coordinates mapCoord) {
 	return screenCoord;
 
 }
+void mathCoordsToScreen(double x, double y, int centerx, int centery, int& sx, int& sy) {
+
+	sx = centerx + x;
+	sy = centery - y;
+
+
+}
+void drawCircledAngle(double x1, double y1, double radius, double left, double right) {
+	int sx1, sy1;
+	int sx2, sy2;
+	for (double alpha = left; alpha <= right; alpha += 0.5) {
+
+		sx1 = radius * cos(alpha * M_PI / 180.0);
+		sy1 = radius * sin(alpha * M_PI / 180.0);
+
+		sx2 = radius * cos((alpha + 0.1) * M_PI / 180.0);
+		sy2 = radius * sin((alpha + 0.1) * M_PI / 180.0);
+
+		mathCoordsToScreen(sx1, sy1, x1, y1, sx1, sy1);
+		mathCoordsToScreen(sx2, sy2, x1, y1, sx2, sy2);
+		SDL_RenderDrawLine(ren, sx1, sy1, sx2, sy2);
+	}
+	SDL_RenderPresent(ren);
+}
+
+
+
+
+
+
+void drawCircledRect(double x, double y, double w, double h, double rad) {
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_Rect filling = { x + rad / 2 - 1, y + rad / 2 - 1, w - rad / 1.5, h - rad / 1.5 };
+	SDL_RenderFillRect(ren, &filling);
+
+
+	SDL_SetRenderDrawColor(ren, 0, 128, 255, 255);
+
+	for (int i = 0; i <= rad / 2; i++) {
+		drawCircledAngle(x + rad, y + rad, rad, 90, 180);
+		drawCircledAngle(x + w - rad, y + rad, rad, 0, 90);
+		drawCircledAngle(x + rad, y + h - rad, rad, 180, 270);
+		drawCircledAngle(x + w - rad, y + h - rad, rad, 270, 360);
+
+		SDL_RenderDrawLineF(ren, x + rad, y, x + w - rad, y);
+		SDL_RenderDrawLineF(ren, x + rad, y + h, x + w - rad, y + h);
+		SDL_RenderDrawLineF(ren, x, y + rad, x, y + h - rad);
+		SDL_RenderDrawLineF(ren, x + w, y + rad, x + w, y + h - rad);
+
+		x += 1;
+		y += 1;
+		h -= 2;
+		w -= 2;
+		rad -= 1;
+	}
+
+
+
+}
 
 SDL_Texture* generateTextureFromPNG(const char* file) {
 	SDL_Surface* surf = IMG_Load(file);
@@ -19,7 +79,7 @@ SDL_Texture* generateTextureFromPNG(const char* file) {
 	SDL_FreeSurface(surf);
 	return texture;
 }
-SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect &rect, SDL_Color fg) {
+SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect& rect, SDL_Color fg) {
 
 	SDL_Surface* surfaceFont = TTF_RenderText_Blended(font, str, fg);
 	rect.w = surfaceFont->w;
@@ -102,7 +162,7 @@ void drawStartMenu(int coursorPosition) {
 
 	//название игры
 	texture = generateTextureFromText("GAME", headerFont, rect, { 0,0,0,255 });
-	rect.x = WINDOW_WIDTH / 2 - rect.w/2;
+	rect.x = WINDOW_WIDTH / 2 - rect.w / 2;
 	rect.y = 50;
 	SDL_RenderCopy(ren, texture, NULL, &rect);
 	SDL_DestroyTexture(texture);
@@ -140,24 +200,24 @@ void drawStartMenu(int coursorPosition) {
 	TTF_CloseFont(choicesFont);
 }
 
-void drawHeroCreatingMenu(Player &player, int heroNum, int coursorPosition) {
+void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	SDL_Rect pngRect;
 	SDL_Rect ttfRect;
-	SDL_Rect classChoice = {0, 0, 500, 450};
+	SDL_Rect classChoice = { 0, 0, 500, 450 };
 	SDL_SetRenderDrawColor(ren, 255, 242, 100, 255);
 	SDL_RenderClear(ren);
 	SDL_Texture* heroClass;
 	char headerText[31];
 	sprintf_s(headerText, "CHOOSE A CLASS FOR YOUR %d HERO", heroNum);
-	
+
 	SDL_Texture* header = generateTextureFromText(headerText, headerFont, ttfRect, { 0,0,0,255 });
 	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
 	ttfRect.y = 50;
 	SDL_RenderCopy(ren, header, NULL, &ttfRect);
 	SDL_DestroyTexture(header);
-	
-	
+
+
 	heroClass = generateTextureFromPNG("Textures\\ClassKnight.png");
 	pngRect.x = 300;
 	pngRect.y = 200;
@@ -223,5 +283,122 @@ void drawHeroCreatingMenu(Player &player, int heroNum, int coursorPosition) {
 
 
 	SDL_RenderPresent(ren);
+}
+
+void drawHeroNameChoice(int coursorPosition) {
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	SDL_Texture* texture;
+
+	//drawCircledRect(300, 500, WINDOW_WIDTH - 600, 300, 25);
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_Rect filling = { 300, 500, WINDOW_WIDTH - 600, 300 };
+	SDL_RenderFillRect(ren, &filling);
+
+
+	texture = generateTextureFromText("How do you want to chose this hero name?", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 520;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 0) texture = generateTextureFromText(">Myself", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Myself", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 750;
+	ttfRect.y = 620;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 1) texture = generateTextureFromText(">Randomly", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Randomly", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 750;
+	ttfRect.y = 670;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}
+
+void drawPlayerNameChoosing(char* name) {
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	SDL_Texture* texture;
+
+	//drawCircledRect(300, 500, WINDOW_WIDTH - 600, 300, 25);
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_Rect filling = { 300, 500, WINDOW_WIDTH - 600, 300 };
+	SDL_RenderFillRect(ren, &filling);
+
+
+
+	texture = generateTextureFromText("Press hero's name", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 520;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	char header[21];
+	sprintf_s(header, "Name: %s", name);
+
+	texture = generateTextureFromText(header, choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 750;
+	ttfRect.y = 670;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}
+
+void drawRandomNameChoosing(char* name) {
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
+	SDL_Rect ttfRect;
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	SDL_Texture* texture;
+
+	//drawCircledRect(300, 500, WINDOW_WIDTH - 600, 300, 25);
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_Rect filling = { 300, 500, WINDOW_WIDTH - 600, 300 };
+	SDL_RenderFillRect(ren, &filling);
+
+
+	texture = generateTextureFromText("Is it a good name?", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 520;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture); 
+	
+	char header[21];
+	sprintf_s(header, "Name: %s", name);
+
+
+	texture = generateTextureFromText(header, choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = 825;
+	ttfRect.y = 625;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	texture = generateTextureFromText("(Press ENTER to confirm or ARROWS to change)", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 700;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
 }
 

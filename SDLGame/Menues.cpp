@@ -1,14 +1,39 @@
 #include "Menues.h"
+char* randomName() {
+	char name[MAX_NAME_LENGTH];
+	FILE* file;
+	int count = 0;
+	if (fopen_s(&file, "Names.txt", "rt") != 0) {
+		printf_s("Can not find saves\n");
+		exit(1);
+	}
+	fscanf_s(file, "%d ", &count);
+	int nameNumber = rand() % (count - 1 + 1) + 1;
+	for (int i = 0; i < count; i++) {
+		fscanf_s(file, "%s", name, sizeof(name) / sizeof(char));
 
+		if (i == nameNumber) {
+			fclose(file);
+			return name;
+		}
+	}
+
+
+}
 
 
 
 bool createHeroesMenu(Player& player) {
-	int coursorPosition = 0, choice;
+	int coursorPosition, choice;
 	bool inHeroMenu = true;
+	bool choosingName = false;
+	bool fillingName = false;
+	
 	SDL_Event ev;
 	for (int i = 0; i < 4; i++)
 	{
+		char name[MAX_NAME_LENGTH] = "";
+		coursorPosition = 0;
 		while (inHeroMenu) {
 
 			while (SDL_PollEvent(&ev)) {
@@ -34,6 +59,7 @@ bool createHeroesMenu(Player& player) {
 					case SDL_SCANCODE_RETURN:
 						choice = coursorPosition;
 						inHeroMenu = false;
+						choosingName = true;
 						break;
 					}
 					break;
@@ -41,7 +67,7 @@ bool createHeroesMenu(Player& player) {
 				}
 			}
 
-			drawHeroCreatingMenu(player, i + 1, coursorPosition);
+			drawHeroCreatingMenu(i + 1, coursorPosition);
 		}
 		switch (choice) {
 		case 0:
@@ -61,7 +87,7 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
 			break;
-		case 1: 
+		case 1:
 			player.team[i].maxHealth = 75;
 			player.team[i].health = player.team[i].maxHealth;
 			player.team[i].armor = 10;
@@ -113,9 +139,108 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].exp = 0;
 			break;
 		}
-		inHeroMenu = true;
+
+		coursorPosition = 0;
+		while (choosingName) {
+			while (SDL_PollEvent(&ev)) {
+				switch (ev.type) {
+				case SDL_QUIT:
+					return false;
+					break;
+
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_UP:
+						if (coursorPosition != 0) coursorPosition--;
+						break;
+					case SDL_SCANCODE_DOWN:
+						if (coursorPosition != 1) coursorPosition++;
+						break;
+					case SDL_SCANCODE_RETURN:
+						choice = coursorPosition;
+						choosingName = false;
+						fillingName = true;
+						break;
+					}
+					break;
+
+				}
+			}
+			drawHeroNameChoice(coursorPosition);
+		}
+		int currentrSym = 0;
+		switch (choice) {
+		case 0:
+			SDL_StartTextInput();
+			while (fillingName) {
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_TEXTINPUT:
+						if (currentrSym < MAX_NAME_LENGTH - 1) {
+							strcat_s(name, ev.text.text);
+							currentrSym++;
+						}
+						break;
+					case SDL_KEYDOWN:
+
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_BACKSPACE:
+							currentrSym--;
+							name[currentrSym] = '\0';
+							break;
+						case SDL_SCANCODE_RETURN:
+							strcpy_s(player.team[i].name, name);
+							fillingName = false;
+							inHeroMenu = true;
+
+							break;
+
+						}
+						break;
+					}
+				}
+				drawPlayerNameChoosing(name);
+			}
+			SDL_StopTextInput();
+			break;
+		case 1:
+
+				strncpy_s(name, randomName() , MAX_NAME_LENGTH);
+			while (fillingName) {
+
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							strncpy_s(name, randomName(), MAX_NAME_LENGTH);
+							break;
+						case SDL_SCANCODE_RIGHT:
+							strncpy_s(name, randomName(), MAX_NAME_LENGTH);
+							break;
+
+						case SDL_SCANCODE_RETURN:
+							strcpy_s(player.team[i].name, name);
+							fillingName = false;
+							inHeroMenu = true;
+							break;
+
+						}
+						break;
+					}
+				}
+
+
+				drawRandomNameChoosing(name);
+
+
+			}
+			break;
+		}
+
 
 	}
+	return true;
 }
 
 bool startMenu(Player& player) {
