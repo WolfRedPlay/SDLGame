@@ -17,4 +17,6 @@ void DeInit(int error);
 
 bool startMenu(Player& player);
 
+void gameMenu();
+
 void playerMenu(Player& player);

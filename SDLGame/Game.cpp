@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 			case SDL_KEYDOWN:
 				switch (ev.key.keysym.scancode) {
 				case SDL_SCANCODE_ESCAPE:
-					isRunning = false;
+					gameMenu();
 					break;
 				case SDL_SCANCODE_TAB:
 					playerMenu(player);

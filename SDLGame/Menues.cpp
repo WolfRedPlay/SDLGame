@@ -321,7 +321,9 @@ bool startMenu(Player& player) {
 
 }
 
+void gameMenu() {
 
+}
 
 void playerMenu(Player& player) {
 	bool inPlayerMenu, inHeroesStats, inInventory, inHeroChoosing;
