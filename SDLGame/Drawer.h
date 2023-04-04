@@ -1,10 +1,8 @@
 #pragma once
 #include "Basic.h"
-#include <SDL_ttf.h>
-#include <SDL_image.h>
+
 
 extern SDL_Renderer* ren;
-
 
 
 
@@ -19,5 +17,12 @@ void drawHeroNameChoice(int coursorPosition);
 void drawPlayerNameChoosing(char* name);
 void drawRandomNameChoosing(char* name);
 
+void drawHeroChoice(Player player, int coursorPosition);
+void drawConfirmation();
+
 void drawPlayerMenu(int coursorPosition);
 void drawHeroesStats(Player& player);
+void drawPlayerWeapons(Player& player, int coursorPosition);
+void drawPlayerArmors(Player& player, int coursorPosition);
+void drawPlayerPotions(Player& player, int coursorPosition);
+void drawHeroAbilities(Hero& hero, int coursorPosition);

@@ -8,9 +8,9 @@ char* randomName() {
 		exit(1);
 	}
 	fscanf_s(file, "%d ", &count);
-	int nameNumber = rand() % (count - 1 + 1) + 1;
-	for (int i = 0; i < count; i++) {
-		fscanf_s(file, "%s", name, sizeof(name) / sizeof(char));
+	int nameNumber = random(1, count);
+	for (int i = 1; i <= count; i++) {
+		fscanf_s(file, "%s\n", name, sizeof(name) / sizeof(char));
 
 		if (i == nameNumber) {
 			fclose(file);
@@ -86,7 +86,8 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].heroClass = KNIGHT;
 			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -100, qountOfWeapons);
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -200, qountOfArmors);
-			//setStartingAbilities(player.team[i], heroClass);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -601, qountOfAbilities), player.team[i].abilities);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -602, qountOfAbilities), player.team[i].abilities);
 
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
@@ -103,7 +104,8 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].heroClass = ROGUE;
 			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -101, qountOfWeapons);
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -201, qountOfArmors);
-			//setStartingAbilities(player.team[i], heroClass);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities), player.team[i].abilities);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -502, qountOfAbilities), player.team[i].abilities);
 
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
@@ -120,7 +122,8 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].heroClass = MAGE;
 			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -102, qountOfWeapons);
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -202, qountOfArmors);
-			//setStartingAbilities(player.team[i], heroClass);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -701, qountOfAbilities), player.team[i].abilities);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -702, qountOfAbilities), player.team[i].abilities);
 
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
@@ -137,7 +140,8 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].heroClass = HEALER;
 			player.team[i].equipedWeapon = findInWeaponsList(ALLWeaponsList, -103, qountOfWeapons);
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -203, qountOfArmors);
-			//setStartingAbilities(player.team[i], heroClass);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -801, qountOfAbilities), player.team[i].abilities);
+			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -802, qountOfAbilities), player.team[i].abilities);
 
 			player.team[i].lvl = 1;
 			player.team[i].exp = 0;
@@ -258,6 +262,8 @@ bool createHeroesMenu(Player& player) {
 
 
 	}
+	addPotionToInventory(findInPotionsList(ALLPotionsList, -302, qountOfPotions), player.potions);
+	addPotionToInventory(findInPotionsList(ALLPotionsList, -302, qountOfPotions), player.potions);
 	return true;
 }
 
@@ -316,10 +322,14 @@ bool startMenu(Player& player) {
 }
 
 
-bool playerMenu(Player& player) {
-	bool inPlayerMenu, inHeroesStats;
-	int coursorPosition, choice;
+
+void playerMenu(Player& player) {
+	bool inPlayerMenu, inHeroesStats, inInventory, inHeroChoosing;
+	int coursorPosition, choice, heroChoice;
+	bool isItemChoosen, isHeroChoosen, isDeleted;
 	SDL_Event ev;
+
+
 
 	while (true) {
 		inPlayerMenu = true;
@@ -345,7 +355,6 @@ bool playerMenu(Player& player) {
 					case SDL_SCANCODE_RETURN:
 						choice = coursorPosition;
 						inPlayerMenu = false;
-						inHeroesStats = true;
 						break;
 
 					case SDL_SCANCODE_TAB:
@@ -366,6 +375,8 @@ bool playerMenu(Player& player) {
 		}
 		switch (choice) {
 		case 0:
+#pragma region HERO STATS
+			inHeroesStats = true;
 			while (inHeroesStats) {
 				while (SDL_PollEvent(&ev)) {
 					switch (ev.type) {
@@ -393,11 +404,429 @@ bool playerMenu(Player& player) {
 				drawHeroesStats(player);
 			}
 
+#pragma endregion
 			break;
-		case 1:break;
-		case 2:break;
-		case 3:break;
-		case 4:break;
+		case 1:
+#pragma region WEAPON INVENTORY
+			inInventory = true;
+			coursorPosition = 0;
+
+			while (inInventory) {
+				isItemChoosen = false;
+				isHeroChoosen = false;
+
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							if (coursorPosition != 0 && coursorPosition != 5) coursorPosition--;
+							break;
+						case SDL_SCANCODE_RIGHT:
+							if (coursorPosition != 4 && coursorPosition != 9) coursorPosition++;
+							break;
+						case SDL_SCANCODE_UP:
+							if (coursorPosition >= 5) coursorPosition -= 5;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition <= 4) coursorPosition += 5;
+							break;
+						case SDL_SCANCODE_RETURN:
+							choice = coursorPosition;
+							isItemChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_TAB:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						}
+
+
+						break;
+					}
+
+				}
+
+
+				if (isItemChoosen) coursorPosition = 0;
+				while (isItemChoosen) {
+					while (SDL_PollEvent(&ev)) {
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_LEFT:
+								if (coursorPosition != 0) coursorPosition--;
+								break;
+							case SDL_SCANCODE_RIGHT:
+								if (coursorPosition != 3) coursorPosition++;
+								break;
+							case SDL_SCANCODE_RETURN:
+								heroChoice = coursorPosition;
+								isHeroChoosen = true;
+								isItemChoosen = false;
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								isItemChoosen = false;
+								break;
+							case SDL_SCANCODE_TAB:
+								isItemChoosen = false;
+								break;
+							}
+
+
+							break;
+						}
+
+					}
+
+					if (isHeroChoosen) {
+						Weapon changedWeapon = player.team[heroChoice].equipedWeapon;
+						player.team[heroChoice].equipedWeapon = takeWeaponFromInventory(player.weapons, choice);
+						addWeaponToInventory(changedWeapon, player.weapons);
+					}
+					drawHeroChoice(player, coursorPosition);
+
+				}
+				drawPlayerWeapons(player, coursorPosition);
+			}
+#pragma endregion
+			break;
+		case 2:
+#pragma region ARMOR INVENTORY
+			inInventory = true;
+			coursorPosition = 0;
+			while (inInventory) {
+				isItemChoosen = false;
+				isHeroChoosen = false;
+
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							if (coursorPosition != 0 && coursorPosition != 5) coursorPosition--;
+							break;
+						case SDL_SCANCODE_RIGHT:
+							if (coursorPosition != 4 && coursorPosition != 9) coursorPosition++;
+							break;
+						case SDL_SCANCODE_UP:
+							if (coursorPosition >= 5) coursorPosition -= 5;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition <= 4) coursorPosition += 5;
+							break;
+						case SDL_SCANCODE_RETURN:
+							choice = coursorPosition;
+							isItemChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_TAB:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						}
+
+
+						break;
+					}
+
+				}
+
+
+				if (isItemChoosen) coursorPosition = 0;
+				while (isItemChoosen) {
+					while (SDL_PollEvent(&ev)) {
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_LEFT:
+								if (coursorPosition != 0) coursorPosition--;
+								break;
+							case SDL_SCANCODE_RIGHT:
+								if (coursorPosition != 3) coursorPosition++;
+								break;
+							case SDL_SCANCODE_RETURN:
+								heroChoice = coursorPosition;
+								isHeroChoosen = true;
+								isItemChoosen = false;
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								isItemChoosen = false;
+								break;
+							case SDL_SCANCODE_TAB:
+								isItemChoosen = false;
+								break;
+							}
+
+
+							break;
+						}
+
+					}
+
+					if (isHeroChoosen) {
+						Armor changedarmor = player.team[heroChoice].equipedArmor;
+						player.team[heroChoice].equipedArmor = takeArmorFromInventory(player.armors, choice);
+						addArmorToInventory(changedarmor, player.armors);
+					}
+					drawHeroChoice(player, coursorPosition);
+
+				}
+				drawPlayerArmors(player, coursorPosition);
+			}
+#pragma endregion
+			break;
+		case 3:
+#pragma region POTION INVENTORY
+			inInventory = true;
+			coursorPosition = 0;
+			while (inInventory) {
+				isItemChoosen = false;
+				isHeroChoosen = false;
+
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							if (coursorPosition != 0 && coursorPosition != 5) coursorPosition--;
+							break;
+						case SDL_SCANCODE_RIGHT:
+							if (coursorPosition != 4 && coursorPosition != 9) coursorPosition++;
+							break;
+						case SDL_SCANCODE_UP:
+							if (coursorPosition >= 5) coursorPosition -= 5;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition <= 4) coursorPosition += 5;
+							break;
+						case SDL_SCANCODE_RETURN:
+							choice = coursorPosition;
+							isItemChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_TAB:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						}
+
+
+						break;
+					}
+
+				}
+
+
+				if (isItemChoosen) coursorPosition = 0;
+				while (isItemChoosen) {
+					while (SDL_PollEvent(&ev)) {
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_LEFT:
+								if (coursorPosition != 0) coursorPosition--;
+								break;
+							case SDL_SCANCODE_RIGHT:
+								if (coursorPosition != 3) coursorPosition++;
+								break;
+							case SDL_SCANCODE_RETURN:
+								heroChoice = coursorPosition;
+								isHeroChoosen = true;
+								isItemChoosen = false;
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								isItemChoosen = false;
+								break;
+							case SDL_SCANCODE_TAB:
+								isItemChoosen = false;
+								break;
+							}
+
+
+							break;
+						}
+
+					}
+
+					if (isHeroChoosen) {
+						if (player.team[heroChoice].health < player.team[heroChoice].maxHealth - player.potions[choice].health)player.team[heroChoice].health += player.potions[choice].health;
+						else player.team[heroChoice].health = player.team[heroChoice].maxHealth;
+						if (player.team[heroChoice].mana < player.team[heroChoice].maxMana - player.potions[choice].mana)player.team[heroChoice].mana += player.potions[choice].mana;
+						else player.team[heroChoice].mana = player.team[heroChoice].maxMana;
+						takePotionFromInventory(player.potions, choice);
+					}
+					drawHeroChoice(player, coursorPosition);
+
+				}
+				drawPlayerPotions(player, coursorPosition);
+			}
+#pragma endregion
+			break;
+		case 4:
+#pragma region ABILITIES LIST
+			inHeroChoosing = true;
+			isHeroChoosen = false;
+			inInventory = false;
+			isDeleted = false;
+			isItemChoosen = false;
+			coursorPosition = 0;
+			while (inHeroChoosing) {
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							if (coursorPosition != 0) coursorPosition--;
+							break;
+						case SDL_SCANCODE_RIGHT:
+							if (coursorPosition != 3) coursorPosition++;
+							break;
+						case SDL_SCANCODE_RETURN:
+							heroChoice = coursorPosition;
+							isHeroChoosen = true;
+							inHeroChoosing = false;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inHeroChoosing = false;
+							isHeroChoosen = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_TAB:
+							inHeroChoosing = false;
+							isHeroChoosen = false;
+							inPlayerMenu = true;
+							break;
+						}
+
+
+						break;
+					}
+
+				}
+				if (isHeroChoosen) {
+					inInventory = true;
+					coursorPosition = 0;
+				}
+				while (inInventory) {
+					while (SDL_PollEvent(&ev)) {
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_LEFT:
+								if (coursorPosition != 0 && coursorPosition != 4) coursorPosition--;
+								break;
+							case SDL_SCANCODE_RIGHT:
+								if (coursorPosition != 3 && coursorPosition != 7) coursorPosition++;
+								break;
+							case SDL_SCANCODE_UP:
+								if (coursorPosition >= 4) coursorPosition -= 4;
+								break;
+							case SDL_SCANCODE_DOWN:
+								if (coursorPosition <= 3) coursorPosition += 4;
+								break;
+							case SDL_SCANCODE_RETURN:
+								choice = coursorPosition;
+								isItemChoosen = true;
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								inInventory = false;
+								isHeroChoosen = false;
+								inHeroChoosing = true;
+								break;
+							case SDL_SCANCODE_TAB:
+								inInventory = false;
+								isHeroChoosen = false;
+								inHeroChoosing = true;
+								break;
+							}
+
+
+							break;
+						}
+
+					}
+
+
+					while (isItemChoosen) {
+						while (SDL_PollEvent(&ev)) {
+							switch (ev.type) {
+							case SDL_QUIT:
+								DeInit(0);
+								break;
+
+							case SDL_KEYDOWN:
+								switch (ev.key.keysym.scancode) {
+								case SDL_SCANCODE_Y:
+									takeAbilityFromList(player.team[heroChoice].abilities, choice);
+									isItemChoosen = false;
+									break;
+								case SDL_SCANCODE_N:
+									isItemChoosen = false;
+									break;
+								}
+								break;
+							}
+
+						}
+
+						drawConfirmation();
+					}
+
+
+
+					drawHeroAbilities(player.team[heroChoice], coursorPosition);
+				}
+
+				drawHeroChoice(player, coursorPosition);
+			}
+
+
+
+#pragma endregion
+			break;
 		case 5:break;
 		case 6:break;
 		}

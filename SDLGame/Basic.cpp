@@ -1,5 +1,21 @@
 #include "Basic.h"
 
+SDL_Texture* generateTextureFromPNG(const char* file) {
+	SDL_Surface* surf = IMG_Load(file);
+	if (surf == NULL) {
+		printf_s("Error with loading img!!!");
+		exit(1);
+	}
+	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surf);
+	SDL_FreeSurface(surf);
+	return texture;
+}
+
+int random(int min, int max) {
+	return rand() % (max - min + 1) + min;
+
+}
+
 void readMap(char** map, const char* fileName, int size_x, int size_y) {
 	FILE* file;
 	if (fopen_s(&file, fileName, "rt+") != 0) {
@@ -43,22 +59,22 @@ Potion createEmptyPotion() {
 		empty.name[i] = ' ';
 	return empty;
 }
-//Ability createEmptyAbility() {
-//	Ability empty;
-//	empty.damage = 0;
-//	empty.manaCost = 0;
-//	empty.cooldown = 0;
-//	empty.ID = 0;
-//	empty.price = 0;
-//	empty.type = -1;
-//	empty.buff = 0;
-//	empty.buffedCharacteristic = -1;
-//	empty.aoe = 0;
-//	empty.duration = 0;
-//	for (int i = 0; i < 15; i++)
-//		empty.name[i] = ' ';
-//	return empty;
-//}
+Ability createEmptyAbility() {
+	Ability empty;
+	empty.damage = 0;
+	empty.manaCost = 0;
+	empty.cooldown = 0;
+	empty.ID = 0;
+	empty.price = 0;
+	empty.type = -1;
+	empty.buff = 0;
+	empty.buffedCharacteristic = -1;
+	empty.aoe = 0;
+	empty.duration = 0;
+	for (int i = 0; i < 15; i++)
+		empty.name[i] = ' ';
+	return empty;
+}
 //QuestItem createEmptyQuestItem() {
 //	QuestItem empty;
 //	empty.ID = 0;
@@ -117,6 +133,32 @@ Hero createEmptyHero() {
 
 
 
+void clearWeaponInventory(Weapon* weapons) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++) {
+		weapons[i] = createEmptyWeapon();
+	}
+
+}
+void clearArmorInventory(Armor* armors)
+{
+
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++) {
+		armors[i] = createEmptyArmor();
+	}
+
+
+}
+void clearPotionInventory(Potion* potions) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++) {
+		potions[i] = createEmptyPotion();
+	}
+
+}
+void clearAbilities(Ability* abilities) {
+	for (int i = 0; i < MAX_ABILITIES; i++) {
+		abilities[i] = createEmptyAbility();
+	}
+}
 void clearPlayer(Player& player) {
 	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
 		player.weapons[i] = createEmptyWeapon();
@@ -127,6 +169,9 @@ void clearPlayer(Player& player) {
 	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
 		player.potions[i] = createEmptyPotion();
 	}
+	for (int i = 0; i < 4; i++) {
+		clearAbilities(player.team[i].abilities);
+	}
 
 	/*for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
 		player.questItems[i] = createEmptyQuestItem();
@@ -134,7 +179,6 @@ void clearPlayer(Player& player) {
 	for (int i = 0; i < MAX_QUESTS; i++) {
 		player.quests[i] = createEmptyQuest();
 	}*/
-
 }
 
 
@@ -154,6 +198,11 @@ Potion findInPotionsList(Potion* ALLPotionsList, int ID, int numPotions) {
 	if (ID == 0) return createEmptyPotion();
 	for (int i = 0; i < numPotions; i++)
 		if (ALLPotionsList[i].ID == ID) return ALLPotionsList[i];
+}
+Ability findInAbilitiesList(Ability* ALLAbilitiesList, int ID, int numAbilities) {
+	if (ID == 0) return createEmptyAbility();
+	for (int i = 0; i < numAbilities; i++)
+		if (ALLAbilitiesList[i].ID == ID) return ALLAbilitiesList[i];
 }
 
 
@@ -219,4 +268,102 @@ Potion* createAllPotions(int& amount) {
 
 	fclose(file);
 	return potionsList;
+}
+Ability* createAllAbilities(int& amount) {
+	FILE* file;
+
+	if (fopen_s(&file, "Abilities\\Abilities.txt", "rt+") != 0) {
+		system("cls");
+		printf_s("Openning file error!!!\a");
+		exit(-1);
+	}
+	fscanf_s(file, "%d", &amount, sizeof(int));
+
+	Ability* ALLAbilities = (Ability*)malloc(amount * sizeof(Ability));
+	for (int i = 0; i < amount; i++) {
+		fscanf_s(file, "%d ", &ALLAbilities[i].ID, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].type, sizeof(int));
+		fscanf_s(file, "%s ", &ALLAbilities[i].name, sizeof(ALLAbilities[0].name) / sizeof(char));
+		fscanf_s(file, "%d ", &ALLAbilities[i].damage, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].buffedCharacteristic, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].buff, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].manaCost, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].staminaCost, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].cooldown, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].effect, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].duration, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].aoe, sizeof(int));
+		fscanf_s(file, "%d ", &ALLAbilities[i].price, sizeof(int));
+	}
+
+	fclose(file);
+
+	return ALLAbilities;
+}
+
+
+
+bool addWeaponToInventory(Weapon weapon, Weapon* weapons) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++)
+		if (weapons[i].ID == 0) {
+			weapons[i] = weapon;
+			return true;
+		}
+	return false;
+}
+bool addArmorToInventory(Armor armor, Armor* armors) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++)
+		if (armors[i].ID == 0) {
+			armors[i] = armor;
+			return true;
+		}
+	return false;
+}
+bool addPotionToInventory(Potion potion, Potion* potions) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++)
+		if (potions[i].ID == 0) {
+			potions[i] = potion;
+			return true;
+		}
+	return false;
+}
+bool addAbilityToAbilities(Ability ability, Ability* abilities) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++)
+		if (abilities[i].ID == 0) {
+			abilities[i] = ability;
+			return true;
+		}
+	return false;
+}
+
+Weapon takeWeaponFromInventory(Weapon* weapons, int itemIndex) {
+
+	Weapon weapon = weapons[itemIndex];
+	weapons[itemIndex] = createEmptyWeapon();
+	return weapon;
+
+
+}
+Armor takeArmorFromInventory(Armor* armors, int itemIndex) {
+
+	Armor armor = armors[itemIndex];
+	armors[itemIndex] = createEmptyArmor();
+	return armor;
+
+
+}
+Potion takePotionFromInventory(Potion* potions, int itemIndex) {
+
+	Potion potion = potions[itemIndex];
+	potions[itemIndex] = createEmptyPotion();
+	return potion;
+
+
+}
+Ability takeAbilityFromList(Ability* abilities, int abilityIndex) {
+
+	Ability ability = abilities[abilityIndex];
+	abilities[abilityIndex] = createEmptyAbility();
+	return ability;
+
 }

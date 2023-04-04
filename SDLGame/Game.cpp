@@ -3,6 +3,8 @@
 #include "Mover.h"
 #include "Menues.h"
 
+#include <ctime>
+
 
 #define SPEED 3.f
 
@@ -14,13 +16,13 @@ bool isRunning = true;
 int qountOfWeapons;
 int qountOfArmors;
 int qountOfPotions;
+int qountOfAbilities;
 //int qountOfQustItems;
-//int qountOfAbilities;
 Weapon* ALLWeaponsList = createAllWeapons(qountOfWeapons);
 Armor* ALLArmorsList = createAllArmors(qountOfArmors);
 Potion* ALLPotionsList = createAllPotions(qountOfPotions);
+Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
 //QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
-//Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
 
 
 void DeInit(int error) {
@@ -70,9 +72,11 @@ char** createMapArray(int size_x, int size_y) {
 
 
 int main(int argc, char* argv[]) {
+	
+	srand(time(NULL));
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 
-
+	
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;

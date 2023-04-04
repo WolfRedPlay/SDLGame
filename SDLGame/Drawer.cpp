@@ -33,7 +33,6 @@ void drawCircledAngle(double x1, double y1, double radius, double left, double r
 	SDL_RenderPresent(ren);
 }
 
-
 void drawCircledRect(double x, double y, double w, double h, double rad) {
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
@@ -67,16 +66,7 @@ void drawCircledRect(double x, double y, double w, double h, double rad) {
 
 
 
-SDL_Texture* generateTextureFromPNG(const char* file) {
-	SDL_Surface* surf = IMG_Load(file);
-	if (surf == NULL) {
-		printf_s("Error with loading img!!!");
-		exit(1);
-	}
-	SDL_Texture* texture = SDL_CreateTextureFromSurface(ren, surf);
-	SDL_FreeSurface(surf);
-	return texture;
-}
+
 SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect& rect, SDL_Color fg) {
 
 	SDL_Surface* surfaceFont = TTF_RenderText_Blended(font, str, fg);
@@ -197,6 +187,79 @@ void drawStartMenu(int coursorPosition) {
 	TTF_CloseFont(choicesFont);
 }
 
+void drawHeroChoice(Player player, int coursorPosition) {
+	SDL_Rect window = { 0, 0, 1000, 300 };
+	window.x = WINDOW_WIDTH / 2 - window.w / 2;
+	window.y = WINDOW_HEIGHT / 2 - window.h;
+
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Rect choice = { 0,0, 100, 100 };
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 0, 64, 128, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("CHOOSE HERO", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 10;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+
+	for (int i = 0; i < 4; i++) {
+		choice.x = window.x + 100 + (choice.w + 133) * i;
+		choice.y = window.y + 100;
+		if (coursorPosition == i) {
+			SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+			SDL_RenderDrawRect(ren, &choice);
+		}
+		texture = generateTextureFromText(player.team[i].name, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = (100 - ttfRect.w) / 2 + choice.x;
+		ttfRect.y = window.y + 225;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}
+void drawConfirmation() {
+	SDL_Rect window = { 0, 0, 900, 300 };
+	window.x = WINDOW_WIDTH / 2 - window.w / 2;
+	window.y = WINDOW_HEIGHT / 2 - window.h;
+
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 0, 64, 128, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("ARE YOU SURE?", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 100;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	texture = generateTextureFromText("(Press 'Y' to confirm/ Press 'N' to reject)", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 190;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}
 
 void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
@@ -281,6 +344,7 @@ void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 
 
 	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
 }
 void drawHeroNameChoice(int coursorPosition) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
@@ -372,8 +436,8 @@ void drawRandomNameChoosing(char* name) {
 	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
 	ttfRect.y = 520;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
-	SDL_DestroyTexture(texture); 
-	
+	SDL_DestroyTexture(texture);
+
 	char header[21];
 	sprintf_s(header, "Name: %s", name);
 
@@ -398,15 +462,15 @@ void drawRandomNameChoosing(char* name) {
 }
 
 void drawPlayerMenu(int coursorPosition) {
-	SDL_Rect window = {100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100};
+	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
 	SDL_Texture* texture;
-	
+
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
 	SDL_RenderFillRect(ren, &window);
-	
+
 
 
 	texture = generateTextureFromText("PLAYER MENU", headerFont, ttfRect, { 0,0,0,255 });
@@ -414,7 +478,7 @@ void drawPlayerMenu(int coursorPosition) {
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	if (coursorPosition == 0)texture = generateTextureFromText(">Heros' stats", choicesFont, ttfRect, { 0,0,0,255 });
 	else texture = generateTextureFromText("Heros' stats", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.x = 700;
@@ -467,6 +531,8 @@ void drawPlayerMenu(int coursorPosition) {
 
 
 	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
 
 }
 
@@ -516,28 +582,28 @@ void drawHeroesStats(Player& player) {
 		ttfRect.y = 520;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
-		
+
 		sprintf_s(heroStats, "Protection: %d", player.team[i].armor);
 		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
 		ttfRect.x = 200 + i * 400;
 		ttfRect.y = 560;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
-		
+
 		sprintf_s(heroStats, "Basic damage: %d", player.team[i].damage);
 		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
 		ttfRect.x = 200 + i * 400;
 		ttfRect.y = 600;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
-		
+
 		sprintf_s(heroStats, "Weapon: %s | DMG: %d", player.team[i].equipedWeapon.name, player.team[i].equipedWeapon.damage);
 		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
 		ttfRect.x = 200 + i * 400;
 		ttfRect.y = 640;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
-		
+
 		sprintf_s(heroStats, "Armor: %s | PRT: %d", player.team[i].equipedArmor.name, player.team[i].equipedArmor.armor);
 		texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
 		ttfRect.x = 200 + i * 400;
@@ -559,8 +625,353 @@ void drawHeroesStats(Player& player) {
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
 	}
-	
+
 	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}
+void drawPlayerWeapons(Player& player, int coursorPosition) {
+
+
+	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Rect itemRect = { 0,0,264,265 };
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("WEAPONS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	char textureWay[100], weaponName[22], weaponDMG[10];
+
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+		sprintf_s(textureWay, "Textures\\%d.png", player.weapons[i].ID);
+		if (player.weapons[i].ID != 0) texture = generateTextureFromPNG(textureWay);
+
+		if (i <= (MAX_PLAYER_INVENTORY_SIZE / 2) - 1)
+		{
+			itemRect.x = window.x + 200 + itemRect.w * i;
+			itemRect.y = window.y + 100;
+		}
+		else {
+			itemRect.x = window.x + 200 + itemRect.w * (i % 5);
+			itemRect.y = window.y + 100 + itemRect.h;
+		}
+		if (i == coursorPosition) SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+		else SDL_SetRenderDrawColor(ren, 0, 200, 192, 255);
+		SDL_RenderDrawRect(ren, &itemRect);
+		SDL_RenderCopy(ren, texture, NULL, &itemRect);
+		if (player.weapons[i].ID != 0) SDL_DestroyTexture(texture);
+	}
+
+	if (player.weapons[coursorPosition].ID != 0) {
+		sprintf_s(weaponName, "NAME: %s", player.weapons[coursorPosition].name);
+		sprintf_s(weaponDMG, "DMG: %d", player.weapons[coursorPosition].damage);
+		texture = generateTextureFromText(weaponName, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 780;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		texture = generateTextureFromText(weaponDMG, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 830;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}
+void drawPlayerArmors(Player& player, int coursorPosition) {
+
+
+	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Rect itemRect = { 0,0,264,265 };
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("ARMOS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	char textureWay[100], armorName[22], armorPRT[10];
+
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+		sprintf_s(textureWay, "Textures\\%d.png", player.armors[i].ID);
+		if (player.armors[i].ID != 0) texture = generateTextureFromPNG(textureWay);
+
+		if (i <= (MAX_PLAYER_INVENTORY_SIZE / 2) - 1)
+		{
+			itemRect.x = window.x + 200 + itemRect.w * i;
+			itemRect.y = window.y + 100;
+		}
+		else {
+			itemRect.x = window.x + 200 + itemRect.w * (i % 5);
+			itemRect.y = window.y + 100 + itemRect.h;
+		}
+		if (i == coursorPosition) SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+		else SDL_SetRenderDrawColor(ren, 0, 200, 192, 255);
+		SDL_RenderDrawRect(ren, &itemRect);
+		SDL_RenderCopy(ren, texture, NULL, &itemRect);
+		if (player.armors[i].ID != 0) SDL_DestroyTexture(texture);
+	}
+	if (player.armors[coursorPosition].ID != 0) {
+		sprintf_s(armorName, "NAME: %s", player.armors[coursorPosition].name);
+		sprintf_s(armorPRT, "PRT: %d", player.armors[coursorPosition].armor);
+		texture = generateTextureFromText(armorName, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 780;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		texture = generateTextureFromText(armorPRT, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 830;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}
+void drawPlayerPotions(Player& player, int coursorPosition) {
+
+
+	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Rect itemRect = { 0,0,264,265 };
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("POTIONS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	char textureWay[100], potionName[22], potionREG[15];
+
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+		sprintf_s(textureWay, "Textures\\%d.png", player.potions[i].ID);
+		if (player.potions[i].ID != 0) texture = generateTextureFromPNG(textureWay);
+
+		if (i <= (MAX_PLAYER_INVENTORY_SIZE / 2) - 1)
+		{
+			itemRect.x = window.x + 200 + itemRect.w * i;
+			itemRect.y = window.y + 100;
+		}
+		else {
+			itemRect.x = window.x + 200 + itemRect.w * (i % 5);
+			itemRect.y = window.y + 100 + itemRect.h;
+		}
+		if (i == coursorPosition) SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+		else SDL_SetRenderDrawColor(ren, 0, 200, 192, 255);
+		SDL_RenderDrawRect(ren, &itemRect);
+		SDL_RenderCopy(ren, texture, NULL, &itemRect);
+		if (player.potions[i].ID != 0) SDL_DestroyTexture(texture);
+	}
+
+	if (player.potions[coursorPosition].ID != 0) {
+		sprintf_s(potionName, "NAME: %s", player.potions[coursorPosition].name);
+		texture = generateTextureFromText(potionName, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 780;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		if (player.potions[coursorPosition].health != 0)sprintf_s(potionREG, "HP Regen: %d", player.potions[coursorPosition].health);
+		if (player.potions[coursorPosition].mana != 0)sprintf_s(potionREG, "MP Regen: %d", player.potions[coursorPosition].mana);
+		texture = generateTextureFromText(potionREG, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 830;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}
+void drawHeroAbilities(Hero& hero, int coursorPosition) {
+
+
+	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Rect itemRect = { 0,0,300,300 };
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("ABILITIES LIST", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	char textureWay[100], characteristic[30];
+
+	for (int i = 0; i < MAX_ABILITIES; i++) {
+		sprintf_s(textureWay, "Textures\\%d.png", hero.abilities[i].ID);
+		if (hero.abilities[i].ID != 0) texture = generateTextureFromPNG(textureWay);
+
+		if (i <= (MAX_ABILITIES / 2) - 1)
+		{
+			itemRect.x = window.x + 210 + itemRect.w * i;
+			itemRect.y = window.y + 100;
+		}
+		else {
+			itemRect.x = window.x + 210 + itemRect.w * (i % 4);
+			itemRect.y = window.y + 100 + itemRect.h;
+		}
+		if (i == coursorPosition) SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+		else SDL_SetRenderDrawColor(ren, 0, 200, 192, 255);
+		SDL_RenderDrawRect(ren, &itemRect);
+		SDL_RenderCopy(ren, texture, NULL, &itemRect);
+		if (hero.abilities[i].ID != 0) SDL_DestroyTexture(texture);
+	}
+
+	if (hero.abilities[coursorPosition].ID != 0) {
+		sprintf_s(characteristic, "NAME: %s", hero.abilities[coursorPosition].name);
+		texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 210;
+		ttfRect.y = 780;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+		if (hero.abilities[coursorPosition].type == ATTACKING)sprintf_s(characteristic, "TYPE: Attacking");
+		if (hero.abilities[coursorPosition].type == BUFFING)sprintf_s(characteristic, "TYPE: Buff");
+		texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 210;
+		ttfRect.y = 810;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		if (hero.abilities[coursorPosition].type == ATTACKING) {
+
+			sprintf_s(characteristic, "DMG: %d", hero.abilities[coursorPosition].damage);
+			texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = window.x + 210;
+			ttfRect.y = 840;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+			switch (hero.abilities[coursorPosition].effect) {
+			case NORMAL:
+				sprintf_s(characteristic, "DEBUFF: None");
+				break;
+			case STUNED:
+				sprintf_s(characteristic, "DEBUFF: Stun");
+				break;
+			case BURN:
+				sprintf_s(characteristic, "DEBUFF: Burn");
+				break;
+			case POISONED:
+				sprintf_s(characteristic, "DEBUFF: Poison");
+				break;
+			case MARKED:
+				sprintf_s(characteristic, "DEBUFF: Mark");
+				break;
+			}
+			texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = window.x + 210;
+			ttfRect.y = 870;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+		}
+
+		if (hero.abilities[coursorPosition].type == BUFFING) {
+
+			sprintf_s(characteristic, "BUFF: %d", hero.abilities[coursorPosition].buff);
+			texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = window.x + 210;
+			ttfRect.y = 840;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+			switch (hero.abilities[coursorPosition].buffedCharacteristic) {
+			case HEALTH:
+				sprintf_s(characteristic, "STAT: Health");
+				break;
+			case ARMOR:
+				sprintf_s(characteristic, "STAT: Armor");
+				break;
+			case DAMAGE:
+				sprintf_s(characteristic, "STAT: Damage");
+				break;
+			}
+			texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = window.x + 210;
+			ttfRect.y = 870;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+		}
+
+		sprintf_s(characteristic, "MANACOST: %d", hero.abilities[coursorPosition].manaCost);
+		texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 210;
+		ttfRect.y = 900;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(characteristic, "STAMINACOST: %d", hero.abilities[coursorPosition].staminaCost);
+		texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 210;
+		ttfRect.y = 930;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		sprintf_s(characteristic, "COOLDOWN: %d", hero.abilities[coursorPosition].cooldown);
+		texture = generateTextureFromText(characteristic, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 210;
+		ttfRect.y = 960;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+	}
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
 
 }
 
