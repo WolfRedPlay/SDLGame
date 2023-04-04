@@ -83,22 +83,22 @@ SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect& 
 void drawScreen(char** map, Coordinates playerPos) {
 
 
-	SDL_Rect unit = { 0,0, UNIT_SIZE, UNIT_SIZE };
+	SDL_Rect unit = { 0,0, UNIT_SIZE_X, UNIT_SIZE_Y };
 
 	int leftBorder = 0, uppperBorder = 0;
 
-	while (playerPos.X >= (WINDOW_WIDTH - 1) / UNIT_SIZE) {
-		playerPos.X -= (WINDOW_WIDTH - 1) / UNIT_SIZE;
-		leftBorder += (WINDOW_WIDTH - 1) / UNIT_SIZE;
+	while (playerPos.X >= (WINDOW_WIDTH - 1) / UNIT_SIZE_X) {
+		playerPos.X -= (WINDOW_WIDTH - 1) / UNIT_SIZE_X;
+		leftBorder += (WINDOW_WIDTH - 1) / UNIT_SIZE_X;
 	}
-	while (playerPos.Y >= WINDOW_HEIGHT / UNIT_SIZE) {
-		playerPos.Y -= WINDOW_HEIGHT / UNIT_SIZE;
-		uppperBorder += WINDOW_HEIGHT / UNIT_SIZE;
+	while (playerPos.Y >= WINDOW_HEIGHT / UNIT_SIZE_Y) {
+		playerPos.Y -= WINDOW_HEIGHT / UNIT_SIZE_Y;
+		uppperBorder += WINDOW_HEIGHT / UNIT_SIZE_Y;
 	}
 
-	for (int i = 0; i < WINDOW_HEIGHT / UNIT_SIZE; i++) {
+	for (int i = 0; i < WINDOW_HEIGHT / UNIT_SIZE_Y; i++) {
 
-		for (int j = 0; j < WINDOW_WIDTH / UNIT_SIZE; j++) {
+		for (int j = 0; j < WINDOW_WIDTH / UNIT_SIZE_X; j++) {
 			if (uppperBorder + i >= MAP_SIZE_Y || leftBorder + j >= MAP_SIZE_X) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else if (map[uppperBorder + i][leftBorder + j] == '\n') SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else
@@ -128,7 +128,7 @@ void drawPlayer(Coordinates playerPosition) {
 	playerPosition = fromMapCoordinatesToScreen(playerPosition);
 
 
-	SDL_FRect playerUnit = { playerPosition.X * UNIT_SIZE, playerPosition.Y * UNIT_SIZE, UNIT_SIZE, UNIT_SIZE };
+	SDL_FRect playerUnit = { playerPosition.X * UNIT_SIZE_X, playerPosition.Y * UNIT_SIZE_Y, UNIT_SIZE_X, UNIT_SIZE_Y };
 
 	SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 

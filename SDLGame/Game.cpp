@@ -6,7 +6,7 @@
 #include <ctime>
 
 
-#define SPEED 3.f
+#define SPEED 2.f
 
 
 SDL_Window* win = NULL;
