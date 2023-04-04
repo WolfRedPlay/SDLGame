@@ -361,12 +361,12 @@ void playerMenu(Player& player) {
 
 					case SDL_SCANCODE_TAB:
 						inPlayerMenu = false;
-						return true;
+						return;
 						break;
 
 					case SDL_SCANCODE_ESCAPE:
 						inPlayerMenu = false;
-						return true;
+						return;
 						break;
 
 					}
