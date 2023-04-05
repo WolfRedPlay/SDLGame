@@ -87,18 +87,18 @@ void drawScreen(char** map, Coordinates playerPos) {
 
 	int leftBorder = 0, uppperBorder = 0;
 
-	while (playerPos.X >= (WINDOW_WIDTH - 1) / UNIT_SIZE_X) {
-		playerPos.X -= (WINDOW_WIDTH - 1) / UNIT_SIZE_X;
-		leftBorder += (WINDOW_WIDTH - 1) / UNIT_SIZE_X;
+	while (playerPos.X >= (window_width - 1) / UNIT_SIZE_X) {
+		playerPos.X -= (window_width - 1) / UNIT_SIZE_X;
+		leftBorder += (window_width - 1) / UNIT_SIZE_X;
 	}
-	while (playerPos.Y >= WINDOW_HEIGHT / UNIT_SIZE_Y) {
-		playerPos.Y -= WINDOW_HEIGHT / UNIT_SIZE_Y;
-		uppperBorder += WINDOW_HEIGHT / UNIT_SIZE_Y;
+	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
+		playerPos.Y -= window_height / UNIT_SIZE_Y;
+		uppperBorder += window_height / UNIT_SIZE_Y;
 	}
 
-	for (int i = 0; i < WINDOW_HEIGHT / UNIT_SIZE_Y; i++) {
+	for (int i = 0; i < window_height / UNIT_SIZE_Y; i++) {
 
-		for (int j = 0; j < WINDOW_WIDTH / UNIT_SIZE_X; j++) {
+		for (int j = 0; j < window_width / UNIT_SIZE_X; j++) {
 			if (uppperBorder + i >= MAP_SIZE_Y || leftBorder + j >= MAP_SIZE_X) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else if (map[uppperBorder + i][leftBorder + j] == '\n') SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else
@@ -136,61 +136,10 @@ void drawPlayer(Coordinates playerPosition) {
 
 }
 
-
-void drawStartMenu(int coursorPosition) {
-	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 100);
-	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
-	SDL_Rect rect;
-	SDL_Texture* texture;
-
-	SDL_SetRenderDrawColor(ren, 255, 242, 100, 255);
-	SDL_RenderClear(ren);
-
-
-	//название игры
-	texture = generateTextureFromText("GAME", headerFont, rect, { 0,0,0,255 });
-	rect.x = WINDOW_WIDTH / 2 - rect.w / 2;
-	rect.y = 50;
-	SDL_RenderCopy(ren, texture, NULL, &rect);
-	SDL_DestroyTexture(texture);
-
-	//пункты]
-	if (coursorPosition == 0) texture = generateTextureFromText(">New Game", choicesFont, rect, { 0,0,0,255 });
-	else texture = generateTextureFromText("New Game", choicesFont, rect, { 0,0,0,255 });
-	rect.x = 800;
-	rect.y = 300;
-	SDL_RenderCopy(ren, texture, NULL, &rect);
-	SDL_DestroyTexture(texture);
-	if (coursorPosition == 1) texture = generateTextureFromText(">Load Game", choicesFont, rect, { 0,0,0,255 });
-	else texture = generateTextureFromText("Load Game", choicesFont, rect, { 0,0,0,255 });
-	rect.x = 800;
-	rect.y = 400;
-	SDL_RenderCopy(ren, texture, NULL, &rect);
-	SDL_DestroyTexture(texture);
-	if (coursorPosition == 2) texture = generateTextureFromText(">Guide", choicesFont, rect, { 0,0,0,255 });
-	else texture = generateTextureFromText("Guide", choicesFont, rect, { 0,0,0,255 });
-	rect.x = 800;
-	rect.y = 500;
-	SDL_RenderCopy(ren, texture, NULL, &rect);
-	SDL_DestroyTexture(texture);
-	if (coursorPosition == 3) texture = generateTextureFromText(">Exit", choicesFont, rect, { 0,0,0,255 });
-	else texture = generateTextureFromText("Exit", choicesFont, rect, { 0,0,0,255 });
-	rect.x = 800;
-	rect.y = 600;
-	SDL_RenderCopy(ren, texture, NULL, &rect);
-	SDL_DestroyTexture(texture);
-
-
-
-	SDL_RenderPresent(ren);
-	TTF_CloseFont(headerFont);
-	TTF_CloseFont(choicesFont);
-}
-
 void drawHeroChoice(Player player, int coursorPosition) {
 	SDL_Rect window = { 0, 0, 1000, 300 };
-	window.x = WINDOW_WIDTH / 2 - window.w / 2;
-	window.y = WINDOW_HEIGHT / 2 - window.h;
+	window.x = window_width / 2 - window.w / 2;
+	window.y = window_height / 2 - window.h;
 
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
@@ -231,8 +180,8 @@ void drawHeroChoice(Player player, int coursorPosition) {
 }
 void drawConfirmation() {
 	SDL_Rect window = { 0, 0, 900, 300 };
-	window.x = WINDOW_WIDTH / 2 - window.w / 2;
-	window.y = WINDOW_HEIGHT / 2 - window.h;
+	window.x = window_width / 2 - window.w / 2;
+	window.y = window_height / 2 - window.h;
 
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
@@ -247,7 +196,7 @@ void drawConfirmation() {
 	ttfRect.y = window.y + 100;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	texture = generateTextureFromText("(Press 'Y' to confirm/ Press 'N' to reject)", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
 	ttfRect.y = window.y + 190;
@@ -260,7 +209,104 @@ void drawConfirmation() {
 	TTF_CloseFont(choicesFont);
 
 }
+void drawSaveSlots(int coursorPosition) {
+	SDL_Rect window;
 
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+
+	window.w = UNIT_SIZE_X * 15;
+	window.h = UNIT_SIZE_Y * 7;
+	window.x = window_width / 2 - window.w / 2;
+	window.y = window_height / 2 - window.h / 2;
+
+	SDL_SetRenderDrawColor(ren, 0, 181, 160, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("CHOOSE SAVE SLOT", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 30;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 0)texture = generateTextureFromText(">Save slot 1", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Save slot 1", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + 150;
+	ttfRect.y += 80;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	if (coursorPosition == 1)texture = generateTextureFromText(">Save slot 2", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Save slot 2", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + 150;
+	ttfRect.y += 40;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	if (coursorPosition == 2)texture = generateTextureFromText(">Save slot 3", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Save slot 3", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + 150;
+	ttfRect.y += 40;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}
+
+void drawStartMenu(int coursorPosition) {
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 100);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
+	SDL_Rect rect;
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 255, 242, 100, 255);
+	SDL_RenderClear(ren);
+
+
+	//название игры
+	texture = generateTextureFromText("GAME", headerFont, rect, { 0,0,0,255 });
+	rect.x = window_width / 2 - rect.w / 2;
+	rect.y = 50;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+
+	//пункты]
+	if (coursorPosition == 0) texture = generateTextureFromText(">New Game", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("New Game", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 300;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 1) texture = generateTextureFromText(">Load Game", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Load Game", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 400;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 2) texture = generateTextureFromText(">Guide", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Guide", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 500;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+	if (coursorPosition == 3) texture = generateTextureFromText(">Exit", choicesFont, rect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Exit", choicesFont, rect, { 0,0,0,255 });
+	rect.x = 800;
+	rect.y = 600;
+	SDL_RenderCopy(ren, texture, NULL, &rect);
+	SDL_DestroyTexture(texture);
+
+
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}
 void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	SDL_Rect pngRect;
@@ -273,7 +319,7 @@ void drawHeroCreatingMenu(int heroNum, int coursorPosition) {
 	sprintf_s(headerText, "CHOOSE A CLASS FOR YOUR %d HERO", heroNum);
 
 	SDL_Texture* header = generateTextureFromText(headerText, headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 50;
 	SDL_RenderCopy(ren, header, NULL, &ttfRect);
 	SDL_DestroyTexture(header);
@@ -352,15 +398,15 @@ void drawHeroNameChoice(int coursorPosition) {
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
 	SDL_Texture* texture;
 
-	//drawCircledRect(300, 500, WINDOW_WIDTH - 600, 300, 25);
+	//drawCircledRect(300, 500, window_width - 600, 300, 25);
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
-	SDL_Rect filling = { 300, 500, WINDOW_WIDTH - 600, 300 };
+	SDL_Rect filling = { 300, 500, window_width - 600, 300 };
 	SDL_RenderFillRect(ren, &filling);
 
 
 	texture = generateTextureFromText("How do you want to chose this hero name?", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 520;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -389,16 +435,16 @@ void drawPlayerNameChoosing(char* name) {
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
 	SDL_Texture* texture;
 
-	//drawCircledRect(300, 500, WINDOW_WIDTH - 600, 300, 25);
+	//drawCircledRect(300, 500, window_width - 600, 300, 25);
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
-	SDL_Rect filling = { 300, 500, WINDOW_WIDTH - 600, 300 };
+	SDL_Rect filling = { 300, 500, window_width - 600, 300 };
 	SDL_RenderFillRect(ren, &filling);
 
 
 
 	texture = generateTextureFromText("Press hero's name", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 520;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -425,15 +471,15 @@ void drawRandomNameChoosing(char* name) {
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
 	SDL_Texture* texture;
 
-	//drawCircledRect(300, 500, WINDOW_WIDTH - 600, 300, 25);
+	//drawCircledRect(300, 500, window_width - 600, 300, 25);
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
-	SDL_Rect filling = { 300, 500, WINDOW_WIDTH - 600, 300 };
+	SDL_Rect filling = { 300, 500, window_width - 600, 300 };
 	SDL_RenderFillRect(ren, &filling);
 
 
 	texture = generateTextureFromText("Is it a good name?", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 520;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -449,7 +495,7 @@ void drawRandomNameChoosing(char* name) {
 	SDL_DestroyTexture(texture);
 
 	texture = generateTextureFromText("(Press ENTER to confirm or ARROWS to change)", choicesFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 700;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -462,7 +508,7 @@ void drawRandomNameChoosing(char* name) {
 }
 
 void drawPlayerMenu(int coursorPosition) {
-	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
@@ -474,7 +520,7 @@ void drawPlayerMenu(int coursorPosition) {
 
 
 	texture = generateTextureFromText("PLAYER MENU", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -535,9 +581,8 @@ void drawPlayerMenu(int coursorPosition) {
 	TTF_CloseFont(choicesFont);
 
 }
-
 void drawHeroesStats(Player& player) {
-	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
 	SDL_Rect ttfRect;
@@ -547,7 +592,7 @@ void drawHeroesStats(Player& player) {
 	SDL_RenderFillRect(ren, &window);
 
 	texture = generateTextureFromText("HEROES' STATS", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -624,6 +669,15 @@ void drawHeroesStats(Player& player) {
 		ttfRect.y = 760;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
+		if (player.team[i].status == DEAD) 
+		{
+			sprintf_s(heroStats, "DEAD");
+			texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = 200 + i * 400;
+			ttfRect.y = 800;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
 	}
 
 	SDL_RenderPresent(ren);
@@ -635,7 +689,7 @@ void drawHeroesStats(Player& player) {
 void drawPlayerWeapons(Player& player, int coursorPosition) {
 
 
-	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
@@ -646,7 +700,7 @@ void drawPlayerWeapons(Player& player, int coursorPosition) {
 	SDL_RenderFillRect(ren, &window);
 
 	texture = generateTextureFromText("WEAPONS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -700,7 +754,7 @@ void drawPlayerWeapons(Player& player, int coursorPosition) {
 void drawPlayerArmors(Player& player, int coursorPosition) {
 
 
-	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
@@ -711,7 +765,7 @@ void drawPlayerArmors(Player& player, int coursorPosition) {
 	SDL_RenderFillRect(ren, &window);
 
 	texture = generateTextureFromText("ARMOS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -762,7 +816,7 @@ void drawPlayerArmors(Player& player, int coursorPosition) {
 void drawPlayerPotions(Player& player, int coursorPosition) {
 
 
-	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
 	SDL_Rect ttfRect;
@@ -773,7 +827,7 @@ void drawPlayerPotions(Player& player, int coursorPosition) {
 	SDL_RenderFillRect(ren, &window);
 
 	texture = generateTextureFromText("POTIONS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -828,7 +882,7 @@ void drawPlayerPotions(Player& player, int coursorPosition) {
 void drawHeroAbilities(Hero& hero, int coursorPosition) {
 
 
-	SDL_Rect window = { 100, 50, WINDOW_WIDTH - 200, WINDOW_HEIGHT - 100 };
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
 	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
 	SDL_Rect ttfRect;
@@ -839,7 +893,7 @@ void drawHeroAbilities(Hero& hero, int coursorPosition) {
 	SDL_RenderFillRect(ren, &window);
 
 	texture = generateTextureFromText("ABILITIES LIST", headerFont, ttfRect, { 0,0,0,255 });
-	ttfRect.x = WINDOW_WIDTH / 2 - ttfRect.w / 2;
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
 	ttfRect.y = 70;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
@@ -975,3 +1029,55 @@ void drawHeroAbilities(Hero& hero, int coursorPosition) {
 
 }
 
+void drawGameMenu(int coursorPosition) {
+	SDL_Rect window;
+
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 70);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+
+	window.w = UNIT_SIZE_X * 20;
+	window.h = UNIT_SIZE_Y * 10;
+	window.x = window_width / 2 - window.w / 2;
+	window.y = window_height / 2 - window.h / 2;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("GAME MENU", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 10;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	if (coursorPosition == 0)texture = generateTextureFromText(">Continue", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Continue", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + 250;
+	ttfRect.y += 150;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	if (coursorPosition == 1)texture = generateTextureFromText(">Save game", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Save game", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.y += 50;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	if (coursorPosition == 2)texture = generateTextureFromText(">Load game", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Load game", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.y += 50;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	
+	if (coursorPosition == 3)texture = generateTextureFromText(">Start manu", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Start manu", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.y += 50;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+}

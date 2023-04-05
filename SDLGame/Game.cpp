@@ -12,7 +12,18 @@
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
 
-bool isRunning = true;
+int window_width = 1920;
+int window_height = 1080;
+
+bool inGame = false;
+
+bool inShop, inDunge, inGlobal,
+shopMapReaded, dungeMapReaded, globalMapReaded;
+
+int dangeType;
+
+
+
 int qountOfWeapons;
 int qountOfArmors;
 int qountOfPotions;
@@ -48,7 +59,7 @@ void Init() {
 		printf_s("Error: %s!", SDL_GetError());
 		DeInit(1);
 	}
-	win = SDL_CreateWindow("Just Window", 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	win = SDL_CreateWindow("Just Window", 0, 0, window_width, window_height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 	if (win == NULL) {
 		printf_s("Create window error: %s!", SDL_GetError());
 		DeInit(1);
@@ -72,18 +83,15 @@ char** createMapArray(int size_x, int size_y) {
 
 
 int main(int argc, char* argv[]) {
-	
+
 	srand(time(NULL));
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	
+
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;
 	Player player;
-	player.keys = 0;
-	player.position = { 3.f, 1.f };
-	readMap(map, "GlobalMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
 	Init();
 
 	int lasttime = SDL_GetTicks();
@@ -92,49 +100,85 @@ int main(int argc, char* argv[]) {
 
 
 
-	isRunning = startMenu(player);
-	while (isRunning) {
-
-		while (SDL_PollEvent(&ev)) {
-			switch (ev.type) {
-			case SDL_QUIT:
-				isRunning = false;
-				break;
-			case SDL_KEYDOWN:
-				switch (ev.key.keysym.scancode) {
-				case SDL_SCANCODE_ESCAPE:
-					gameMenu();
+	while (true) {
+		inShop = false;
+		inDunge = false;
+		inGlobal = true;
+		shopMapReaded = false;
+		dungeMapReaded = false;
+		globalMapReaded = false;
+		startMenu(player, map);
+		while (inGame) {
+			if (inShop) {
+				if (!shopMapReaded) {
+					map = createMapArray(SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
+					readMap(map, "Maps\\Shop.txt", SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
+					globalMapReaded = false;
+					dungeMapReaded = false;
+					shopMapReaded = true;
+				}
+			}
+			else if (inDunge) {
+				if (!dungeMapReaded) {
+					map = createMapArray(DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					if (dangeType == 1)readMap(map, "Maps\\Dunge1.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					if (dangeType == 2)readMap(map, "Maps\\Dunge2.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					globalMapReaded = false;
+					shopMapReaded = false;
+					dungeMapReaded = true;
+				}
+			}
+			else if (inGlobal) {
+				if (!globalMapReaded) {
+					map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
+					readMap(map, "Maps\\SavedMap.txt", MAP_SIZE_X, MAP_SIZE_Y);
+					shopMapReaded = false;
+					dungeMapReaded = false;
+					globalMapReaded = true;
+				}
+			}
+			while (SDL_PollEvent(&ev)) {
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
 					break;
-				case SDL_SCANCODE_TAB:
-					playerMenu(player);
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_ESCAPE:
+						gameMenu(player, map);
+						break;
+					case SDL_SCANCODE_TAB:
+						playerMenu(player);
+						break;
+
+
+
+
+					}
 					break;
-
-
-
 
 				}
-				break;
-
 			}
+
+			newtime = SDL_GetTicks();
+			dt = newtime - lasttime;
+			lasttime = newtime;
+
+			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, -SPEED * dt / 1000 });
+			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0,  SPEED * dt / 1000 });
+			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
+			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
+
+
+			drawScreen(map, player.position);
+			drawPlayer(player.position);
+
+			SDL_RenderPresent(ren);
 		}
-
-		newtime = SDL_GetTicks();
-		dt = newtime - lasttime;
-		lasttime = newtime;
-
-		if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, -SPEED * dt / 1000 });
-		if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0,  SPEED * dt / 1000 });
-		if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
-		if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
-
-	
-		drawScreen(map, player.position);
-		drawPlayer(player.position);
-
-		SDL_RenderPresent(ren);
 	}
+	free(map);
 	DeInit(0);
 	return 0;
 }
-			//printf_s("NAME: %s\n", player.team[i].name);
+//printf_s("NAME: %s\n", player.team[i].name);
 

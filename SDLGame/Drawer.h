@@ -4,21 +4,24 @@
 
 extern SDL_Renderer* ren;
 
-
+extern int window_width;
+extern int window_height;
 
 
 void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition);
 
-void drawStartMenu(int coursorPosition);
+void drawHeroChoice(Player player, int coursorPosition);
+void drawConfirmation();
+void drawSaveSlots(int coursorPosition);
 
+void drawStartMenu(int coursorPosition);
 void drawHeroCreatingMenu(int heroNum, int coursorPosition);
 void drawHeroNameChoice(int coursorPosition);
 void drawPlayerNameChoosing(char* name);
 void drawRandomNameChoosing(char* name);
 
-void drawHeroChoice(Player player, int coursorPosition);
-void drawConfirmation();
+void drawGameMenu(int coursorPosition);
 
 void drawPlayerMenu(int coursorPosition);
 void drawHeroesStats(Player& player);

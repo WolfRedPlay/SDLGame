@@ -33,6 +33,10 @@ bool createHeroesMenu(Player& player) {
 	SDL_Event ev;
 	for (int i = 0; i < 4; i++)
 	{
+		player.team[i].lvl = 1;
+		player.team[i].exp = 0;
+		player.team[i].status = NORMAL;
+
 		char name[MAX_NAME_LENGTH] = "";
 		coursorPosition = 0;
 		while (inHeroMenu) {
@@ -89,8 +93,6 @@ bool createHeroesMenu(Player& player) {
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -601, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -602, qountOfAbilities), player.team[i].abilities);
 
-			player.team[i].lvl = 1;
-			player.team[i].exp = 0;
 			break;
 		case 1:
 			player.team[i].maxHealth = 75;
@@ -107,8 +109,6 @@ bool createHeroesMenu(Player& player) {
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -502, qountOfAbilities), player.team[i].abilities);
 
-			player.team[i].lvl = 1;
-			player.team[i].exp = 0;
 			break;
 		case 2:
 			player.team[i].maxHealth = 70;
@@ -125,8 +125,6 @@ bool createHeroesMenu(Player& player) {
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -701, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -702, qountOfAbilities), player.team[i].abilities);
 
-			player.team[i].lvl = 1;
-			player.team[i].exp = 0;
 			break;
 		case 3:
 			player.team[i].maxHealth = 80;
@@ -143,8 +141,7 @@ bool createHeroesMenu(Player& player) {
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -801, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -802, qountOfAbilities), player.team[i].abilities);
 
-			player.team[i].lvl = 1;
-			player.team[i].exp = 0;
+			
 			break;
 		}
 
@@ -260,19 +257,25 @@ bool createHeroesMenu(Player& player) {
 			break;
 		}
 
-
 	}
 	addPotionToInventory(findInPotionsList(ALLPotionsList, -302, qountOfPotions), player.potions);
 	addPotionToInventory(findInPotionsList(ALLPotionsList, -302, qountOfPotions), player.potions);
+	player.keys = 0;
+	player.money = 100;
+	player.currentLocation = 0;
+	player.position = { 3.f, 1.f };
 	return true;
 }
 
-bool startMenu(Player& player) {
-	int coursorPosition = 0, choice;
-	bool inStartMenu = true;
+void startMenu(Player& player, char** map) {
+	int coursorPosition, choice, slotChoice;
+	bool inStartMenu, inSaves, isChoosen;
 	SDL_Event ev;
 	while (true) {
-
+		inStartMenu = true; 
+		inSaves = false;
+		isChoosen = false;
+		coursorPosition = 0;
 		while (inStartMenu) {
 			while (SDL_PollEvent(&ev))
 			{
@@ -304,24 +307,249 @@ bool startMenu(Player& player) {
 
 		switch (choice) {
 		case 0:
-			if (createHeroesMenu(player)) return true;
+			if (createHeroesMenu(player)) {
+				inGame = true;
+				readMap(map, "Maps\\GlobalMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
+				setMapSaves("Maps\\SavedMap.txt", map);
+				return;
+			}
 			else inStartMenu = true;
 			break;
-		case 1: break;
+		case 1:
+			coursorPosition = 0;
+			inSaves = true;
+			while (inSaves) {
+				while (SDL_PollEvent(&ev))
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_UP:
+							if (coursorPosition != 0) coursorPosition--;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition != 2) coursorPosition++;
+							break;
+						case SDL_SCANCODE_RETURN:
+							slotChoice = coursorPosition;
+							inSaves = false;
+							isChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inStartMenu = true;
+							inSaves = false;
+							isChoosen = false;
+							break;
+						}
+					}
+
+				if (isChoosen) {
+					if (slotChoice == 0) {
+						loadSaves("Saves\\save1.txt", player);
+						/*loadQuestsSaves("Saves\\CompletedQuests1.txt", quests, questsAmount);*/
+						readMap(map, "Saves\\SavedMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
+						setMapSaves("Maps\\SavedMap.txt", map);
+					}
+					if (slotChoice == 1) {
+						loadSaves("Saves\\save2.txt", player);
+						/*loadQuestsSaves("Saves\\CompletedQuests2.txt", quests, questsAmount);*/
+						readMap(map, "Saves\\SavedMap2.txt", MAP_SIZE_X, MAP_SIZE_Y);
+						setMapSaves("Maps\\SavedMap.txt", map);
+					}
+					if (slotChoice == 2) {
+						loadSaves("Saves\\save3.txt", player);
+						/*loadQuestsSaves("Saves\\CompletedQuests3.txt", quests, questsAmount);*/
+						readMap(map, "Saves\\SavedMap3.txt", MAP_SIZE_X, MAP_SIZE_Y);
+						setMapSaves("Maps\\SavedMap.txt", map);
+					}
+					inGame = true;
+					return;
+				}
+
+
+				drawSaveSlots(coursorPosition);
+			}
+			
+			break;
 		case 2: break;
 
 
 		case 3:
-			return false;
+			DeInit(0);
 			break;
 		}
 
 	}
-
-
 }
 
-void gameMenu() {
+void gameMenu(Player& player, char** map) {
+	bool inGameMenu, inSaves, isChoosen;
+	int coursorPosition, choice, slotChoice;
+	SDL_Event ev;
+
+		inGameMenu = true;
+		isChoosen = false;
+		inSaves = false;
+		choice = -1;
+		coursorPosition = 0;
+		while (inGameMenu) {
+			while (SDL_PollEvent(&ev))
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_UP:
+						if (coursorPosition != 0) coursorPosition--;
+						break;
+					case SDL_SCANCODE_DOWN:
+						if (coursorPosition != 3) coursorPosition++;
+						break;
+					case SDL_SCANCODE_RETURN:
+						choice = coursorPosition;
+						inGameMenu = false;
+						break;
+					case SDL_SCANCODE_ESCAPE:
+						inGameMenu = false;
+						return;
+					}
+					break;
+				}
+			switch (choice) {
+			case 0: return;
+			case 1:
+#pragma region Set Saves
+				coursorPosition = 0;
+				inSaves = true;
+				while (inSaves) {
+					while (SDL_PollEvent(&ev))
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_UP:
+								if (coursorPosition != 0) coursorPosition--;
+								break;
+							case SDL_SCANCODE_DOWN:
+								if (coursorPosition != 2) coursorPosition++;
+								break;
+							case SDL_SCANCODE_RETURN:
+								slotChoice = coursorPosition;
+								inSaves = false;
+								isChoosen = true;
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								inGameMenu = true;
+								inSaves = false;
+								isChoosen = false;
+								choice = -1;
+								coursorPosition = 0;
+								break;
+							}
+						}
+
+					if (isChoosen) {
+						if (slotChoice == 0) {
+							setSaves("Saves\\save1.txt", player);
+							/*setQuestsSaves("Saves\\CompletedQuests1.txt", quests, questsAmount);*/
+							setMapSaves("Saves\\SavedMap1.txt", map);
+						}
+						if (slotChoice == 1) {
+							setSaves("Saves\\save2.txt", player);
+							/*setQuestsSaves("Saves\\CompletedQuests2.txt", quests, questsAmount);*/
+							setMapSaves("Saves\\SavedMap2.txt", map);
+						}
+						if (slotChoice == 2) {
+							setSaves("Saves\\save3.txt", player);
+							/*setQuestsSaves("Saves\\CompletedQuests3.txt", quests, questsAmount);*/
+							setMapSaves("Saves\\SavedMap3.txt", map);
+						}
+
+						inGameMenu = true;
+						isChoosen = false;
+						choice = -1;
+						coursorPosition = 0;
+					}
+
+
+					drawSaveSlots(coursorPosition);
+				}
+#pragma endregion
+				break;
+			case 2:
+#pragma region Load Saves
+				coursorPosition = 0;
+				inSaves = true;
+				while (inSaves) {
+					while (SDL_PollEvent(&ev))
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_UP:
+								if (coursorPosition != 0) coursorPosition--;
+								break;
+							case SDL_SCANCODE_DOWN:
+								if (coursorPosition != 2) coursorPosition++;
+								break;
+							case SDL_SCANCODE_RETURN:
+								slotChoice = coursorPosition;
+								inSaves = false;
+								isChoosen = true;
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								inGameMenu = true;
+								inSaves = false;
+								isChoosen = false;
+								choice = -1;
+								coursorPosition = 0;
+								break;
+							}
+						}
+
+					if (isChoosen) {
+						if (slotChoice == 0) {
+							loadSaves("Saves\\save1.txt", player);
+							/*loadQuestsSaves("Saves\\CompletedQuests1.txt", quests, questsAmount);*/
+							readMap(map, "Saves\\SavedMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
+							setMapSaves("Maps\\SavedMap.txt", map);
+						}
+						if (slotChoice == 1) {
+							loadSaves("Saves\\save2.txt", player);
+							/*loadQuestsSaves("Saves\\CompletedQuests2.txt", quests, questsAmount);*/
+							readMap(map, "Saves\\SavedMap2.txt", MAP_SIZE_X, MAP_SIZE_Y);
+							setMapSaves("Maps\\SavedMap.txt", map);
+						}
+						if (slotChoice == 2) {
+							loadSaves("Saves\\save3.txt", player);
+							/*loadQuestsSaves("Saves\\CompletedQuests3.txt", quests, questsAmount);*/
+							readMap(map, "Saves\\SavedMap3.txt", MAP_SIZE_X, MAP_SIZE_Y);
+							setMapSaves("Maps\\SavedMap.txt", map);
+						}
+
+						return;
+					}
+
+
+					drawSaveSlots(coursorPosition);
+				} 
+#pragma endregion
+				break;
+			case 3:
+				inGame = false;
+				
+				return;
+			}
+
+			drawGameMenu(coursorPosition);
+		}
 
 }
 

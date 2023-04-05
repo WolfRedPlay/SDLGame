@@ -1,7 +1,6 @@
 #pragma once
 #include "Basic.h"
-#include "Drawer.h"
-#include "Save.h"
+
 
 extern int qountOfWeapons;
 extern int qountOfArmors;
@@ -14,12 +13,9 @@ extern Potion* ALLPotionsList;
 extern Ability* ALLAbilitiesList;
 //extern QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
-extern bool inGame;
 
-void DeInit(int error);
 
-void startMenu(Player& player, char **map);
+void setSaves(const char* fn, Player player);
+void setMapSaves(const char* fn, char** map);
 
-void gameMenu(Player& player, char** map);
-
-void playerMenu(Player& player);
+void loadSaves(const char* fn, Player& player);

@@ -7,19 +7,25 @@
 
 
 extern SDL_Renderer* ren;
+extern int window_width;
+extern int window_height;
 
-#define UNIT_SIZE_X 40 //WINDOW_WIDTH/48
-#define UNIT_SIZE_Y 54 //WINDOW_HEIGHT/20
+#define UNIT_SIZE_X (window_width/48) //40
+#define UNIT_SIZE_Y (window_height/20) //54
 
 
-#define WINDOW_WIDTH 1920 
-#define WINDOW_HEIGHT 1080
 
 #define MAP_SIZE_X 401
 #define MAP_SIZE_Y 100
 
-#define SCREEN_SIZE_X WINDOW_WIDTH/UNIT_SIZE_X
-#define SCREEN_SIZE_Y WINDOW_HEIGHT/UNIT_SIZE_Y
+#define SHOP_MAP_SIZE_X 27
+#define SHOP_MAP_SIZE_Y 11
+
+#define DUNGE_MAP_SIZE_X 181
+#define DUNGE_MAP_SIZE_Y 60
+
+#define SCREEN_SIZE_X window_width/UNIT_SIZE_X
+#define SCREEN_SIZE_Y window_height/UNIT_SIZE_Y
 
 
 #define MAX_NAME_LENGTH 15
