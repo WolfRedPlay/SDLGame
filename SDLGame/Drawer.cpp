@@ -85,6 +85,18 @@ void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY) {
 	SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 	SDL_RenderClear(ren);
 
+	SDL_Rect npcFrame = {0,0,0,0};
+
+
+	SDL_Texture* woodWall = generateTextureFromPNG("Textures\\wooden_wall.png");
+	SDL_Texture* grass = generateTextureFromPNG("Textures\\grass.png");
+	SDL_Texture* wood = generateTextureFromPNG("Textures\\wood.png");
+	SDL_Texture* stoneWall = generateTextureFromPNG("Textures\\Stonewall.png");
+	SDL_Texture* key = generateTextureFromPNG("Textures\\Key.png");
+	SDL_Texture* door = generateTextureFromPNG("Textures\\door.png");
+	SDL_Texture* chest = generateTextureFromPNG("Textures\\chest.png");
+	SDL_Texture* goldChest = generateTextureFromPNG("Textures\\Golden_chest.png");
+	SDL_Texture* npc = generateTextureFromPNG("Textures\\NPC.png");
 
 
 	SDL_Rect unit = { 0,0, UNIT_SIZE_X, UNIT_SIZE_Y };
@@ -110,17 +122,19 @@ void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY) {
 	for (int i = 0; i < y; i++) {
 
 		for (int j = 0; j < x; j++) {
+			npcFrame.x = 0;
+			npcFrame.y = 0;
 			if (uppperBorder + i >= mapSizeY || leftBorder + j >= mapSizeX) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else if (map[uppperBorder + i][leftBorder + j] == '\n') SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else
 			{
-				if (map[uppperBorder + i][leftBorder + j] == WALL) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
-				if (map[uppperBorder + i][leftBorder + j] == ' ') SDL_SetRenderDrawColor(ren, 181, 230, 29, 255);
-				if (map[uppperBorder + i][leftBorder + j] == KEY) SDL_SetRenderDrawColor(ren, 255, 242, 0, 255);
-				if (map[uppperBorder + i][leftBorder + j] == DOOR) SDL_SetRenderDrawColor(ren, 185, 122, 87, 255);
+				if (map[uppperBorder + i][leftBorder + j] == EMPTY) {
+					unit.x += unit.w;
+					continue;
+				}
+
 				if (map[uppperBorder + i][leftBorder + j] == NPC_QUEST) SDL_SetRenderDrawColor(ren, 237, 28, 36, 255);
-				if (map[uppperBorder + i][leftBorder + j] == NPC) SDL_SetRenderDrawColor(ren, 255, 128, 128, 255);
-				if (map[uppperBorder + i][leftBorder + j] == CHEST) SDL_SetRenderDrawColor(ren, 255, 128, 0, 255);
+
 				if (map[uppperBorder + i][leftBorder + j] == SHOP) SDL_SetRenderDrawColor(ren, 128, 128, 0, 255);
 				if (map[uppperBorder + i][leftBorder + j] == INKEEPER) SDL_SetRenderDrawColor(ren, 128, 128, 128, 255);
 				if (map[uppperBorder + i][leftBorder + j] == WEAPON_SELLER) SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
@@ -129,25 +143,90 @@ void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY) {
 				if (map[uppperBorder + i][leftBorder + j] == ABILITIES_SELLER) SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 
 			}
+			if (map[uppperBorder + i][leftBorder + j] == WOODEN_WALL) {
+				SDL_RenderCopy(ren, woodWall, NULL, &unit);
+			}
+			else
+				if (map[uppperBorder + i][leftBorder + j] == CHEST) {
+					SDL_RenderCopy(ren, chest, NULL, &unit);
+				}
+				else
+					if (map[uppperBorder + i][leftBorder + j] == QUEST_CHEST) {
+						SDL_RenderCopy(ren, goldChest, NULL, &unit);
+					}
+					else
+						if (map[uppperBorder + i][leftBorder + j] == DOOR) {
+							if (map[uppperBorder + i - 1][leftBorder + j] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+							if (map[uppperBorder + i - 1][leftBorder + j] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+							SDL_RenderCopy(ren, door, NULL, &unit);
+						}
+						else
+							if (map[uppperBorder + i][leftBorder + j] == NPC) {
+								if (map[uppperBorder + i][leftBorder + j-1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+								if (map[uppperBorder + i][leftBorder + j-1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+								npcFrame.w = 40;
+								npcFrame.h = 70;
+								npcFrame.x += npcFrame.w;
+								int different = npcFrame.h - unit.h;
+								unit.y -= different;
+								unit.h = npcFrame.h;
+								SDL_RenderCopy(ren, npc, &npcFrame, &unit);
+								unit.h = UNIT_SIZE_Y;
+								unit.y += different;
+							}
+							else
+								if (map[uppperBorder + i][leftBorder + j] == KEY) {
+									if (map[uppperBorder + i][leftBorder + j - 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+									if (map[uppperBorder + i][leftBorder + j - 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
 
-			SDL_RenderFillRect(ren, &unit);
+									SDL_RenderCopy(ren, key, NULL, &unit);
+								}
+								else
+									if (map[uppperBorder + i][leftBorder + j] == GRASS) {
+										SDL_RenderCopy(ren, grass, NULL, &unit);
+									}
+									else
+										if (map[uppperBorder + i][leftBorder + j] == WOOD) {
+											SDL_RenderCopy(ren, wood, NULL, &unit);
+										}
+										else
+											if (map[uppperBorder + i][leftBorder + j] == STONE_WALL) {
+												SDL_RenderCopy(ren, stoneWall, NULL, &unit);
+											}
+											else
+												SDL_RenderFillRect(ren, &unit);
 			unit.x += unit.w;
 		}
 		unit.x = 0;
 		unit.y += unit.h;
 	}
+	SDL_DestroyTexture(woodWall);
+	SDL_DestroyTexture(grass);
+	SDL_DestroyTexture(wood);
+	SDL_DestroyTexture(stoneWall);
+	SDL_DestroyTexture(key);
+	SDL_DestroyTexture(door);
+	SDL_DestroyTexture(chest);
+	SDL_DestroyTexture(goldChest);
+	SDL_DestroyTexture(npc);
 
 }
 void drawPlayer(Coordinates playerPosition) {
 
 	playerPosition = fromMapCoordinatesToScreen(playerPosition);
 
-
+	SDL_Rect playerFrame = { 0,0,0,0 };
 	SDL_FRect playerUnit = { playerPosition.X * UNIT_SIZE_X, playerPosition.Y * UNIT_SIZE_Y, UNIT_SIZE_X, UNIT_SIZE_Y };
+	SDL_Texture* player = generateTextureFromPNG("Textures\\Player.png");
 
-	SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+	playerFrame.w = 54;
+	playerFrame.h = 70;
+	playerUnit.h = 60;
+	playerUnit.y -= playerFrame.h - playerUnit.h + 10;
 
-	SDL_RenderFillRectF(ren, &playerUnit);
+	SDL_RenderCopyF(ren, player, &playerFrame, &playerUnit);
+
+	SDL_DestroyTexture(player);
 
 }
 

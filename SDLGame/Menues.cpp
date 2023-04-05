@@ -263,7 +263,7 @@ bool createHeroesMenu(Player& player) {
 	player.keys = 0;
 	player.money = 100;
 	player.currentLocation = 0;
-	player.position = { 3.f, 1.f };
+	player.position = { 3.f, 2.f };
 	return true;
 }
 

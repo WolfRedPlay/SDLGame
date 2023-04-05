@@ -10,8 +10,8 @@ extern SDL_Renderer* ren;
 extern int window_width;
 extern int window_height;
 
-#define UNIT_SIZE_X (window_width/48) //40
-#define UNIT_SIZE_Y (window_height/20) //54
+#define UNIT_SIZE_X 40 //(window_width/48) //40
+#define UNIT_SIZE_Y 40 //(window_height/20) //54
 
 
 
@@ -42,7 +42,11 @@ extern int window_height;
 #define HEALER 93
 
 enum Symbols {
-	WALL = '#',
+	WOODEN_WALL = '#',
+	STONE_WALL = '\[',
+	EMPTY = ' ',
+	GRASS = '.',
+	WOOD = ',',
 	SHOP = 'S',
 	DUNGE = '0',  //
 	LOCATION = 'O',//
@@ -58,7 +62,7 @@ enum Symbols {
 	KEY = 'K',
 	DOOR = 'D',
 	CHEST = 'C',
-	QUEST_CHEST = 'G',//
+	QUEST_CHEST = 'G',
 	PUZZLE_MAN = '?'//
 
 };

@@ -6,8 +6,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 	int tempMoveY2, tempMoveX2;
 	float tempY, tempX;
 
-	tempX = (float(nearbyint((player.position.X + move.X) * 1000))) / 1000;
-	tempY = (float(nearbyint((player.position.Y + move.Y) * 1000))) / 1000;
+	tempX = (float(nearbyint((player.position.X + move.X) * 100))) / 100;
+	tempY = (float(nearbyint((player.position.Y + move.Y) * 100))) / 100;
 
 
 
@@ -38,13 +38,14 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY1][tempMoveX2] == DOOR) {
 			if (player.keys >= 1) {
-				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = ' ';
-				if (map[tempMoveY1][tempMoveX2] == DOOR) map[tempMoveY1][tempMoveX2] = ' ';
+				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = map[tempMoveY1 - 1][tempMoveX1];
+				if (map[tempMoveY1][tempMoveX2] == DOOR) map[tempMoveY1][tempMoveX2] = map[tempMoveY1 - 1][tempMoveX2];
 				player.keys--;
 			}
 			else return false;
 		}
-		if (map[tempMoveY1][tempMoveX1] == WALL || map[tempMoveY1][tempMoveX2] == WALL) return false;
+		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY1][tempMoveX2] == WOODEN_WALL) return false;
+		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY1][tempMoveX2] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY1][tempMoveX2] == WEAPON_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == POTION_SELLER || map[tempMoveY1][tempMoveX2] == POTION_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == ARMOR_SELLER || map[tempMoveY1][tempMoveX2] == ARMOR_SELLER) return false;
@@ -57,8 +58,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		if (map[tempMoveY1][tempMoveX1] == BANDITS_LEADER || map[tempMoveY1][tempMoveX2] == BANDITS_LEADER) return false;
 		if (map[tempMoveY1][tempMoveX1] == PUZZLE_MAN || map[tempMoveY1][tempMoveX2] == PUZZLE_MAN) return false;
 		if (map[tempMoveY1][tempMoveX1] == KEY || map[tempMoveY1][tempMoveX2] == KEY) {
-			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY1][tempMoveX1] = ' ';
-			if (map[tempMoveY1][tempMoveX2] == KEY) map[tempMoveY1][tempMoveX2] = ' ';
+			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY1][tempMoveX1] = map[tempMoveY1][tempMoveX1 - 1];
+			if (map[tempMoveY1][tempMoveX2] == KEY) map[tempMoveY1][tempMoveX2] = map[tempMoveY1][tempMoveX2 - 1];
 			player.keys++;
 		}
 	}
@@ -77,13 +78,14 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY2][tempMoveX1] == DOOR) {
 			if (player.keys >= 1) {
-				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = ' ';
-				if (map[tempMoveY2][tempMoveX1] == DOOR) map[tempMoveY2][tempMoveX1] = ' ';
+				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = map[tempMoveY1 - 1][tempMoveX1];
+				if (map[tempMoveY2][tempMoveX1] == DOOR) map[tempMoveY2][tempMoveX1] = map[tempMoveY2 - 1][tempMoveX1];
 				player.keys--;
 			}
 			else return false;
 		}
-		if (map[tempMoveY1][tempMoveX1] == WALL || map[tempMoveY2][tempMoveX1] == WALL) return false;
+		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY2][tempMoveX1] == WOODEN_WALL) return false;
+		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY2][tempMoveX1] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY2][tempMoveX1] == WEAPON_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == POTION_SELLER || map[tempMoveY2][tempMoveX1] == POTION_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == ARMOR_SELLER || map[tempMoveY2][tempMoveX1] == ARMOR_SELLER) return false;
@@ -96,8 +98,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		if (map[tempMoveY1][tempMoveX1] == BANDITS_LEADER || map[tempMoveY2][tempMoveX1] == BANDITS_LEADER) return false;
 		if (map[tempMoveY1][tempMoveX1] == PUZZLE_MAN || map[tempMoveY2][tempMoveX1] == PUZZLE_MAN) return false;
 		if (map[tempMoveY1][tempMoveX1] == KEY || map[tempMoveY2][tempMoveX1] == KEY) {
-			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY2][tempMoveX1] = ' ';
-			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY2][tempMoveX1] = ' ';
+			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY2][tempMoveX1] = map[tempMoveY2][tempMoveX1 - 1];
+			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY2][tempMoveX1] = map[tempMoveY2][tempMoveX1 - 1];
 			player.keys++;
 		}
 	}
@@ -119,7 +121,7 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 
 
 
-	player.position.X = (float(nearbyint((player.position.X + move.X) * 1000))) / 1000;
-	player.position.Y = (float(nearbyint((player.position.Y + move.Y) * 1000))) / 1000;
+	player.position.X = (float(nearbyint((player.position.X + move.X) * 100))) / 100;
+	player.position.Y = (float(nearbyint((player.position.Y + move.Y) * 100))) / 100;
 	return true;
 }

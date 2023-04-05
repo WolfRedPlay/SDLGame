@@ -116,7 +116,7 @@ int main(int argc, char* argv[]) {
 		globalMapReaded = false;
 		startMenu(player, map);
 		while (inGame) {
-			
+
 			while (SDL_PollEvent(&ev)) {
 				switch (ev.type) {
 				case SDL_QUIT:
@@ -128,6 +128,10 @@ int main(int argc, char* argv[]) {
 						gameMenu(player, map);
 						break;
 					case SDL_SCANCODE_TAB:
+						playerMenu(player);
+						break;
+
+					case SDL_SCANCODE_E:
 						playerMenu(player);
 						break;
 
@@ -143,7 +147,11 @@ int main(int argc, char* argv[]) {
 			newtime = SDL_GetTicks();
 			dt = newtime - lasttime;
 			lasttime = newtime;
-
+			
+			
+			
+			
+			
 			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, -SPEED * dt / 1000 });
 			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0,  SPEED * dt / 1000 });
 			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
@@ -179,8 +187,11 @@ int main(int argc, char* argv[]) {
 				}
 			}
 
-			drawScreen(map, player.position, mapSizeX, mapSizeY);
-			drawPlayer(player.position);
+
+				drawScreen(map, player.position, mapSizeX, mapSizeY);
+				drawPlayer(player.position);
+
+//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
 
 			SDL_RenderPresent(ren);
 		}
@@ -189,5 +200,4 @@ int main(int argc, char* argv[]) {
 	DeInit(0);
 	return 0;
 }
-//printf_s("NAME: %s\n", player.team[i].name);
 
