@@ -1,7 +1,7 @@
 #include "Mover.h"
 
 bool movePlayer(char** map, Player& player, Coordinates move) {
-	
+
 	int tempMoveY1, tempMoveX1;
 	int tempMoveY2, tempMoveX2;
 	float tempY, tempX;
@@ -22,13 +22,24 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		tempMoveY1 = int(floorf(tempY));
 		tempMoveY2 = int(ceilf(tempY));
 	}
-	if (move.Y > 0) tempMoveY1 = int(ceilf(tempY));	
+	if (move.Y > 0) tempMoveY1 = int(ceilf(tempY));
 	if (move.X == 0)
 	{
+		if (map[tempMoveY1][tempMoveX1] == SHOP || map[tempMoveY1][tempMoveX2] == SHOP && inGlobal) {
+
+			/*if (player.position.Y == 5 && player.position.X == 47) shopStage = 1;
+			if (player.position.Y == 2 && player.position.X == 196) shopStage = 2;*/
+
+			inShop = true;
+			inGlobal = false;
+			temp = player.position;
+			player.position = { 12, 9 };
+			return true;
+		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY1][tempMoveX2] == DOOR) {
 			if (player.keys >= 1) {
-				if(map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1]= ' ';
-				if(map[tempMoveY1][tempMoveX2] == DOOR) map[tempMoveY1][tempMoveX2]= ' ';
+				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = ' ';
+				if (map[tempMoveY1][tempMoveX2] == DOOR) map[tempMoveY1][tempMoveX2] = ' ';
 				player.keys--;
 			}
 			else return false;
@@ -53,6 +64,17 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 	}
 	if (move.Y == 0)
 	{
+		if (map[tempMoveY1][tempMoveX1] == SHOP || map[tempMoveY2][tempMoveX1] == SHOP && inGlobal) {
+
+			/*if (player.position.Y == 5 && player.position.X == 47) shopStage = 1;
+			if (player.position.Y == 2 && player.position.X == 196) shopStage = 2;*/
+
+			inShop = true;
+			inGlobal = false;
+			temp = player.position;
+			player.position = { 12, 9 };
+			return true;
+		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY2][tempMoveX1] == DOOR) {
 			if (player.keys >= 1) {
 				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = ' ';
@@ -79,7 +101,24 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			player.keys++;
 		}
 	}
-	
+
+	if (inShop) {
+		if (player.position.Y > 9) {
+			inShop = false;
+			inDunge = false;
+			inGlobal = true;
+			player.position.X = temp.X - 1;
+			player.position.Y = temp.Y;
+			temp = { 0,0 };
+			shopStage = 0;
+			dungeType = 0;
+
+		}
+
+	}
+
+
+
 	player.position.X = (float(nearbyint((player.position.X + move.X) * 1000))) / 1000;
 	player.position.Y = (float(nearbyint((player.position.Y + move.Y) * 1000))) / 1000;
 	return true;

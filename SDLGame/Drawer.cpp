@@ -80,12 +80,18 @@ SDL_Texture* generateTextureFromText(const char* str, TTF_Font* font, SDL_Rect& 
 
 }
 
-void drawScreen(char** map, Coordinates playerPos) {
+void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY) {
+
+	SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
+	SDL_RenderClear(ren);
+
 
 
 	SDL_Rect unit = { 0,0, UNIT_SIZE_X, UNIT_SIZE_Y };
 
 	int leftBorder = 0, uppperBorder = 0;
+
+	int x = 0, y = 0;
 
 	while (playerPos.X >= (window_width - 1) / UNIT_SIZE_X) {
 		playerPos.X -= (window_width - 1) / UNIT_SIZE_X;
@@ -95,23 +101,32 @@ void drawScreen(char** map, Coordinates playerPos) {
 		playerPos.Y -= window_height / UNIT_SIZE_Y;
 		uppperBorder += window_height / UNIT_SIZE_Y;
 	}
+	if (window_height / UNIT_SIZE_Y > mapSizeY) y = mapSizeY;
+	else y = window_height / UNIT_SIZE_Y;
+	if (window_width / UNIT_SIZE_X > mapSizeX) x = mapSizeX;
+	else x = window_width / UNIT_SIZE_X;
 
-	for (int i = 0; i < window_height / UNIT_SIZE_Y; i++) {
 
-		for (int j = 0; j < window_width / UNIT_SIZE_X; j++) {
-			if (uppperBorder + i >= MAP_SIZE_Y || leftBorder + j >= MAP_SIZE_X) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
+	for (int i = 0; i < y; i++) {
+
+		for (int j = 0; j < x; j++) {
+			if (uppperBorder + i >= mapSizeY || leftBorder + j >= mapSizeX) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else if (map[uppperBorder + i][leftBorder + j] == '\n') SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 			else
 			{
-				if (map[uppperBorder + i][leftBorder + j] == '#') SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
+				if (map[uppperBorder + i][leftBorder + j] == WALL) SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 				if (map[uppperBorder + i][leftBorder + j] == ' ') SDL_SetRenderDrawColor(ren, 181, 230, 29, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'K') SDL_SetRenderDrawColor(ren, 255, 242, 0, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'D') SDL_SetRenderDrawColor(ren, 185, 122, 87, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'Q') SDL_SetRenderDrawColor(ren, 237, 28, 36, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'N') SDL_SetRenderDrawColor(ren, 255, 128, 128, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'C') SDL_SetRenderDrawColor(ren, 255, 128, 0, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'S') SDL_SetRenderDrawColor(ren, 128, 128, 0, 255);
-				if (map[uppperBorder + i][leftBorder + j] == 'I') SDL_SetRenderDrawColor(ren, 128, 128, 128, 255);
+				if (map[uppperBorder + i][leftBorder + j] == KEY) SDL_SetRenderDrawColor(ren, 255, 242, 0, 255);
+				if (map[uppperBorder + i][leftBorder + j] == DOOR) SDL_SetRenderDrawColor(ren, 185, 122, 87, 255);
+				if (map[uppperBorder + i][leftBorder + j] == NPC_QUEST) SDL_SetRenderDrawColor(ren, 237, 28, 36, 255);
+				if (map[uppperBorder + i][leftBorder + j] == NPC) SDL_SetRenderDrawColor(ren, 255, 128, 128, 255);
+				if (map[uppperBorder + i][leftBorder + j] == CHEST) SDL_SetRenderDrawColor(ren, 255, 128, 0, 255);
+				if (map[uppperBorder + i][leftBorder + j] == SHOP) SDL_SetRenderDrawColor(ren, 128, 128, 0, 255);
+				if (map[uppperBorder + i][leftBorder + j] == INKEEPER) SDL_SetRenderDrawColor(ren, 128, 128, 128, 255);
+				if (map[uppperBorder + i][leftBorder + j] == WEAPON_SELLER) SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+				if (map[uppperBorder + i][leftBorder + j] == ARMOR_SELLER) SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+				if (map[uppperBorder + i][leftBorder + j] == POTION_SELLER) SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
+				if (map[uppperBorder + i][leftBorder + j] == ABILITIES_SELLER) SDL_SetRenderDrawColor(ren, 0, 0, 0, 255);
 
 			}
 
@@ -237,14 +252,14 @@ void drawSaveSlots(int coursorPosition) {
 	ttfRect.y += 80;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	if (coursorPosition == 1)texture = generateTextureFromText(">Save slot 2", choicesFont, ttfRect, { 0,0,0,255 });
 	else texture = generateTextureFromText("Save slot 2", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.x = window.x + 150;
 	ttfRect.y += 40;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	if (coursorPosition == 2)texture = generateTextureFromText(">Save slot 3", choicesFont, ttfRect, { 0,0,0,255 });
 	else texture = generateTextureFromText("Save slot 3", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.x = window.x + 150;
@@ -669,7 +684,7 @@ void drawHeroesStats(Player& player) {
 		ttfRect.y = 760;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
-		if (player.team[i].status == DEAD) 
+		if (player.team[i].status == DEAD)
 		{
 			sprintf_s(heroStats, "DEAD");
 			texture = generateTextureFromText(heroStats, choicesFont, ttfRect, { 0,0,0,255 });
@@ -1057,19 +1072,19 @@ void drawGameMenu(int coursorPosition) {
 	ttfRect.y += 150;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	if (coursorPosition == 1)texture = generateTextureFromText(">Save game", choicesFont, ttfRect, { 0,0,0,255 });
 	else texture = generateTextureFromText("Save game", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.y += 50;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	if (coursorPosition == 2)texture = generateTextureFromText(">Load game", choicesFont, ttfRect, { 0,0,0,255 });
 	else texture = generateTextureFromText("Load game", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.y += 50;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
-	
+
 	if (coursorPosition == 3)texture = generateTextureFromText(">Start manu", choicesFont, ttfRect, { 0,0,0,255 });
 	else texture = generateTextureFromText("Start manu", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.y += 50;

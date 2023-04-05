@@ -44,8 +44,8 @@ extern int window_height;
 enum Symbols {
 	WALL = '#',
 	SHOP = 'S',
-	DUNGE = '0',
-	LOCATION = 'O',
+	DUNGE = '0',  //
+	LOCATION = 'O',//
 	WEAPON_SELLER = 'W',
 	ARMOR_SELLER = 'A',
 	POTION_SELLER = 'P',
@@ -53,13 +53,13 @@ enum Symbols {
 	NPC = 'N',
 	NPC_QUEST = 'Q',
 	INKEEPER = 'I',
-	DUNGE_BOSS = 'B',
-	BANDITS_LEADER = 'L',
+	DUNGE_BOSS = 'B',//
+	BANDITS_LEADER = 'L',//
 	KEY = 'K',
 	DOOR = 'D',
 	CHEST = 'C',
-	QUEST_CHEST = 'G',
-	PUZZLE_MAN = '?'
+	QUEST_CHEST = 'G',//
+	PUZZLE_MAN = '?'//
 
 };
 

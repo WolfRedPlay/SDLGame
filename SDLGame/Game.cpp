@@ -17,12 +17,16 @@ int window_height = 1080;
 
 bool inGame = false;
 
+int mapSizeX, mapSizeY;
+
 bool inShop, inDunge, inGlobal,
 shopMapReaded, dungeMapReaded, globalMapReaded;
 
 int dangeType;
 
+Coordinates temp = { 0.f,0.f };
 
+int shopStage = 0, dungeType = 0;
 
 int qountOfWeapons;
 int qountOfArmors;
@@ -77,6 +81,9 @@ char** createMapArray(int size_x, int size_y) {
 	char** map = (char**)malloc(size_y * sizeof(char*));
 	for (int i = 0; i < size_y; i++)
 		map[i] = (char*)malloc(size_x * sizeof(char));
+
+	mapSizeX = size_x;
+	mapSizeY = size_y;
 	return map;
 }
 
@@ -109,34 +116,7 @@ int main(int argc, char* argv[]) {
 		globalMapReaded = false;
 		startMenu(player, map);
 		while (inGame) {
-			if (inShop) {
-				if (!shopMapReaded) {
-					map = createMapArray(SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
-					readMap(map, "Maps\\Shop.txt", SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
-					globalMapReaded = false;
-					dungeMapReaded = false;
-					shopMapReaded = true;
-				}
-			}
-			else if (inDunge) {
-				if (!dungeMapReaded) {
-					map = createMapArray(DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
-					if (dangeType == 1)readMap(map, "Maps\\Dunge1.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
-					if (dangeType == 2)readMap(map, "Maps\\Dunge2.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
-					globalMapReaded = false;
-					shopMapReaded = false;
-					dungeMapReaded = true;
-				}
-			}
-			else if (inGlobal) {
-				if (!globalMapReaded) {
-					map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
-					readMap(map, "Maps\\SavedMap.txt", MAP_SIZE_X, MAP_SIZE_Y);
-					shopMapReaded = false;
-					dungeMapReaded = false;
-					globalMapReaded = true;
-				}
-			}
+			
 			while (SDL_PollEvent(&ev)) {
 				switch (ev.type) {
 				case SDL_QUIT:
@@ -170,7 +150,36 @@ int main(int argc, char* argv[]) {
 			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
 
 
-			drawScreen(map, player.position);
+			if (inShop) {
+				if (!shopMapReaded) {
+					map = createMapArray(SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
+					readMap(map, "Maps\\Shop.txt", SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
+					globalMapReaded = false;
+					dungeMapReaded = false;
+					shopMapReaded = true;
+				}
+			}
+			else if (inDunge) {
+				if (!dungeMapReaded) {
+					map = createMapArray(DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					if (dangeType == 1)readMap(map, "Maps\\Dunge1.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					if (dangeType == 2)readMap(map, "Maps\\Dunge2.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					globalMapReaded = false;
+					shopMapReaded = false;
+					dungeMapReaded = true;
+				}
+			}
+			else if (inGlobal) {
+				if (!globalMapReaded) {
+					map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
+					readMap(map, "Maps\\SavedMap.txt", MAP_SIZE_X, MAP_SIZE_Y);
+					shopMapReaded = false;
+					dungeMapReaded = false;
+					globalMapReaded = true;
+				}
+			}
+
+			drawScreen(map, player.position, mapSizeX, mapSizeY);
 			drawPlayer(player.position);
 
 			SDL_RenderPresent(ren);

@@ -8,7 +8,7 @@ extern int window_width;
 extern int window_height;
 
 
-void drawScreen(char** map, Coordinates playerPos);
+void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY);
 void drawPlayer(Coordinates playerPosition);
 
 void drawHeroChoice(Player player, int coursorPosition);
