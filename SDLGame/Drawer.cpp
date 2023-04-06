@@ -1243,3 +1243,115 @@ void drawGameMenu(int coursorPosition) {
 	TTF_CloseFont(headerFont);
 	TTF_CloseFont(choicesFont);
 }
+
+
+void drawSeller(int typeOfSeller, int coursorPosition) {
+	SDL_Rect window = {0,0,UNIT_SIZE_X * 20,UNIT_SIZE_Y * 20 };
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	SDL_Texture* texture;
+	SDL_Rect ttfRect;
+
+
+	window.x = UNIT_SIZE_X * 2;
+	window.y = window_height - window.h - UNIT_SIZE_Y * 2;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	if (coursorPosition == 0)texture = generateTextureFromText(">Buy", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Buy", choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + UNIT_SIZE_X * 3;
+	ttfRect.y = 900;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+		
+	if (typeOfSeller != 4)
+	{
+		if (coursorPosition == 1)texture = generateTextureFromText(">Sell", choicesFont, ttfRect, { 0,0,0,255 });
+		else texture = generateTextureFromText("Sell", choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + UNIT_SIZE_X * 3;
+		ttfRect.y += 40;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+	else
+	{
+		if (coursorPosition == 1)texture = generateTextureFromText(">Forget", choicesFont, ttfRect, { 0,0,0,255 });
+		else texture = generateTextureFromText("Forget", choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + UNIT_SIZE_X * 3;
+		ttfRect.y += 40;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+
+
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(choicesFont);
+
+}
+
+void drawSellerChoice(SellerOfWeapons seller, int coursorPosition) {
+
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Rect itemRect = { 0,0,130,130 };
+	SDL_Texture* texture;
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+
+	texture = generateTextureFromText("WEAPONS", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+
+	char textureWay[100], weaponName[22], weaponDMG[10];
+
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++) {
+		sprintf_s(textureWay, "Textures\\%d.png", seller.weapons[i].ID);
+		if (seller.weapons[i].ID != 0) texture = generateTextureFromPNG(textureWay);
+
+		if (i <= (MAX_PLAYER_INVENTORY_SIZE / 2) - 1)
+		{
+			itemRect.x = window.x + 200 + itemRect.w * i;
+			itemRect.y = window.y + 100;
+		}
+		else {
+			itemRect.x = window.x + 200 + itemRect.w * (i % 5);
+			itemRect.y = window.y + 100 + itemRect.h;
+		}
+		if (i == coursorPosition) SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+		else SDL_SetRenderDrawColor(ren, 0, 200, 192, 255);
+		SDL_RenderDrawRect(ren, &itemRect);
+		SDL_RenderCopy(ren, texture, NULL, &itemRect);
+		if (seller.weapons[i].ID != 0) SDL_DestroyTexture(texture);
+	}
+
+	if (seller.weapons[coursorPosition].ID != 0) {
+		sprintf_s(weaponName, "NAME: %s", seller.weapons[coursorPosition].name);
+		sprintf_s(weaponDMG, "DMG: %d", seller.weapons[coursorPosition].damage);
+		texture = generateTextureFromText(weaponName, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 780;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		texture = generateTextureFromText(weaponDMG, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 830;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}

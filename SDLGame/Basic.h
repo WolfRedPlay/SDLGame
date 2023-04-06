@@ -173,6 +173,27 @@ struct Player {
 	int currentLocation;
 };
 
+struct SellerOfWeapons {
+
+	Weapon weapons[MAX_INVENTORY_SIZE];
+
+};
+struct SellerOfArmors {
+
+	Armor armors[MAX_INVENTORY_SIZE];
+
+};
+struct SellerOfPotions {
+
+	Potion potions[MAX_INVENTORY_SIZE];
+
+};
+struct SellerOfAbilities {
+
+	Ability abilities[MAX_ABILITIES];
+
+};
+
 int random(int min, int max);
 
 SDL_Texture* generateTextureFromPNG(const char* file);

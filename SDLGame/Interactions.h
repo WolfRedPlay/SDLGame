@@ -1,6 +1,7 @@
 #pragma once
 #include "Basic.h"
 #include "Drawer.h"
+#include "Shop.h"
 
 extern int qountOfWeapons;
 extern int qountOfArmors;

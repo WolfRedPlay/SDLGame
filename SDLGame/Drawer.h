@@ -35,3 +35,12 @@ void drawPlayerWeapons(Player& player, int coursorPosition);
 void drawPlayerArmors(Player& player, int coursorPosition);
 void drawPlayerPotions(Player& player, int coursorPosition);
 void drawHeroAbilities(Hero& hero, int coursorPosition);
+
+
+
+void drawSeller(int typeOfSeller, int coursorPosition);
+
+void drawSellerChoice(SellerOfWeapons seller, int coursorPosition);
+void drawSellerChoice(SellerOfArmors seller, int coursorPosition);
+void drawSellerChoice(SellerOfPotions seller, int coursorPosition);
+void drawSellerChoice(SellerOfAbilities seller, int coursorPosition);
