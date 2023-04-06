@@ -13,14 +13,14 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 
 	if (move.X < 0) tempMoveX1 = int(floorf(tempX));
 	if (move.X == 0) {
-		tempMoveX1 = int(floorf(tempX));
-		tempMoveX2 = int(ceilf(tempX));
+		tempMoveX1 = int(floorf(tempX + 0.2f));
+		tempMoveX2 = int(ceilf(tempX - 0.2f));
 	}
 	if (move.X > 0) tempMoveX1 = int(ceilf(tempX));
 	if (move.Y < 0) tempMoveY1 = int(floorf(tempY));
 	if (move.Y == 0) {
-		tempMoveY1 = int(floorf(tempY));
-		tempMoveY2 = int(ceilf(tempY));
+		tempMoveY1 = int(floorf(tempY + 0.2f));
+		tempMoveY2 = int(ceilf(tempY - 0.2f));
 	}
 	if (move.Y > 0) tempMoveY1 = int(ceilf(tempY));
 	if (move.X == 0)
