@@ -179,6 +179,8 @@ SDL_Texture* generateTextureFromPNG(const char* file);
 
 void readMap(char** map, const char* fileName, int size_x, int size_y);
 
+void deleteObject(char** map, int x, int y);
+
 void clearWeaponInventory(Weapon* weapons);
 void clearArmorInventory(Armor* armors);
 void clearPotionInventory(Potion* potions);

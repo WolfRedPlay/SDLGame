@@ -30,6 +30,21 @@ void readMap(char** map, const char* fileName, int size_x, int size_y) {
 	fclose(file);
 }
 
+void deleteObject(char** map, int x, int y) {
+	int grassCount = 0;
+	int woodCount = 0;
+
+	for (int i = -1; i <= 1; i++) {
+		for (int j = -1; j <= 1; j++) {
+			if (map[y + i][x + j] == GRASS) grassCount++;
+			if (map[y + i][x + j] == WOOD) woodCount++;
+		}
+	}
+	if (grassCount > woodCount) map[y][x] = GRASS;
+	if (woodCount > grassCount) map[y][x] = WOOD;
+
+
+}
 
 Weapon createEmptyWeapon() {
 	Weapon empty;

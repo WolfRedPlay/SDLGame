@@ -38,8 +38,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY1][tempMoveX2] == DOOR) {
 			if (player.keys >= 1) {
-				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = map[tempMoveY1 - 1][tempMoveX1];
-				if (map[tempMoveY1][tempMoveX2] == DOOR) map[tempMoveY1][tempMoveX2] = map[tempMoveY1 - 1][tempMoveX2];
+				if (map[tempMoveY1][tempMoveX1] == DOOR) deleteObject(map, tempMoveX1, tempMoveY1);
+				if (map[tempMoveY1][tempMoveX2] == DOOR) deleteObject(map, tempMoveX2, tempMoveY1);
 				player.keys--;
 			}
 			else return false;
@@ -58,8 +58,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		if (map[tempMoveY1][tempMoveX1] == BANDITS_LEADER || map[tempMoveY1][tempMoveX2] == BANDITS_LEADER) return false;
 		if (map[tempMoveY1][tempMoveX1] == PUZZLE_MAN || map[tempMoveY1][tempMoveX2] == PUZZLE_MAN) return false;
 		if (map[tempMoveY1][tempMoveX1] == KEY || map[tempMoveY1][tempMoveX2] == KEY) {
-			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY1][tempMoveX1] = map[tempMoveY1][tempMoveX1 - 1];
-			if (map[tempMoveY1][tempMoveX2] == KEY) map[tempMoveY1][tempMoveX2] = map[tempMoveY1][tempMoveX2 - 1];
+			if (map[tempMoveY1][tempMoveX1] == KEY) deleteObject(map, tempMoveX1, tempMoveY1);
+			if (map[tempMoveY1][tempMoveX2] == KEY) deleteObject(map, tempMoveX2, tempMoveY1);
 			player.keys++;
 		}
 	}
@@ -78,8 +78,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY2][tempMoveX1] == DOOR) {
 			if (player.keys >= 1) {
-				if (map[tempMoveY1][tempMoveX1] == DOOR) map[tempMoveY1][tempMoveX1] = map[tempMoveY1 - 1][tempMoveX1];
-				if (map[tempMoveY2][tempMoveX1] == DOOR) map[tempMoveY2][tempMoveX1] = map[tempMoveY2 - 1][tempMoveX1];
+				if (map[tempMoveY1][tempMoveX1] == DOOR) deleteObject(map, tempMoveX1, tempMoveY1);
+				if (map[tempMoveY2][tempMoveX1] == DOOR) deleteObject(map, tempMoveX1, tempMoveY2);
 				player.keys--;
 			}
 			else return false;
@@ -98,8 +98,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		if (map[tempMoveY1][tempMoveX1] == BANDITS_LEADER || map[tempMoveY2][tempMoveX1] == BANDITS_LEADER) return false;
 		if (map[tempMoveY1][tempMoveX1] == PUZZLE_MAN || map[tempMoveY2][tempMoveX1] == PUZZLE_MAN) return false;
 		if (map[tempMoveY1][tempMoveX1] == KEY || map[tempMoveY2][tempMoveX1] == KEY) {
-			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY2][tempMoveX1] = map[tempMoveY2][tempMoveX1 - 1];
-			if (map[tempMoveY1][tempMoveX1] == KEY) map[tempMoveY2][tempMoveX1] = map[tempMoveY2][tempMoveX1 - 1];
+			if (map[tempMoveY1][tempMoveX1] == KEY) deleteObject(map, tempMoveX1, tempMoveY1);
+			if (map[tempMoveY2][tempMoveX1] == KEY) deleteObject(map, tempMoveX1, tempMoveY2);
 			player.keys++;
 		}
 	}

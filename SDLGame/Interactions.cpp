@@ -57,8 +57,8 @@ void interact(char** map, Player& player) {
 		if (map[tempY1][tempX1] == NPC || map[tempY1][tempX2] == NPC) player.position.Y += 5;
 		if (map[tempY1][tempX1] == CHEST || map[tempY1][tempX2] == CHEST) {
 			openChest(player);
-			if (map[tempY1][tempX1] == CHEST) map[tempY1][tempX1] = map[tempY1][tempX1 + 1];
-			if (map[tempY1][tempX2] == CHEST) map[tempY1][tempX2] = map[tempY1][tempX2 + 1];
+			if (map[tempY1][tempX1] == CHEST) deleteObject(map, tempX1, tempY1);
+			if (map[tempY1][tempX2] == CHEST)  deleteObject(map, tempX2, tempY1);
 		}
 	}
 	if (player.diraction == LEFT) {
@@ -69,8 +69,8 @@ void interact(char** map, Player& player) {
 		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
 		if (map[tempY1][tempX1] == CHEST || map[tempY2][tempX1] == CHEST) {
 			openChest(player);
-			if (map[tempY1][tempX1] == CHEST) map[tempY1][tempX1] = map[tempY1][tempX1 + 1];
-			if (map[tempY2][tempX1] == CHEST) map[tempY2][tempX1] = map[tempY2][tempX1 + 1];
+			if (map[tempY1][tempX1] == CHEST) deleteObject(map, tempX1, tempY1);
+			if (map[tempY2][tempX1] == CHEST) deleteObject(map, tempX1, tempY2);
 
 		}
 
@@ -83,8 +83,8 @@ void interact(char** map, Player& player) {
 		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
 		if (map[tempY1][tempX1] == CHEST || map[tempY2][tempX1] == CHEST) {
 			openChest(player);
-			if (map[tempY1][tempX1] == CHEST) map[tempY1][tempX1] = map[tempY1][tempX1 + 1];
-			if (map[tempY2][tempX1] == CHEST) map[tempY2][tempX1] = map[tempY2][tempX1 + 1];
+			if (map[tempY1][tempX1] == CHEST) deleteObject(map, tempX1, tempY1);
+			if (map[tempY2][tempX1] == CHEST) deleteObject(map, tempX1, tempY2);
 
 		}
 
