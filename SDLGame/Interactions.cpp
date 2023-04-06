@@ -1,6 +1,48 @@
 #include "Interactions.h"
 
 
+
+
+
+void openChest(Player& player) {
+	Weapon givedWeapon;
+	Armor givedArmor;
+	Potion givedPotion;
+	givedWeapon.ID = 0;
+	givedArmor.ID = 0;
+	givedPotion.ID = 0;
+	int randomNum = 0;
+	int maxID;
+	int minID;
+	if ((rand() % (10 - 1 + 1) + 1) > 5) {
+		maxID = -100;
+		minID = -103;
+		randomNum = rand() % (maxID - minID + 1) + minID;
+		givedWeapon = findInWeaponsList(ALLWeaponsList, randomNum, qountOfWeapons);
+		addWeaponToInventory(givedWeapon, player.weapons);
+	}
+	if ((rand() % (10 - 1 + 1) + 1) > 5) {
+		maxID = -200;
+		minID = -202;
+		randomNum = rand() % (maxID - minID + 1) + minID;
+		givedArmor = findInArmorsList(ALLArmorsList, randomNum, qountOfArmors);
+		addArmorToInventory(givedArmor, player.armors);
+	}
+	if ((rand() % (10 - 1 + 1) + 1) > 5) {
+		maxID = -300;
+		minID = -305;
+		randomNum = rand() % (maxID - minID + 1) + minID;
+		givedPotion = findInPotionsList(ALLPotionsList, randomNum, qountOfPotions);
+		addPotionToInventory(givedPotion, player.potions);
+	}
+	int givedMoney = rand() % (100 - 0 + 1) + 0;
+	player.money += givedMoney;
+	drawChestOpenning(givedWeapon, givedArmor, givedPotion, givedMoney);
+}
+
+
+
+
 void interact(char** map, Player& player) {
 
 
@@ -13,7 +55,11 @@ void interact(char** map, Player& player) {
 
 		if (map[tempY1][tempX1] == NPC || map[tempY1][tempX2] == NPC) player.position.Y += 5;
 		if (map[tempY1][tempX1] == NPC || map[tempY1][tempX2] == NPC) player.position.Y += 5;
-		if (map[tempY1][tempX1] == NPC || map[tempY1][tempX2] == NPC) player.position.Y += 5;
+		if (map[tempY1][tempX1] == CHEST || map[tempY1][tempX2] == CHEST) {
+			openChest(player);
+			if (map[tempY1][tempX1] == CHEST) map[tempY1][tempX1] = map[tempY1][tempX1 + 1];
+			if (map[tempY1][tempX2] == CHEST) map[tempY1][tempX2] = map[tempY1][tempX2 + 1];
+		}
 	}
 	if (player.diraction == LEFT) {
 		tempX1 = floorf(player.position.X) - 1;
@@ -21,6 +67,12 @@ void interact(char** map, Player& player) {
 		tempY2 = ceilf(player.position.Y);
 
 		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
+		if (map[tempY1][tempX1] == CHEST || map[tempY2][tempX1] == CHEST) {
+			openChest(player);
+			if (map[tempY1][tempX1] == CHEST) map[tempY1][tempX1] = map[tempY1][tempX1 + 1];
+			if (map[tempY2][tempX1] == CHEST) map[tempY2][tempX1] = map[tempY2][tempX1 + 1];
+
+		}
 
 	}
 	if (player.diraction == RIGHT) {
@@ -29,6 +81,12 @@ void interact(char** map, Player& player) {
 		tempY2 = ceilf(player.position.Y);
 
 		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
+		if (map[tempY1][tempX1] == CHEST || map[tempY2][tempX1] == CHEST) {
+			openChest(player);
+			if (map[tempY1][tempX1] == CHEST) map[tempY1][tempX1] = map[tempY1][tempX1 + 1];
+			if (map[tempY2][tempX1] == CHEST) map[tempY2][tempX1] = map[tempY2][tempX1 + 1];
+
+		}
 
 
 

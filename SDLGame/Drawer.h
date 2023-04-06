@@ -13,6 +13,10 @@ extern int dt;
 void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 
+
+void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);
+//void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney, QuestItem item);
+
 void drawHeroChoice(Player player, int coursorPosition);
 void drawConfirmation();
 void drawSaveSlots(int coursorPosition);

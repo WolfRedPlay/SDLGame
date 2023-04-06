@@ -238,6 +238,66 @@ void drawPlayer(Coordinates playerPosition, int diraction, int frame) {
 
 }
 
+void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney) {
+	SDL_Rect window = { 0, 0, 500, 400 };
+	window.x = window_width / 2 - window.w / 2;
+	window.y = window_height / 2 - window.h;
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+	char text[50];
+
+	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
+	SDL_RenderFillRect(ren, &window);
+	
+	texture = generateTextureFromText("CONGRATULATIONS!", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 30;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+	ttfRect.y += 80;
+	if (givedWeapon.ID != 0)
+	{
+		sprintf_s(text, "You've received: %s", givedWeapon.name);
+		texture = generateTextureFromText(text, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+		ttfRect.y += 30;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+	if (givedArmor.ID != 0)
+	{
+		sprintf_s(text, "You've received: %s", givedArmor.name);
+		texture = generateTextureFromText(text, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+		ttfRect.y += 30;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+	if (givedPotion.ID != 0)
+	{
+		sprintf_s(text, "You've received: %s", givedPotion.name);
+		texture = generateTextureFromText(text, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+		ttfRect.y += 30;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+	}
+	sprintf_s(text, "You've received: %d coins", givedMoney);
+	texture = generateTextureFromText(text, choicesFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window.x + window.w / 2 - ttfRect.w / 2;
+	ttfRect.y += 30;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+	SDL_RenderPresent(ren);
+	SDL_Delay(2000);
+}
+
 void drawHeroChoice(Player player, int coursorPosition) {
 	SDL_Rect window = { 0, 0, 1000, 300 };
 	window.x = window_width / 2 - window.w / 2;
@@ -1172,8 +1232,8 @@ void drawGameMenu(int coursorPosition) {
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
 
-	if (coursorPosition == 3)texture = generateTextureFromText(">Start manu", choicesFont, ttfRect, { 0,0,0,255 });
-	else texture = generateTextureFromText("Start manu", choicesFont, ttfRect, { 0,0,0,255 });
+	if (coursorPosition == 3)texture = generateTextureFromText(">Start menu", choicesFont, ttfRect, { 0,0,0,255 });
+	else texture = generateTextureFromText("Start menu", choicesFont, ttfRect, { 0,0,0,255 });
 	ttfRect.y += 50;
 	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 	SDL_DestroyTexture(texture);
