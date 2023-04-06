@@ -41,6 +41,14 @@ extern int window_height;
 #define MAGE 92
 #define HEALER 93
 
+enum Diractions {
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT
+};
+
+
 enum Symbols {
 	WOODEN_WALL = '#',
 	STONE_WALL = '\[',
@@ -155,6 +163,7 @@ struct Player {
 	int money;
 	int keys;
 	Coordinates position;
+	int diraction;
 	Weapon weapons[MAX_PLAYER_INVENTORY_SIZE];
 	Armor armors[MAX_PLAYER_INVENTORY_SIZE];
 	Potion potions[MAX_PLAYER_INVENTORY_SIZE];

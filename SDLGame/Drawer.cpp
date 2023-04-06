@@ -211,7 +211,10 @@ void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY) {
 	SDL_DestroyTexture(npc);
 
 }
-void drawPlayer(Coordinates playerPosition) {
+void drawPlayer(Coordinates playerPosition, int diraction, int frame) {
+
+	
+
 
 	playerPosition = fromMapCoordinatesToScreen(playerPosition);
 
@@ -221,6 +224,11 @@ void drawPlayer(Coordinates playerPosition) {
 
 	playerFrame.w = 54;
 	playerFrame.h = 70;
+	if (diraction == DOWN) playerFrame.y = 0;
+	if (diraction == UP) playerFrame.y = playerFrame.h * 3;
+	if (diraction == LEFT) playerFrame.y = playerFrame.h * 1;
+	if (diraction == RIGHT) playerFrame.y = playerFrame.h * 2;
+	playerFrame.x = playerFrame.w * frame;
 	playerUnit.h = 60;
 	playerUnit.y -= playerFrame.h - playerUnit.h + 10;
 

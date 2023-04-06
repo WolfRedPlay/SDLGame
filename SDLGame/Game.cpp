@@ -2,6 +2,7 @@
 #include "Drawer.h"
 #include "Mover.h"
 #include "Menues.h"
+#include "Interactions.h"
 
 #include <ctime>
 
@@ -15,12 +16,14 @@ SDL_Renderer* ren = NULL;
 int window_width = 1920;
 int window_height = 1080;
 
+
 bool inGame = false;
 
 int mapSizeX, mapSizeY;
 
 bool inShop, inDunge, inGlobal,
-shopMapReaded, dungeMapReaded, globalMapReaded;
+shopMapReaded, dungeMapReaded, globalMapReaded,
+isMoving;
 
 int dangeType;
 
@@ -93,7 +96,10 @@ int main(int argc, char* argv[]) {
 
 	srand(time(NULL));
 	const Uint8* state = SDL_GetKeyboardState(NULL);
-
+	int frame = 0;
+	int framCount = 4;
+	int current_frametime = 0;
+	int max_frametime = 1000 / 6;
 
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
@@ -104,6 +110,7 @@ int main(int argc, char* argv[]) {
 	int lasttime = SDL_GetTicks();
 	int newtime;
 	int dt = 0;
+	
 
 
 
@@ -132,7 +139,7 @@ int main(int argc, char* argv[]) {
 						break;
 
 					case SDL_SCANCODE_E:
-						playerMenu(player);
+						interact(map,player);
 						break;
 
 
@@ -149,13 +156,41 @@ int main(int argc, char* argv[]) {
 			lasttime = newtime;
 			
 			
+			isMoving = false;
 			
 			
-			
-			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0, -SPEED * dt / 1000 });
-			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) movePlayer(map, player, { 0,  SPEED * dt / 1000 });
-			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { -SPEED * dt / 1000, 0 });
-			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) movePlayer(map, player, { SPEED * dt / 1000, 0 });
+			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
+				movePlayer(map, player, { 0, -SPEED * dt / 1000 });
+				player.diraction = UP;
+				isMoving = true;
+			}
+			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) {
+				movePlayer(map, player, { 0,  SPEED * dt / 1000 });
+				player.diraction = DOWN;
+				isMoving = true;
+			}
+			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT])
+			{
+				movePlayer(map, player, { -SPEED * dt / 1000, 0 });
+				player.diraction = LEFT;
+				isMoving = true;
+			}
+			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) {
+				movePlayer(map, player, { SPEED * dt / 1000, 0 });
+				player.diraction = RIGHT;
+				isMoving = true;
+			}
+
+			if (isMoving) {
+				current_frametime += dt;
+				if (current_frametime >= max_frametime) {
+					current_frametime -= max_frametime;
+					frame = (frame + 1) % framCount;
+				}
+			}
+			else frame = 0;
+
+
 
 
 			if (inShop) {
@@ -189,7 +224,7 @@ int main(int argc, char* argv[]) {
 
 
 				drawScreen(map, player.position, mapSizeX, mapSizeY);
-				drawPlayer(player.position);
+				drawPlayer(player.position, player.diraction, frame);
 
 //printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
 

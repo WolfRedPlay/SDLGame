@@ -7,9 +7,11 @@ extern SDL_Renderer* ren;
 extern int window_width;
 extern int window_height;
 
+extern bool isMoving;
+extern int dt;
 
 void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY);
-void drawPlayer(Coordinates playerPosition);
+void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 
 void drawHeroChoice(Player player, int coursorPosition);
 void drawConfirmation();
