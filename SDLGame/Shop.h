@@ -16,7 +16,7 @@ extern Ability* ALLAbilitiesList;
 extern void DeInit(int error);
 
 
-void weaponSeller(Player& player, int stage);
-void armorSeller(Player& player, int stage);
-void potionSeller(Player& player, int stage);
-void abilitySeller(Player& player, int stage);
+void weaponSeller(Player& player, int stage, char** map);
+void armorSeller(Player& player, int stage, char** map);
+void potionSeller(Player& player, int stage, char** map);
+void abilitySeller(Player& player, int stage, char** map);

@@ -54,10 +54,10 @@ void interact(char** map, Player& player) {
 		tempX2 = ceilf(player.position.X);
 
 		if (map[tempY1][tempX1] == NPC || map[tempY1][tempX2] == NPC) player.position.Y += 5;
-		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) weaponSeller(player, 1);
-		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY1][tempX2] == ARMOR_SELLER) player.position.Y += 5;
-		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY1][tempX2] == POTION_SELLER) player.position.Y += 5;
-		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) player.position.Y += 5;
+		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) weaponSeller(player, 1, map);
+		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY1][tempX2] == ARMOR_SELLER) armorSeller(player, 1, map);
+		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY1][tempX2] == POTION_SELLER) potionSeller(player, 1, map);
+		if (map[tempY1][tempX1] == ABILITIES_SELLER || map[tempY1][tempX2] == ABILITIES_SELLER) abilitySeller(player, 1, map);
 		if (map[tempY1][tempX1] == CHEST || map[tempY1][tempX2] == CHEST) {
 			openChest(player);
 			if (map[tempY1][tempX1] == CHEST) deleteObject(map, tempX1, tempY1);
@@ -70,10 +70,10 @@ void interact(char** map, Player& player) {
 		tempY2 = ceilf(player.position.Y);
 
 		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
-		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1);
-		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) player.position.Y += 5;
-		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) player.position.Y += 5;
-		if (map[tempY1][tempX1] == ABILITIES_SELLER || map[tempY2][tempX1] == ABILITIES_SELLER) player.position.Y += 5;
+		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
+		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
+		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);
+		if (map[tempY1][tempX1] == ABILITIES_SELLER || map[tempY2][tempX1] == ABILITIES_SELLER) abilitySeller(player, 1, map);
 		if (map[tempY1][tempX1] == CHEST || map[tempY2][tempX1] == CHEST) {
 			openChest(player);
 			if (map[tempY1][tempX1] == CHEST) deleteObject(map, tempX1, tempY1);
@@ -88,10 +88,10 @@ void interact(char** map, Player& player) {
 		tempY2 = ceilf(player.position.Y);
 
 		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
-		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1);
-		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) player.position.Y += 5;
-		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) player.position.Y += 5;
-		if (map[tempY1][tempX1] == ABILITIES_SELLER || map[tempY2][tempX1] == ABILITIES_SELLER) player.position.Y += 5;
+		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
+		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
+		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);
+		if (map[tempY1][tempX1] == ABILITIES_SELLER || map[tempY2][tempX1] == ABILITIES_SELLER) abilitySeller(player, 1, map);
 		if (map[tempY1][tempX1] == CHEST || map[tempY2][tempX1] == CHEST) {
 			openChest(player);
 			if (map[tempY1][tempX1] == CHEST) deleteObject(map, tempX1, tempY1);

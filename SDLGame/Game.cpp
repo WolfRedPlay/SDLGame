@@ -223,7 +223,7 @@ int main(int argc, char* argv[]) {
 			}
 
 
-				drawScreen(map, player.position, mapSizeX, mapSizeY);
+				drawScreen(map, player.position);
 				drawPlayer(player.position, player.diraction, frame);
 
 //printf_s("x: %f y: %f \n", player.position.X, player.position.Y);

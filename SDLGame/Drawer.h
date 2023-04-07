@@ -10,7 +10,9 @@ extern int window_height;
 extern bool isMoving;
 extern int dt;
 
-void drawScreen(char** map, Coordinates playerPos, int mapSizeX, int mapSizeY);
+extern int mapSizeX, mapSizeY;
+
+void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 
 
@@ -40,7 +42,7 @@ void drawHeroAbilities(Hero& hero, int coursorPosition);
 
 void drawSeller(int typeOfSeller, int coursorPosition);
 
-void drawSellerChoice(SellerOfWeapons seller, int coursorPosition);
-void drawSellerChoice(SellerOfArmors seller, int coursorPosition);
-void drawSellerChoice(SellerOfPotions seller, int coursorPosition);
-void drawSellerChoice(SellerOfAbilities seller, int coursorPosition);
+void drawSellerChoice(int coins, SellerOfWeapons seller, int coursorPosition);
+void drawSellerChoice(int coins, SellerOfArmors seller, int coursorPosition);
+void drawSellerChoice(int coins, SellerOfPotions seller, int coursorPosition);
+void drawSellerChoice(int coins, SellerOfAbilities seller, int coursorPosition);

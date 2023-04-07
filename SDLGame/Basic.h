@@ -122,6 +122,7 @@ struct Potion {
 
 struct Ability {
 	char name[MAX_NAME_LENGTH];
+	int type;
 	int damage;
 	int manaCost;
 	int staminaCost;
@@ -129,7 +130,6 @@ struct Ability {
 	int ID;
 	int price;
 	int effect;
-	int type;
 	int buffedCharacteristic;
 	int buff;
 	int duration;
