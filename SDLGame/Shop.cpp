@@ -382,16 +382,15 @@ void sellPotion(Player& player, SellerOfPotions& seller)
 
 }
 
-void buyAbility(Player& player, SellerOfAbilities& seller)
-{
+void buyAbility(Player& player, SellerOfAbilities& seller){
 	int choice, coursorPosition = 0, heroChoice = 0;
 	SDL_Event ev;
 
-	bool isChoosen = false;
+	bool isChoosen = false, heroChoosen = false;
 
 
 	while (true) {
-
+		coursorPosition = 0;
 		while (!isChoosen) {
 			while (SDL_PollEvent(&ev))
 				switch (ev.type) {
@@ -412,6 +411,7 @@ void buyAbility(Player& player, SellerOfAbilities& seller)
 						{
 							choice = coursorPosition;
 							isChoosen = true;
+							heroChoosen = false;
 						}
 
 						break;
@@ -424,22 +424,59 @@ void buyAbility(Player& player, SellerOfAbilities& seller)
 		}
 
 		if (player.money >= seller.abilities[choice].price) {
+			coursorPosition = 0;
+			while (!heroChoosen) {
+				while (SDL_PollEvent(&ev))
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
 
-			Ability boughtAbility = takeAbilityFromList(seller.abilities, choice);
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							if (coursorPosition != 0) coursorPosition--;
+							break;
+						case SDL_SCANCODE_RIGHT:
+							if (coursorPosition != 3) coursorPosition++;
+							break;
+						case SDL_SCANCODE_RETURN:
+							heroChoice = coursorPosition;
+							heroChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							heroChoosen = false;
+							isChoosen = false;
+							break;
+						}
+						break;
+					}
 
-			if (addAbilityToAbilities(boughtAbility, player.team[heroChoice].abilities) == true)
-			{
-				player.money -= boughtAbility.price;
-				isChoosen = false;
-				//звук покупки
+				drawHeroChoice(player, coursorPosition);
+
 			}
-			else {
-
-				addAbilityToAbilities(boughtAbility, seller.abilities);
-				isChoosen = false;
-				//звук неудачной покупки
 
 
+
+			if (heroChoosen){
+				Ability boughtAbility = takeAbilityFromList(seller.abilities, choice);
+
+				if (addAbilityToAbilities(boughtAbility, player.team[heroChoice].abilities) == true)
+				{
+					player.money -= boughtAbility.price;
+					isChoosen = false;
+					heroChoosen = false;
+					//звук покупки
+				}
+				else {
+
+					addAbilityToAbilities(boughtAbility, seller.abilities);
+					isChoosen = false;
+					heroChoosen = false;
+					//звук неудачной покупки
+
+
+				}
 			}
 		}
 		else
@@ -794,7 +831,6 @@ void potionSeller(Player& player, int stage, char** map)
 	}
 
 }
-
 void abilitySeller(Player& player, int stage, char** map)
 {
 	SDL_Event ev;
