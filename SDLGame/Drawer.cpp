@@ -401,7 +401,8 @@ void drawHeroChoice(Player player, int coursorPosition) {
 	for (int i = 0; i < 4; i++) {
 		choice.x = window.x + 100 + (choice.w + 133) * i;
 		choice.y = window.y + 100;
-		if (coursorPosition == i) {
+		if (i == 0 || i == 2) SDL_RenderCopy(ren, player.team[i].texture, NULL, &choice);
+		if (coursorPosition == i) {	
 			SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
 			SDL_RenderDrawRect(ren, &choice);
 		}

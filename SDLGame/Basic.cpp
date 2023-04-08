@@ -107,9 +107,9 @@ Ability createEmptyAbility() {
 //}
 Hero createEmptyHero() {
 	Hero empty;
-	/*for (int i = 0; i < MAX_ABILITIES; i++) {
+	for (int i = 0; i < MAX_ABILITIES; i++) {
 		empty.abilities[i] = createEmptyAbility();
-	}*/
+	}
 	empty.armor = 0;
 	empty.damage = 0;
 	empty.equipedArmor = createEmptyArmor();
@@ -123,27 +123,26 @@ Hero createEmptyHero() {
 		empty.name[i] = ' ';
 	return empty;
 }
-//Enemy createEmptyEnemy() {
-//	Enemy empty;
-//	/*for (int i = 0; i < MAX_ABILITIES; i++) {
-//	}*/
-//	empty.ability = createEmptyAbility();
-//	empty.armor = 0;
-//	empty.damage = 0;
-//	empty.IDarmorDrop = 0;
-//	empty.IDpotionDrop = 0;
-//	empty.health = 0;
-//	empty.mana = 0;
-//	empty.stamina = 0;
-//	empty.IDweaponDrop = 0;
-//	empty.ID = 0;
-//	empty.moneyDrop = 0;
-//	empty.symbol = ' ';
-//
-//	for (int i = 0; i < MAX_NAME_LENGTH; i++)
-//		empty.name[i] = ' ';
-//	return empty;
-//}
+Enemy createEmptyEnemy() {
+	Enemy empty;
+	/*for (int i = 0; i < MAX_ABILITIES; i++) {
+	}*/
+	empty.ability = createEmptyAbility();
+	empty.armor = 0;
+	empty.damage = 0;
+	empty.IDarmorDrop = 0;
+	empty.IDpotionDrop = 0;
+	empty.health = 0;
+	empty.mana = 0;
+	empty.stamina = 0;
+	empty.IDweaponDrop = 0;
+	empty.ID = 0;
+	empty.moneyDrop = 0;
+
+	for (int i = 0; i < MAX_NAME_LENGTH; i++)
+		empty.name[i] = ' ';
+	return empty;
+}
 
 
 
@@ -315,6 +314,40 @@ Ability* createAllAbilities(int& amount) {
 	fclose(file);
 
 	return ALLAbilities;
+}
+Enemy* createAllEnemies(int& amount) {
+
+	int qountOfAbilities;
+	Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
+	FILE* file;
+	if (fopen_s(&file, "Enemies\\Enemies.txt", "rt+") != 0) {
+		system("cls");
+		printf_s("Openning file error!!!\a");
+		exit(-1);
+	}
+	fscanf_s(file, "%d", &amount, sizeof(int));
+	Enemy* enemiesList = (Enemy*)malloc(amount * sizeof(Enemy));
+	for (int i = 0; i < amount; i++) {
+		fscanf_s(file, "%d ", &enemiesList[i].ID, sizeof(int));
+		fscanf_s(file, "%s ", &enemiesList[i].name, sizeof(enemiesList[0].name) / sizeof(char));
+		fscanf_s(file, "%d ", &enemiesList[i].health, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].mana, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].stamina, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].lvl, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].damage, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].armor, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].IDweaponDrop, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].IDarmorDrop, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].IDpotionDrop, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].moneyDrop, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].expDrop, sizeof(int));
+		fscanf_s(file, "%d ", &enemiesList[i].ability.ID, sizeof(int));
+		enemiesList[i].status = NORMAL;
+		enemiesList[i].ability = findInAbilitiesList(ALLAbilitiesList, enemiesList[i].ability.ID, qountOfAbilities);
+	}
+
+	fclose(file);
+	return enemiesList;
 }
 
 

@@ -157,6 +157,7 @@ struct Hero {
 	Ability abilities[MAX_ABILITIES];
 	int lvl;
 	int exp;
+	SDL_Texture* texture;
 };
 
 struct Player {
@@ -242,6 +243,7 @@ Weapon* createAllWeapons(int& amount);
 Armor* createAllArmors(int& amount);
 Potion* createAllPotions(int& amount);
 Ability* createAllAbilities(int& amount);
+Enemy* createAllEnemies(int& amount);
 
 
 bool addWeaponToInventory(Weapon weapon, Weapon* weapons);

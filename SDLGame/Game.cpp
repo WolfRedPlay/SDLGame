@@ -125,7 +125,7 @@ int main(int argc, char* argv[]) {
 		dungeMapReaded = false;
 		globalMapReaded = false;
 		startMenu(player, map);
-		while (inGame) {
+			while (inGame) {
 
 			while (SDL_PollEvent(&ev)) {
 				switch (ev.type) {
@@ -238,7 +238,30 @@ int main(int argc, char* argv[]) {
 			}
 
 			if (enemyCounter == startFight) {
+				int enemyCount;
+				Enemy* enemyList = createAllEnemies(enemyCount);
+				int enemyRandNum;
+				int maxLvl = 0;
+				for (int i = 0; i < 4; i++)
+					if (player.team[i].lvl >= maxLvl) maxLvl = player.team[i].lvl;
+				EnemiesSquad randomEnemiesSquad;
 
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[0] = enemyList[enemyRandNum - 1];
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[1] = enemyList[enemyRandNum - 1];
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[2] = enemyList[enemyRandNum - 1];
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[3] = enemyList[enemyRandNum - 1];
 
 				enemyCounter = 0;
 				enemyCounterRandomed = false;

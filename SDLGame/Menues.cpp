@@ -92,7 +92,7 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -200, qountOfArmors);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -601, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -602, qountOfAbilities), player.team[i].abilities);
-
+			player.team[i].texture = generateTextureFromPNG("Textures\\Knight.png");
 			break;
 		case 1:
 			player.team[i].maxHealth = 75;
@@ -124,7 +124,7 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -202, qountOfArmors);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -701, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -702, qountOfAbilities), player.team[i].abilities);
-
+			player.team[i].texture = generateTextureFromPNG("Textures\\Mage.png");
 			break;
 		case 3:
 			player.team[i].maxHealth = 80;
