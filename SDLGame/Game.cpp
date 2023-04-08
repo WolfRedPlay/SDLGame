@@ -9,6 +9,8 @@
 
 float speed = 2.f;
 
+#define MAX_ENEMY_COUNTER 45
+#define MIN_ENEMY_COUNTER 25
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -101,6 +103,7 @@ int main(int argc, char* argv[]) {
 	int current_frametime = 0;
 	int max_frametime = 1000 / 4;
 
+	int enemyCounter = 0;
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;
