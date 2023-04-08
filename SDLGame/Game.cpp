@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
 	int frame = 0;
 	int framCount = 4;
 	int current_frametime = 0;
-	int max_frametime = 1000 / 6;
+	int max_frametime = 1000 / 4;
 
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
@@ -110,7 +110,7 @@ int main(int argc, char* argv[]) {
 	int lasttime = SDL_GetTicks();
 	int newtime;
 	int dt = 0;
-	
+
 
 
 
@@ -139,7 +139,7 @@ int main(int argc, char* argv[]) {
 						break;
 
 					case SDL_SCANCODE_E:
-						interact(map,player);
+						interact(map, player);
 						break;
 
 
@@ -154,13 +154,18 @@ int main(int argc, char* argv[]) {
 			newtime = SDL_GetTicks();
 			dt = newtime - lasttime;
 			lasttime = newtime;
-			
-			
+
+
 			isMoving = false;
-			
-			if (state[SDL_SCANCODE_LSHIFT]) speed = 4.f;
-			if (!state[SDL_SCANCODE_LSHIFT]) speed = 2.f;
-			
+
+			if (state[SDL_SCANCODE_LSHIFT]) {
+				speed = 4.f;
+				max_frametime = 1000 / 6;
+			}
+			if (!state[SDL_SCANCODE_LSHIFT]) {
+				speed = 2.f;
+				max_frametime = 1000 / 4;
+			}
 			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
 				movePlayer(map, player, { 0, -speed * dt / 1000 });
 				player.diraction = UP;
@@ -225,10 +230,10 @@ int main(int argc, char* argv[]) {
 			}
 
 
-				drawScreen(map, player.position);
-				drawPlayer(player.position, player.diraction, frame);
+			drawScreen(map, player.position);
+			drawPlayer(player.position, player.diraction, frame);
 
-//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
+			//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
 
 			SDL_RenderPresent(ren);
 		}

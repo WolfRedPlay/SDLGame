@@ -46,3 +46,7 @@ void drawSellerChoice(int coins, SellerOfWeapons seller, int coursorPosition);
 void drawSellerChoice(int coins, SellerOfArmors seller, int coursorPosition);
 void drawSellerChoice(int coins, SellerOfPotions seller, int coursorPosition);
 void drawSellerChoice(int coins, SellerOfAbilities seller, int coursorPosition);
+
+
+void drawInkeeperDialog(int restorePrice, int revivePrice, int money, int coursorPosition);
+void drawInkeeperReject();
