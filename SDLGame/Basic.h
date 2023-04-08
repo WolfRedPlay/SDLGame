@@ -173,6 +173,29 @@ struct Player {
 	int currentLocation;
 };
 
+struct Enemy {
+	int health;
+	int damage;
+	int armor;
+	int ID;
+	int moneyDrop;
+	int expDrop;
+	int IDweaponDrop;
+	int IDarmorDrop;
+	int IDpotionDrop;
+	char name[MAX_NAME_LENGTH];
+	int status;
+	Ability ability;
+	int mana;
+	int stamina;
+	int lvl;
+
+};
+
+struct EnemiesSquad {
+	Enemy enemies[4];
+};
+
 struct SellerOfWeapons {
 
 	Weapon weapons[MAX_INVENTORY_SIZE];

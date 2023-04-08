@@ -103,7 +103,7 @@ int main(int argc, char* argv[]) {
 	int current_frametime = 0;
 	int max_frametime = 1000 / 4;
 
-	int enemyCounter = 0;
+	int enemyCounter = 0; bool enemyCounterRandomed = false; int startFight = 0;
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;
@@ -170,23 +170,23 @@ int main(int argc, char* argv[]) {
 				max_frametime = 1000 / 4;
 			}
 			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
-				movePlayer(map, player, { 0, -speed * dt / 1000 });
+				if (movePlayer(map, player, { 0, -speed * dt / 1000 })) enemyCounter++;
 				player.diraction = UP;
 				isMoving = true;
 			}
 			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) {
-				movePlayer(map, player, { 0,  speed * dt / 1000 });
+				if (movePlayer(map, player, { 0,  speed * dt / 1000 })) enemyCounter++;
 				player.diraction = DOWN;
 				isMoving = true;
 			}
 			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT])
 			{
-				movePlayer(map, player, { -speed * dt / 1000, 0 });
+				if (movePlayer(map, player, { -speed * dt / 1000, 0 })) enemyCounter++;
 				player.diraction = LEFT;
 				isMoving = true;
 			}
 			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) {
-				movePlayer(map, player, { speed * dt / 1000, 0 });
+				if (movePlayer(map, player, { speed * dt / 1000, 0 })) enemyCounter++;
 				player.diraction = RIGHT;
 				isMoving = true;
 			}
@@ -231,6 +231,20 @@ int main(int argc, char* argv[]) {
 					globalMapReaded = true;
 				}
 			}
+
+			if (!enemyCounterRandomed) {
+				startFight = random(MIN_ENEMY_COUNTER, MAX_ENEMY_COUNTER);
+				enemyCounterRandomed = true;
+			}
+
+			if (enemyCounter == startFight) {
+
+
+				enemyCounter = 0;
+				enemyCounterRandomed = false;
+			}
+
+
 
 
 			drawScreen(map, player.position);
