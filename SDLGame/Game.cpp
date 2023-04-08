@@ -7,7 +7,7 @@
 #include <ctime>
 
 
-#define SPEED 2.f
+float speed = 2.f;
 
 
 SDL_Window* win = NULL;
@@ -158,25 +158,27 @@ int main(int argc, char* argv[]) {
 			
 			isMoving = false;
 			
+			if (state[SDL_SCANCODE_LSHIFT]) speed = 4.f;
+			if (!state[SDL_SCANCODE_LSHIFT]) speed = 2.f;
 			
 			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
-				movePlayer(map, player, { 0, -SPEED * dt / 1000 });
+				movePlayer(map, player, { 0, -speed * dt / 1000 });
 				player.diraction = UP;
 				isMoving = true;
 			}
 			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) {
-				movePlayer(map, player, { 0,  SPEED * dt / 1000 });
+				movePlayer(map, player, { 0,  speed * dt / 1000 });
 				player.diraction = DOWN;
 				isMoving = true;
 			}
 			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT])
 			{
-				movePlayer(map, player, { -SPEED * dt / 1000, 0 });
+				movePlayer(map, player, { -speed * dt / 1000, 0 });
 				player.diraction = LEFT;
 				isMoving = true;
 			}
 			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) {
-				movePlayer(map, player, { SPEED * dt / 1000, 0 });
+				movePlayer(map, player, { speed * dt / 1000, 0 });
 				player.diraction = RIGHT;
 				isMoving = true;
 			}

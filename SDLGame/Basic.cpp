@@ -42,6 +42,7 @@ void deleteObject(char** map, int x, int y) {
 	}
 	if (grassCount > woodCount) map[y][x] = GRASS;
 	if (woodCount > grassCount) map[y][x] = WOOD;
+	if (woodCount == grassCount) map[y][x] = WOOD;
 
 
 }

@@ -451,7 +451,126 @@ void buyAbility(Player& player, SellerOfAbilities& seller)
 	}
 
 }
+void forgetAbility(Player& player) {
+	SDL_Event ev;
+	bool inHeroChoosing = true;
+	bool isHeroChoosen = false;
+	bool inInventory = false;
+	bool isDeleted = false;
+	bool isItemChoosen = false;
+	int coursorPosition = 0, heroChoice, choice;
+	while (inHeroChoosing) {
+		while (SDL_PollEvent(&ev)) {
+			switch (ev.type) {
+			case SDL_QUIT:
+				DeInit(0);
+				break;
 
+			case SDL_KEYDOWN:
+				switch (ev.key.keysym.scancode) {
+				case SDL_SCANCODE_LEFT:
+					if (coursorPosition != 0) coursorPosition--;
+					break;
+				case SDL_SCANCODE_RIGHT:
+					if (coursorPosition != 3) coursorPosition++;
+					break;
+				case SDL_SCANCODE_RETURN:
+					heroChoice = coursorPosition;
+					isHeroChoosen = true;
+					inHeroChoosing = false;
+					break;
+				case SDL_SCANCODE_ESCAPE:
+					inHeroChoosing = false;
+					return;
+					break;
+				}
+				break;
+			}
+
+		}
+		if (isHeroChoosen) {
+			inInventory = true;
+			coursorPosition = 0;
+		}
+		while (inInventory) {
+			while (SDL_PollEvent(&ev)) {
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_LEFT:
+						if (coursorPosition != 0 && coursorPosition != 4) coursorPosition--;
+						break;
+					case SDL_SCANCODE_RIGHT:
+						if (coursorPosition != 3 && coursorPosition != 7) coursorPosition++;
+						break;
+					case SDL_SCANCODE_UP:
+						if (coursorPosition >= 4) coursorPosition -= 4;
+						break;
+					case SDL_SCANCODE_DOWN:
+						if (coursorPosition <= 3) coursorPosition += 4;
+						break;
+					case SDL_SCANCODE_RETURN:
+						choice = coursorPosition;
+						isItemChoosen = true;
+						break;
+					case SDL_SCANCODE_ESCAPE:
+						inInventory = false;
+						isHeroChoosen = false;
+						inHeroChoosing = true;
+						break;
+					case SDL_SCANCODE_TAB:
+						inInventory = false;
+						isHeroChoosen = false;
+						inHeroChoosing = true;
+						break;
+					}
+
+
+					break;
+				}
+
+			}
+
+
+			while (isItemChoosen) {
+				while (SDL_PollEvent(&ev)) {
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_Y:
+							takeAbilityFromList(player.team[heroChoice].abilities, choice);
+							isItemChoosen = false;
+							break;
+						case SDL_SCANCODE_N:
+							isItemChoosen = false;
+							break;
+						}
+						break;
+					}
+
+				}
+
+				drawConfirmation();
+			}
+
+
+
+			drawHeroAbilities(player.team[heroChoice], coursorPosition);
+		}
+
+		drawHeroChoice(player, coursorPosition);
+	}
+
+
+}
 
 void weaponSeller(Player& player, int stage, char** map)
 {
@@ -745,7 +864,7 @@ void abilitySeller(Player& player, int stage, char** map)
 			inSeller = true;
 			break;
 		case 1: 
-			//forgetAbility(player, seller);
+			forgetAbility(player);
 			drawScreen(map, player.position);
 			drawPlayer(player.position, player.diraction, 0);
 			inSeller = true;
@@ -755,78 +874,3 @@ void abilitySeller(Player& player, int stage, char** map)
 	}
 
 }
-
-
-
-//void abilitySeller(Player& player, int stage)
-//{
-//	int qountOfAbilities;
-//
-//	Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
-//	SellerOfAbilities seller;
-//
-//
-//	clearAbilities(seller.abilities);
-//
-//	if (stage == 1)
-//	{
-//		addAbilityToAbilities(ALLAbilitiesList[0], seller.abilities);
-//		addAbilityToAbilities(ALLAbilitiesList[2], seller.abilities);
-//		addAbilityToAbilities(ALLAbilitiesList[4], seller.abilities);
-//		addAbilityToAbilities(ALLAbilitiesList[6], seller.abilities);
-//	}
-//
-//	if (stage == 2)
-//	{
-//		addAbilityToAbilities(ALLAbilitiesList[1], seller.abilities);
-//		addAbilityToAbilities(ALLAbilitiesList[3], seller.abilities);
-//		addAbilityToAbilities(ALLAbilitiesList[5], seller.abilities);
-//		addAbilityToAbilities(ALLAbilitiesList[7], seller.abilities);
-//	}
-//
-//	int choice;
-//	int butCode, coursorPosition = 3;
-//
-//	do
-//	{
-//		do {
-//			system("cls");
-//			drawScreen(screen);
-//			drawBar(player);
-//			drawSellerChoice('a');
-//			SetConsoleCursorPosition(hConsole, { 114,(short)coursorPosition });
-//			printf_s(">");
-//
-//			butCode = _getch();
-//			if (butCode == 224)
-//				switch (_getch()) {
-//				case UP:
-//					if (coursorPosition != 3) {
-//						coursorPosition -= 2;
-//					}
-//
-//					break;
-//				case DOWN:
-//					if (coursorPosition != 5) {
-//						coursorPosition += 2;
-//					}
-//
-//					break;
-//				}
-//			else
-//				if (butCode == ENTER) {
-//					if (coursorPosition == 3) choice = 1;
-//					if (coursorPosition == 5) choice = 3;
-//					break;
-//				}
-//		} while (true);
-//
-//		switch (choice)
-//		{
-//		case 1: buyAbilities(player, seller, screen); break;
-//		case 3: return; break;
-//		default: break;
-//		}
-//	} while (true);
-//}
-
