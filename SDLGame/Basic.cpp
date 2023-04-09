@@ -20,7 +20,7 @@ void readMap(char** map, const char* fileName, int size_x, int size_y) {
 	FILE* file;
 	if (fopen_s(&file, fileName, "rt+") != 0) {
 		system("cls");
-		printf_s("Openning file error!!!\a");
+		printf_s("Openning file error map!!!\a");
 		exit(-1);
 	}
 	for (int i = 0; i < size_y; i++)
@@ -225,7 +225,7 @@ Weapon* createAllWeapons(int& amount) {
 	FILE* file;
 	if (fopen_s(&file, "Items\\Weapons.txt", "rt+") != 0) {
 		system("cls");
-		printf_s("Openning file error!!!\a");
+		printf_s("Openning file error weapons!!!\a");
 		exit(-1);
 	}
 
@@ -247,7 +247,7 @@ Armor* createAllArmors(int& amount) {
 
 	if (fopen_s(&file, "Items\\Armors.txt", "rt+") != 0) {
 		system("cls");
-		printf_s("Openning file error!!!\a");
+		printf_s("Openning file error armors!!!\a");
 		exit(-1);
 	}
 	fscanf_s(file, "%d", &amount, sizeof(int));
@@ -344,6 +344,7 @@ Enemy* createAllEnemies(int& amount) {
 		fscanf_s(file, "%d ", &enemiesList[i].ability.ID, sizeof(int));
 		enemiesList[i].status = NORMAL;
 		enemiesList[i].ability = findInAbilitiesList(ALLAbilitiesList, enemiesList[i].ability.ID, qountOfAbilities);
+		enemiesList[i].texture = generateTextureFromPNG("Textures\\Older.png");
 	}
 
 	fclose(file);

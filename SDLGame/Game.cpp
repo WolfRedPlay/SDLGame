@@ -3,14 +3,15 @@
 #include "Mover.h"
 #include "Menues.h"
 #include "Interactions.h"
+#include "Fighting.h"
 
 #include <ctime>
 
 
 float speed = 2.f;
 
-#define MAX_ENEMY_COUNTER 45
-#define MIN_ENEMY_COUNTER 25
+#define MAX_ENEMY_COUNTER 200
+#define MIN_ENEMY_COUNTER 100
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -237,7 +238,7 @@ int main(int argc, char* argv[]) {
 				enemyCounterRandomed = true;
 			}
 
-			if (enemyCounter == startFight) {
+			if (enemyCounter >= startFight) {
 				int enemyCount;
 				Enemy* enemyList = createAllEnemies(enemyCount);
 				int enemyRandNum;
@@ -262,6 +263,8 @@ int main(int argc, char* argv[]) {
 					enemyRandNum = random(0, enemyCount);
 				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
 				randomEnemiesSquad.enemies[3] = enemyList[enemyRandNum - 1];
+
+				startBattle(player, randomEnemiesSquad);
 
 				enemyCounter = 0;
 				enemyCounterRandomed = false;

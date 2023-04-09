@@ -280,6 +280,21 @@ void loadSaves(const char* fn, Player& player) {
 		Ability* currentAbilities = scanIDAbilities(saveFile, currentAbilitiesListSize);
 
 		fillHeroAbilities(player.team[i], currentAbilitiesListSize, currentAbilities);
+
+		switch (player.team[i].heroClass) {
+		case KNIGHT: 
+			player.team[i].texture = generateTextureFromPNG("Textures\\Knight.png");
+			break;
+		case ROGUE: 
+			player.team[i].texture = generateTextureFromPNG("Textures\\Inkeeper.png");
+			break;
+		case MAGE: 
+			player.team[i].texture = generateTextureFromPNG("Textures\\Mage.png");
+			break;
+		case HEALER: 
+			player.team[i].texture = generateTextureFromPNG("Textures\\Sell_potion.png");
+			break;
+		}
 	}
 
 

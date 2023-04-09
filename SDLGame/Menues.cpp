@@ -108,7 +108,7 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -201, qountOfArmors);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -502, qountOfAbilities), player.team[i].abilities);
-
+			player.team[i].texture = generateTextureFromPNG("Textures\\Inkeeper.png");
 			break;
 		case 2:
 			player.team[i].maxHealth = 70;
@@ -140,7 +140,7 @@ bool createHeroesMenu(Player& player) {
 			player.team[i].equipedArmor = findInArmorsList(ALLArmorsList, -203, qountOfArmors);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -801, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -802, qountOfAbilities), player.team[i].abilities);
-
+			player.team[i].texture = generateTextureFromPNG("Textures\\Sell_potion.png");
 			
 			break;
 		}
@@ -978,7 +978,7 @@ void playerMenu(Player& player) {
 					coursorPosition = 0;
 				}
 				while (inInventory) {
-					while (SDL_PollEvent(&ev)) {
+					while (SDL_PollEvent(&ev)) 
 						switch (ev.type) {
 						case SDL_QUIT:
 							DeInit(0);
@@ -1018,7 +1018,7 @@ void playerMenu(Player& player) {
 							break;
 						}
 
-					}
+					
 
 
 					while (isItemChoosen) {

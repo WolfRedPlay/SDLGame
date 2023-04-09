@@ -50,3 +50,7 @@ void drawSellerChoice(int coins, SellerOfAbilities seller, int coursorPosition);
 
 void drawInkeeperDialog(int restorePrice, int revivePrice, int money, int coursorPosition);
 void drawInkeeperReject();
+
+
+void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type);
+void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type, Hero hero);

@@ -4,4 +4,4 @@
 
 extern void DeInit(int error);
 
-void startFight();
+void startBattle(Player& player, EnemiesSquad enemies);

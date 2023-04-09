@@ -190,7 +190,7 @@ struct Enemy {
 	int mana;
 	int stamina;
 	int lvl;
-
+	SDL_Texture* texture;
 };
 
 struct EnemiesSquad {
