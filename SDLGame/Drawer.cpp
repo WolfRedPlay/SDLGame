@@ -1871,7 +1871,7 @@ void drawChoosingRect(int type, int coursorPosition) {
 void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition, int type) {
 	SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 	SDL_RenderClear(ren);
-
+	char text[100];
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	TTF_Font* basicFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
 
@@ -1882,15 +1882,29 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 
 	charRect.x = 200;
 	charRect.y = 50;
+	ttfRect.x = charRect.x;
 
 	for (int i = 0; i < 4; i++) {
+		sprintf_s(text, "HP: %d", player.team[i].health);
+		texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
+		ttfRect.y = charRect.y - ttfRect.h;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
 		SDL_RenderCopy(ren, player.team[i].texture, NULL, &charRect);
 		charRect.y += charRect.h + 50;
 	}
 	
 	charRect.x = window_width - charRect.w - 200;
 	charRect.y = 50;
+	ttfRect.x = charRect.x;
 	for (int i = 0; i < 4; i++) {
+		sprintf_s(text, "HP: %d", enemies.enemies[i].health);
+		texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
+		ttfRect.y = charRect.y - ttfRect.h;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
 		SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
 		charRect.y += charRect.h + 50;
 	}
@@ -1899,7 +1913,6 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 
 	actionArea.y = window_height - actionArea.h;
 
-	char text[100];
 
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
@@ -1953,6 +1966,7 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition, int type, Hero hero) {
 	SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 	SDL_RenderClear(ren);
+	char text[100];
 
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	TTF_Font* basicFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
@@ -1964,15 +1978,32 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 
 	charRect.x = 200;
 	charRect.y = 50;
+	ttfRect.x = charRect.x;
+
 
 	for (int i = 0; i < 4; i++) {
+
+		sprintf_s(text, "HP: %d", player.team[i].health);
+		texture = generateTextureFromText(text, basicFont, ttfRect, {0,0,0,255});
+		ttfRect.y = charRect.y - ttfRect.h;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
 		SDL_RenderCopy(ren, player.team[i].texture, NULL, &charRect);
 		charRect.y += charRect.h + 50;
 	}
 	
 	charRect.x = window_width - charRect.w - 200;
 	charRect.y = 50;
+	ttfRect.x = charRect.x;
 	for (int i = 0; i < 4; i++) {
+		
+		sprintf_s(text, "HP: %d", enemies.enemies[i].health);
+		texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
+		ttfRect.y = charRect.y - ttfRect.h;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
 		SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
 		charRect.y += charRect.h + 50;
 	}
@@ -1981,7 +2012,6 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 
 	actionArea.y = window_height - actionArea.h;
 
-	char text[100];
 
 
 	SDL_SetRenderDrawColor(ren, 28, 181, 192, 255);
