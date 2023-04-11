@@ -1,6 +1,7 @@
 #include "Interactions.h"
 
-
+int tempX1 = 0, tempX2 = 0;
+int tempY1 = 0, tempY2 = 0;
 
 
 
@@ -77,7 +78,7 @@ void inkeeper(Player& player, char** map) {
 				}
 
 
-			drawInkeeperDialog(priceForRestore, priceForRevive,player.money, coursorPosition);
+			drawInkeeperDialog(priceForRestore, priceForRevive, player.money, coursorPosition);
 
 		}
 
@@ -166,19 +167,38 @@ void inkeeper(Player& player, char** map) {
 	}
 }
 
+bool checkForNPCInteraction(NPC& npc) {
+	for (int i = 0; i < 4; i++) {
+		if (npcs[i].position.X == tempX1 && npcs[i].position.Y == tempY1) 
+		{
+			npc = npcs[i];
+			return true;
+		}
+		if (npcs[i].position.X == tempX2 && npcs[i].position.Y == tempY1)
+		{
+			npc = npcs[i];
+			return true;
 
+		}
+		if (npcs[i].position.X == tempX1 && npcs[i].position.Y == tempY2)
+		{
+			npc = npcs[i];
+			return true;
+		}
+	}
+	return false;
+}
 
 void interact(char** map, Player& player) {
 
+	NPC npc;
 
-	int tempX1 = 0, tempX2 = 0;
-	int tempY1 = 0, tempY2 = 0;
 	if (player.diraction == UP) {
 		tempY1 = floorf(player.position.Y) - 1;
 		tempX1 = floorf(player.position.X);
 		tempX2 = ceilf(player.position.X);
 
-		if (map[tempY1][tempX1] == NPC || map[tempY1][tempX2] == NPC) player.position.Y += 5;
+		if (checkForNPCInteraction(npc)) NPCDialog(npc);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY1][tempX2] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY1][tempX2] == POTION_SELLER) potionSeller(player, 1, map);
@@ -195,7 +215,7 @@ void interact(char** map, Player& player) {
 		tempY1 = floorf(player.position.Y);
 		tempY2 = ceilf(player.position.Y);
 
-		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
+		if (checkForNPCInteraction(npc)) NPCDialog(npc);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);
@@ -214,7 +234,7 @@ void interact(char** map, Player& player) {
 		tempY1 = floorf(player.position.Y);
 		tempY2 = ceilf(player.position.Y);
 
-		if (map[tempY1][tempX1] == NPC || map[tempY2][tempX1] == NPC) player.position.X += 5;
+		if (checkForNPCInteraction(npc)) NPCDialog(npc);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);

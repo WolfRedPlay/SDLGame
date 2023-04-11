@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Basic.cpp" />
+    <ClCompile Include="Dialogs.cpp" />
     <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="Fighting.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -149,11 +150,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Basic.h" />
+    <ClInclude Include="Dialogs.h" />
     <ClInclude Include="Drawer.h" />
     <ClInclude Include="Fighting.h" />
     <ClInclude Include="Interactions.h" />
     <ClInclude Include="Menues.h" />
     <ClInclude Include="Mover.h" />
+    <ClInclude Include="Phrases.h" />
     <ClInclude Include="Save.h" />
     <ClInclude Include="Shop.h" />
   </ItemGroup>

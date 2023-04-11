@@ -1,5 +1,7 @@
 #pragma once
 #include "Basic.h"
+#include "Phrases.h"
+
 
 
 extern SDL_Renderer* ren;
@@ -14,6 +16,7 @@ extern int mapSizeX, mapSizeY;
 
 void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
+void drawNPCs(NPC npcs[4]);
 
 
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);
@@ -54,3 +57,5 @@ void drawInkeeperReject();
 
 void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type);
 void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type, Hero hero);
+
+void drawNPCDialogWindow(NPC npc);
