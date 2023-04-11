@@ -321,6 +321,9 @@ Quest* createAllQuests(int& amount) {
 	FILE* file;
 	int itemID;
 
+	int qountOfQustItems;
+	QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+
 	if (fopen_s(&file, "Quests\\Quests.txt", "rt+") != 0) {
 		system("cls");
 		printf_s("Openning file error!!!\a");
