@@ -10,8 +10,8 @@ extern SDL_Renderer* ren;
 extern int window_width;
 extern int window_height;
 
-extern int qountOfQustItems;
-extern QuestItem* ALLQuestItemsList;
+//extern int qountOfQustItems;
+//extern QuestItem* ALLQuestItemsList;
 #define UNIT_SIZE_X 40 //(window_width/48) //40
 #define UNIT_SIZE_Y 40 //(window_height/20) //54
 
@@ -121,6 +121,7 @@ struct Potion {
 	int ID;
 
 };
+
 struct QuestItem {
 	int ID;
 	char name[MAX_NAME_LENGTH];
@@ -132,7 +133,6 @@ struct Quest {
 	char name[MAX_NAME_LENGTH];
 	int moneyReward;
 	int expReward;
-
 };
 
 struct Ability {
@@ -176,6 +176,8 @@ struct Hero {
 };
 
 struct Player {
+	QuestItem questItems[MAX_PLAYER_INVENTORY_SIZE];
+	Quest quests[MAX_QUESTS];
 	int money;
 	int keys;
 	Coordinates position;
@@ -183,8 +185,6 @@ struct Player {
 	Weapon weapons[MAX_PLAYER_INVENTORY_SIZE];
 	Armor armors[MAX_PLAYER_INVENTORY_SIZE];
 	Potion potions[MAX_PLAYER_INVENTORY_SIZE];
-	QuestItem questItems[MAX_PLAYER_INVENTORY_SIZE];
-	Quest quests[MAX_QUESTS];
 	Hero team[4];
 	int currentLocation;
 };

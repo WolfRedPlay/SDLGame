@@ -10,8 +10,8 @@
 
 float speed = 2.f;
 
-#define MAX_ENEMY_COUNTER 20000
-#define MIN_ENEMY_COUNTER 20000
+#define MAX_ENEMY_COUNTER 1000
+#define MIN_ENEMY_COUNTER 500
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -40,12 +40,12 @@ int qountOfWeapons;
 int qountOfArmors;
 int qountOfPotions;
 int qountOfAbilities;
-int qountOfQustItems;
+//int qountOfQustItems;
 Weapon* ALLWeaponsList = createAllWeapons(qountOfWeapons);
 Armor* ALLArmorsList = createAllArmors(qountOfArmors);
 Potion* ALLPotionsList = createAllPotions(qountOfPotions);
 Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
-QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+//QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
 
 void DeInit(int error) {
