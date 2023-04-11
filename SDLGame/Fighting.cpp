@@ -12,6 +12,8 @@ bool freeHeroes[4];
 bool freeEnemies[4];
 int heroesCooldowns[4][MAX_ABILITIES] = { 0 };
 int enemiesCooldowns[4] = { 0 };
+int burnTimers[8] = { 0 };
+int poisonTimers[8] = { 0 };
 
 SDL_Event ev;
 
@@ -22,12 +24,12 @@ void saveMaxColldowns(Ability* abilities, int* cooldowns) {
 }
 void setCooldownsToZero(Ability* abilities) {
 	for (int i = 0; i < MAX_ABILITIES; i++) {
-		abilities[i].cooldown = 0;
+		if (abilities[i].ID != 0)abilities[i].cooldown = 0;
 	}
 }
 void setCooldownsToMax(Ability* abilities, int* cooldowns) {
 	for (int i = 0; i < MAX_ABILITIES; i++) {
-		abilities[i].cooldown = cooldowns[i] - 1;
+		if (abilities[i].ID != 0)abilities[i].cooldown = cooldowns[i] - 1;
 	}
 }
 
@@ -65,11 +67,30 @@ void cast(Hero& attacker, Ability& ability, Enemy& defender) {
 	}
 
 }
-void cast(Hero& buffer, Ability& ability, Hero& duffed) {
-
+void cast(Hero& buffer, Ability& ability, Hero& buffed) {
+	buffer.mana -= ability.manaCost;
+	buffer.stamina -= ability.staminaCost;
+	if (ability.buffedCharacteristic == HEALTH) {
+		if (buffed.health <= buffed.maxHealth - ability.buff)buffed.health += ability.buff;
+		else buffed.health = buffed.maxHealth;
+	}
+	if (ability.buffedCharacteristic == ARMOR) {
+		if (buffed.armor <= 100 - ability.buff)buffed.armor += ability.buff;
+		else buffed.armor = 100;
+	}
+	if (ability.buffedCharacteristic == DAMAGE) {
+		buffed.damage += ability.buff;
+	}
 }
-
 void cast(Enemy& attacker, Ability& ability, Hero& defender) {
+	defender.health -= ability.damage;
+	attacker.mana -= ability.manaCost;
+	attacker.stamina -= ability.staminaCost;
+	if (ability.effect != NORMAL) defender.status = ability.effect;
+	if (defender.health <= 0) {
+		defender.health = 0;
+		defender.status = DEAD;
+	}
 
 }
 
@@ -103,18 +124,40 @@ int playerAct(Player& player, EnemiesSquad& enemies) {
 
 	bool inHeroChoosing = true, inActionChoosing = false, inAction = false, inEnemyChoosing = false, inChoosing = false;
 
+
 	for (int i = 0; i < 4; i++) {
-		enemiesCooldowns[i] = enemies.enemies[i].ability.cooldown + 1;
-		enemies.enemies[i].ability.cooldown = 0;
-		saveMaxColldowns(player.team[i].abilities, heroesCooldowns[i]);
-		setCooldownsToZero(player.team[i].abilities);
+		if (player.team[i].status == BURN) {
+			if (burnTimers[i] == 5)
+			{
+				burnTimers[i] = 0;
+				player.team[i].status = NORMAL;
+			}
+			else burnTimers[i]++;
+			player.team[i].health -= 10;
+		}
+		if (player.team[i].status == POISONED) {
+			if (poisonTimers[i] == 8)
+			{
+				poisonTimers[i] = 0;
+				player.team[i].status = NORMAL;
+			}
+			else poisonTimers[i]++;
+			player.team[i].health -= 6;
+		}
+		if (player.team[i].status == STUNED) {
+			freeHeroes[i] = false;
+
+		}
 	}
 
+	for (int i = 0; i < 4; i++) {
+		if (enemies.enemies[i].status == STUNED) enemies.enemies[i].status = NORMAL;
+	}
 
+	for (int i = 0; i < 4; i++)
+		if (player.team[i].status == DEAD || player.team[i].status == ESCAPED) freeHeroes[i] = false;
 
 	while (freeHeroes[0] || freeHeroes[1] || freeHeroes[2] || freeHeroes[3]) {
-		for (int i = 0; i < 4; i++)
-			if (player.team[i].status == DEAD || player.team[i].status == ESCAPED) freeHeroes[i] = false;
 
 		if ((enemies.enemies[0].status == DEAD || enemies.enemies[0].status == ESCAPED) &&
 			(enemies.enemies[1].status == DEAD || enemies.enemies[1].status == ESCAPED) &&
@@ -429,9 +472,15 @@ int playerAct(Player& player, EnemiesSquad& enemies) {
 				break;
 			case 3:
 				increaseProtection(player.team[heroChoice]);
+				freeHeroes[heroChoice] = false;
+				inAction = false;
+				inHeroChoosing = true;
 				break;
 			case 4:
 				tryToEscape(player.team[heroChoice]);
+				freeHeroes[heroChoice] = false;
+				inAction = false;
+				inHeroChoosing = true;
 				break;
 			}
 		}
@@ -450,9 +499,39 @@ int playerAct(Player& player, EnemiesSquad& enemies) {
 int enemiesAct(Player& player, EnemiesSquad& enemies) {
 	int heroChoice, enemyCoice = 0;
 
+
+	for (int i = 0; i < 4; i++) {
+		if (enemies.enemies[i].status == BURN) {
+			if (burnTimers[i + 4] == 5)
+			{
+				burnTimers[i + 4] = 0;
+				enemies.enemies[i].status = NORMAL;
+			}
+			else burnTimers[i + 4]++;
+			enemies.enemies[i].health -= 10;
+		}
+		if (enemies.enemies[i].status == POISONED) {
+			if (poisonTimers[i + 4] == 8)
+			{
+				poisonTimers[i + 4] = 0;
+				enemies.enemies[i].status = NORMAL;
+			}
+			else poisonTimers[i + 4]++;
+			enemies.enemies[i].health -= 6;
+		}
+		if (enemies.enemies[i].status == STUNED) {
+			freeEnemies[i] = false;
+
+		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		if (player.team[i].status == STUNED) player.team[i].status = NORMAL;
+	}
+
+	for (int i = 0; i < 4; i++)
+		if (enemies.enemies[i].status == DEAD || enemies.enemies[i].status == ESCAPED) freeEnemies[i] = false;
 	while (freeEnemies[0] || freeEnemies[1] || freeEnemies[2] || freeEnemies[3]) {
-		for (int i = 0; i < 4; i++)
-			if (enemies.enemies[i].status == DEAD || enemies.enemies[i].status == ESCAPED) freeEnemies[i] = false;
 
 		if ((player.team[0].status == DEAD || player.team[0].status == ESCAPED) &&
 			(player.team[1].status == DEAD || player.team[1].status == ESCAPED) &&
@@ -465,13 +544,14 @@ int enemiesAct(Player& player, EnemiesSquad& enemies) {
 
 		} while (!freeEnemies[enemyCoice]);
 
-		if (enemies.enemies[enemyCoice].ability.cooldown != 0 && 
-			enemies.enemies[enemyCoice].mana >= enemies.enemies[enemyCoice].ability.manaCost && 
+		if (enemies.enemies[enemyCoice].ability.cooldown != 0 &&
+			enemies.enemies[enemyCoice].mana >= enemies.enemies[enemyCoice].ability.manaCost &&
 			enemies.enemies[enemyCoice].stamina >= enemies.enemies[enemyCoice].ability.staminaCost) {
 			do {
 				heroChoice = random(0, 3);
 			} while (player.team[heroChoice].status == DEAD || player.team[heroChoice].status == ESCAPED);
 			cast(enemies.enemies[enemyCoice], enemies.enemies[enemyCoice].ability, player.team[heroChoice]);
+			enemies.enemies[enemyCoice].ability.cooldown = enemiesCooldowns[enemyCoice];
 			freeEnemies[enemyCoice] = false;
 		}
 		else if (enemies.enemies[enemyCoice].health < 5) {
@@ -497,7 +577,58 @@ int enemiesAct(Player& player, EnemiesSquad& enemies) {
 	return CONTINUE;
 }
 
+void win(Player& player, EnemiesSquad& enemies) {
+	int chance = 0;
+	bool deadEnemies[4];
+	for (int i = 0; i < 4; i++) {
+		if (enemies.enemies[i].status == DEAD) deadEnemies[i] = true;
+		else deadEnemies[i] = false;
+	}
 
+	for (int i = 0; i < 4; i++) {
+		if (deadEnemies[i]) {
+			chance = random(1, 100);
+			if (chance >= 50) {
+				Weapon givedWeapon = findInWeaponsList(ALLWeaponsList, enemies.enemies[i].IDweaponDrop, qountOfWeapons);
+				addWeaponToInventory(givedWeapon, player.weapons);
+			}
+			chance = random(1, 100);
+			if (chance >= 50) {
+				Armor givedArmor = findInArmorsList(ALLArmorsList, enemies.enemies[i].IDarmorDrop, qountOfArmors);
+				addArmorToInventory(givedArmor, player.armors);
+			}
+
+			chance = random(1, 100);
+			if (chance >= 50) {
+				Potion givedPotion = findInPotionsList(ALLPotionsList, enemies.enemies[i].IDpotionDrop, qountOfPotions);
+				addPotionToInventory(givedPotion, player.potions);
+			}
+
+			player.money += enemies.enemies[i].moneyDrop;
+
+
+
+		}
+	}
+
+
+
+
+
+
+	for (int i = 0; i < 4; i++) {
+		if (player.team[i].status != DEAD && player.team[i].status != ESCAPED) {
+			for (int j = 0; j < 4; j++) {
+				if (deadEnemies[j]) {
+					player.team[i].exp += enemies.enemies[j].expDrop;
+				}
+			}
+		}
+
+
+
+	}
+}
 
 
 
@@ -505,6 +636,13 @@ void startBattle(Player& player, EnemiesSquad enemies) {
 
 	int result = CONTINUE;
 	int chance = random(1, 100);
+
+	for (int i = 0; i < 4; i++) {
+		enemiesCooldowns[i] = enemies.enemies[i].ability.cooldown + 1;
+		enemies.enemies[i].ability.cooldown = 0;
+		saveMaxColldowns(player.team[i].abilities, heroesCooldowns[i]);
+		setCooldownsToZero(player.team[i].abilities);
+	}
 
 	while (true) {
 
@@ -522,15 +660,20 @@ void startBattle(Player& player, EnemiesSquad enemies) {
 		}
 
 		if (result == WIN) {
-			//победа
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
+			win(player, enemies);
 			return;
 		}
 		if (result == ESCAPE) {
-			//побег
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
 			return;
 		}
 		if (result == LOSE) {
-			//поражение
+			inGame = false;
 			return;
 		}
 
@@ -542,20 +685,30 @@ void startBattle(Player& player, EnemiesSquad enemies) {
 		}
 
 		if (result == WIN) {
-			//победа
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
+			win(player, enemies);
 			return;
 		}
 
 		if (result == ESCAPE) {
-			//побег
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
 			return;
 		}
 
 		if (result == LOSE) {
-			//поражение
+			inGame = false;
 			return;
 		}
-
+		for (int i = 0; i < 4; i++) {
+			enemies.enemies[i].ability.cooldown--;
+			for (int j = 0; j < MAX_ABILITIES; j++) {
+				if (player.team[i].abilities[j].ID != 0 && player.team[i].abilities[j].cooldown != 0) player.team[i].abilities[j].cooldown--;
+			}
+		}
 
 
 
