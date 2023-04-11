@@ -91,20 +91,22 @@ Ability createEmptyAbility() {
 		empty.name[i] = ' ';
 	return empty;
 }
-//QuestItem createEmptyQuestItem() {
-//	QuestItem empty;
-//	empty.ID = 0;
-//	for (int i = 0; i < 15; i++)
-//		empty.name[i] = ' ';
-//	return empty;
-//}
-//Quest createEmptyQuest() {
-//	Quest empty;
-//	empty.requiredItem = createEmptyQuestItem();
-//	for (int i = 0; i < 15; i++)
-//		empty.name[i] = ' ';
-//	return empty;
-//}
+QuestItem createEmptyQuestItem() {
+	QuestItem empty;
+	empty.ID = 0;
+	for (int i = 0; i < 15; i++)
+		empty.name[i] = ' ';
+	return empty;
+}
+Quest createEmptyQuest() {
+	Quest empty;
+	empty.requiredItem = createEmptyQuestItem();
+	for (int i = 0; i < 15; i++)
+		empty.name[i] = ' ';
+	empty.expReward = 0;
+	empty.moneyReward = 0;
+	return empty;
+}
 Hero createEmptyHero() {
 	Hero empty;
 	for (int i = 0; i < MAX_ABILITIES; i++) {
@@ -188,12 +190,12 @@ void clearPlayer(Player& player) {
 		clearAbilities(player.team[i].abilities);
 	}
 
-	/*for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
 		player.questItems[i] = createEmptyQuestItem();
 	}
 	for (int i = 0; i < MAX_QUESTS; i++) {
 		player.quests[i] = createEmptyQuest();
-	}*/
+	}
 }
 
 
@@ -213,6 +215,16 @@ Potion findInPotionsList(Potion* ALLPotionsList, int ID, int numPotions) {
 	if (ID == 0) return createEmptyPotion();
 	for (int i = 0; i < numPotions; i++)
 		if (ALLPotionsList[i].ID == ID) return ALLPotionsList[i];
+}
+Quest findQuestInList(Quest* ALLQuestsList, int ID, int numQuests) {
+	if (ID == 0) return createEmptyQuest();
+	for (int i = 0; i < numQuests; i++)
+		if (ALLQuestsList[i].requiredItem.ID == ID) return ALLQuestsList[i];
+}
+QuestItem findInQuestItemsList(QuestItem* ALLQuestItemsList, int ID, int numQuestItems) {
+	if (ID == 0) return createEmptyQuestItem();
+	for (int i = 0; i < numQuestItems; i++)
+		if (ALLQuestItemsList[i].ID == ID) return ALLQuestItemsList[i];
 }
 Ability findInAbilitiesList(Ability* ALLAbilitiesList, int ID, int numAbilities) {
 	if (ID == 0) return createEmptyAbility();
@@ -283,6 +295,53 @@ Potion* createAllPotions(int& amount) {
 
 	fclose(file);
 	return potionsList;
+}
+QuestItem* createAllQuestItems(int& amount) {
+
+	FILE* file;
+
+	if (fopen_s(&file, "Items\\QuestItems.txt", "rt+") != 0) {
+		system("cls");
+		printf_s("Openning file error!!!\a");
+		exit(-1);
+	}
+	fscanf_s(file, "%d", &amount, sizeof(int));
+	QuestItem* questItemList = (QuestItem*)malloc(amount * sizeof(QuestItem));
+	for (int i = 0; i < amount; i++) {
+		fscanf_s(file, "%d ", &questItemList[i].ID, sizeof(int));
+		fscanf_s(file, "%s ", &questItemList[i].name, sizeof(questItemList[0].name) / sizeof(char));
+
+	}
+
+	fclose(file);
+	return questItemList;
+}
+Quest* createAllQuests(int& amount) {
+
+	FILE* file;
+	int itemID;
+
+	int qountOfQustItems;
+	QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+
+	if (fopen_s(&file, "Quests\\Quests.txt", "rt+") != 0) {
+		system("cls");
+		printf_s("Openning file error!!!\a");
+		exit(-1);
+	}
+	fscanf_s(file, "%d", &amount, sizeof(int));
+	Quest* questsList = (Quest*)malloc(amount * sizeof(Quest));
+	for (int i = 0; i < amount; i++) {
+		fscanf_s(file, "%d ", &itemID, sizeof(int));
+		questsList[i].requiredItem = findInQuestItemsList(ALLQuestItemsList, itemID, qountOfQustItems);
+		fscanf_s(file, "%s ", &questsList[i].name, sizeof(questsList[0].name) / sizeof(char));
+		fscanf_s(file, "%d ", &questsList[i].moneyReward, sizeof(int));
+		questsList[i].isCompleted = false;
+
+	}
+
+	fclose(file);
+	return questsList;
 }
 Ability* createAllAbilities(int& amount) {
 	FILE* file;
@@ -377,6 +436,22 @@ bool addPotionToInventory(Potion potion, Potion* potions) {
 		}
 	return false;
 }
+bool addQuestToList(Quest quest, Quest* quests) {
+	for (int i = 0; i < MAX_QUESTS; i++)
+		if (quests[i].requiredItem.ID == 0) {
+			quests[i] = quest;
+			return true;
+		}
+	return false;
+}
+bool addQuestItemToInventory(QuestItem item, QuestItem* items) {
+	for (int i = 0; i < MAX_INVENTORY_SIZE; i++)
+		if (items[i].ID == 0) {
+			items[i] = item;
+			return true;
+		}
+	return false;
+}
 bool addAbilityToAbilities(Ability ability, Ability* abilities) {
 	for (int i = 0; i < MAX_INVENTORY_SIZE; i++)
 		if (abilities[i].ID == 0) {
@@ -410,6 +485,19 @@ Potion takePotionFromInventory(Potion* potions, int itemIndex) {
 
 
 }
+Quest takeQuestFromList(Quest* questsList, int questIndex) {
+
+	Quest quest = questsList[questIndex];
+	questsList[questIndex] = createEmptyQuest();
+	return quest;
+
+
+}
+QuestItem takeQuestItemFromInventory(QuestItem* items, int itemIndex) {
+	QuestItem item = items[itemIndex];
+	items[itemIndex] = createEmptyQuestItem();
+	return item;
+}
 Ability takeAbilityFromList(Ability* abilities, int abilityIndex) {
 
 	Ability ability = abilities[abilityIndex];
@@ -417,3 +505,4 @@ Ability takeAbilityFromList(Ability* abilities, int abilityIndex) {
 	return ability;
 
 }
+

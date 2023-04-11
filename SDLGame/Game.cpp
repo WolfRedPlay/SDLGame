@@ -10,8 +10,8 @@
 
 float speed = 2.f;
 
-#define MAX_ENEMY_COUNTER 200
-#define MIN_ENEMY_COUNTER 100
+#define MAX_ENEMY_COUNTER 20000
+#define MIN_ENEMY_COUNTER 20000
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -32,18 +32,20 @@ int dangeType;
 
 Coordinates temp = { 0.f,0.f };
 
+NPC npcs[4];
+
 int shopStage = 0, dungeType = 0;
 
 int qountOfWeapons;
 int qountOfArmors;
 int qountOfPotions;
 int qountOfAbilities;
-//int qountOfQustItems;
+int qountOfQustItems;
 Weapon* ALLWeaponsList = createAllWeapons(qountOfWeapons);
 Armor* ALLArmorsList = createAllArmors(qountOfArmors);
 Potion* ALLPotionsList = createAllPotions(qountOfPotions);
 Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
-//QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
 
 void DeInit(int error) {
@@ -104,6 +106,8 @@ int main(int argc, char* argv[]) {
 	int current_frametime = 0;
 	int max_frametime = 1000 / 4;
 
+
+
 	int enemyCounter = 0; bool enemyCounterRandomed = false; int startFight = 0;
 
 	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
@@ -115,7 +119,20 @@ int main(int argc, char* argv[]) {
 	int newtime;
 	int dt = 0;
 
-
+	npcs[0].position = { 16, 3 };
+	npcs[1].position = { 24, 3};
+	npcs[2].position = { 20, 10 };
+	npcs[3].position = {25, 15};
+	
+	npcs[0].texture = generateTextureFromPNG("Textures\\NPC.png");
+	npcs[1].texture = generateTextureFromPNG("Textures\\NPC.png");
+	npcs[2].texture = generateTextureFromPNG("Textures\\NPC.png");
+	npcs[3].texture = generateTextureFromPNG("Textures\\NPC.png");
+	
+	npcs[0].phrase = 1;
+	npcs[1].phrase = 2;
+	npcs[2].phrase = 3;
+	npcs[3].phrase = 4;
 
 
 	while (true) {
@@ -274,6 +291,7 @@ int main(int argc, char* argv[]) {
 
 
 			drawScreen(map, player.position);
+			drawNPCs(npcs);
 			drawPlayer(player.position, player.diraction, frame);
 
 			//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);

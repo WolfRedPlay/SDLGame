@@ -2,6 +2,7 @@
 #include "Basic.h"
 #include "Drawer.h"
 #include "Shop.h"
+#include "Dialogs.h"
 
 extern int qountOfWeapons;
 extern int qountOfArmors;
@@ -14,5 +15,6 @@ extern Potion* ALLPotionsList;
 extern Ability* ALLAbilitiesList;
 //extern QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
+extern NPC npcs[4];
 
 void interact(char** map, Player& player);

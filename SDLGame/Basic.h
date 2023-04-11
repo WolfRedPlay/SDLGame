@@ -10,6 +10,8 @@ extern SDL_Renderer* ren;
 extern int window_width;
 extern int window_height;
 
+extern int qountOfQustItems;
+extern QuestItem* ALLQuestItemsList;
 #define UNIT_SIZE_X 40 //(window_width/48) //40
 #define UNIT_SIZE_Y 40 //(window_height/20) //54
 
@@ -62,7 +64,7 @@ enum Symbols {
 	ARMOR_SELLER = 'A',
 	POTION_SELLER = 'P',
 	ABILITIES_SELLER = 'M',
-	NPC = 'N',
+	NPC_SYM = 'N',
 	NPC_QUEST = 'Q',
 	INKEEPER = 'I',
 	DUNGE_BOSS = 'B',//
@@ -119,6 +121,19 @@ struct Potion {
 	int ID;
 
 };
+struct QuestItem {
+	int ID;
+	char name[MAX_NAME_LENGTH];
+};
+
+struct Quest {
+	bool isCompleted = false;
+	QuestItem requiredItem;
+	char name[MAX_NAME_LENGTH];
+	int moneyReward;
+	int expReward;
+
+};
 
 struct Ability {
 	char name[MAX_NAME_LENGTH];
@@ -168,8 +183,8 @@ struct Player {
 	Weapon weapons[MAX_PLAYER_INVENTORY_SIZE];
 	Armor armors[MAX_PLAYER_INVENTORY_SIZE];
 	Potion potions[MAX_PLAYER_INVENTORY_SIZE];
-	/*QuestItem questItems[MAX_PLAYER_INVENTORY_SIZE];
-	Quest quests[MAX_QUESTS];*/
+	QuestItem questItems[MAX_PLAYER_INVENTORY_SIZE];
+	Quest quests[MAX_QUESTS];
 	Hero team[4];
 	int currentLocation;
 };
@@ -195,6 +210,17 @@ struct Enemy {
 
 struct EnemiesSquad {
 	Enemy enemies[4];
+};
+
+struct NPC {
+	Coordinates position;
+	SDL_Texture* texture;
+	int phrase;
+};
+struct QuestNPC {
+	Coordinates position;
+	SDL_Texture* texture;
+	Quest quest;
 };
 
 struct SellerOfWeapons {
@@ -237,11 +263,15 @@ void clearPlayer(Player& player);
 Weapon findInWeaponsList(Weapon* ALLWeaopnsList, int ID, int numWeapons);
 Armor findInArmorsList(Armor* ALLArmorsList, int ID, int numArmors);
 Potion findInPotionsList(Potion* ALLPotionsList, int ID, int numPotions);
+Quest findQuestInList(Quest* ALLQuestsList, int ID, int numQuests);
+QuestItem findInQuestItemsList(QuestItem* ALLQuestItemsList, int ID, int numQuestItems);
 Ability findInAbilitiesList(Ability* ALLAbilitiesList, int ID, int numAbilities);
 
 Weapon* createAllWeapons(int& amount);
 Armor* createAllArmors(int& amount);
 Potion* createAllPotions(int& amount);
+QuestItem* createAllQuestItems(int& amount);
+Quest* createAllQuests(int& amount);
 Ability* createAllAbilities(int& amount);
 Enemy* createAllEnemies(int& amount);
 
@@ -249,9 +279,13 @@ Enemy* createAllEnemies(int& amount);
 bool addWeaponToInventory(Weapon weapon, Weapon* weapons);
 bool addArmorToInventory(Armor armor, Armor* armors);
 bool addPotionToInventory(Potion potion, Potion* potions);
+bool addQuestToList(Quest quest, Quest* quests);
+bool addQuestItemToInventory(QuestItem item, QuestItem* items);
 bool addAbilityToAbilities(Ability ability, Ability* abilities);
 
 Weapon takeWeaponFromInventory(Weapon* weapons, int itemIndex);
 Armor takeArmorFromInventory(Armor* armors, int itemIndex);
 Potion takePotionFromInventory(Potion* potions, int itemIndex);
+Quest takeQuestFromList(Quest* questsList, int questIndex);
+QuestItem takeQuestItemFromInventory(QuestItem* items, int itemIndex);
 Ability takeAbilityFromList(Ability* abilities, int abilityIndex);
