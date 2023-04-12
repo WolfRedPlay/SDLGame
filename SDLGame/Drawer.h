@@ -16,7 +16,8 @@ extern int mapSizeX, mapSizeY;
 
 void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
-void drawNPCs(NPC npcs[4]);
+void drawNPCs(NPC* npcs);
+void drawQuestNPCs(QuestNPC* NPCs);
 
 
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);

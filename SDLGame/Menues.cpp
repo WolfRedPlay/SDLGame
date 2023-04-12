@@ -262,7 +262,7 @@ bool createHeroesMenu(Player& player) {
 	addPotionToInventory(findInPotionsList(ALLPotionsList, -302, qountOfPotions), player.potions);
 	player.keys = 0;
 	player.money = 100;
-	player.currentLocation = 0;
+	player.currentLocation = 1;
 	player.position = { 3.f, 2.f };
 	player.diraction = DOWN;
 	return true;

@@ -169,20 +169,20 @@ void inkeeper(Player& player, char** map) {
 
 bool checkForNPCInteraction(NPC& npc) {
 	for (int i = 0; i < 4; i++) {
-		if (npcs[i].position.X == tempX1 && npcs[i].position.Y == tempY1) 
+		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY1) 
 		{
-			npc = npcs[i];
+			npc = NPCs[i];
 			return true;
 		}
-		if (npcs[i].position.X == tempX2 && npcs[i].position.Y == tempY1)
+		if (NPCs[i].position.X == tempX2 && NPCs[i].position.Y == tempY1)
 		{
-			npc = npcs[i];
+			npc = NPCs[i];
 			return true;
 
 		}
-		if (npcs[i].position.X == tempX1 && npcs[i].position.Y == tempY2)
+		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY2)
 		{
-			npc = npcs[i];
+			npc = NPCs[i];
 			return true;
 		}
 	}

@@ -4,7 +4,7 @@
 
 extern bool inShop, inDunge, inGlobal,
 shopMapReaded, dungeMapReaded, globalMapReaded;
-extern NPC npcs[4];
+extern NPC* NPCs;
 extern Coordinates temp;
 extern int shopStage, dungeType;
 bool movePlayer(char** map, Player& player, Coordinates move);

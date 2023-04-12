@@ -29,7 +29,6 @@ void readMap(char** map, const char* fileName, int size_x, int size_y) {
 
 	fclose(file);
 }
-
 void deleteObject(char** map, int x, int y) {
 	int grassCount = 0;
 	int woodCount = 0;
@@ -45,6 +44,44 @@ void deleteObject(char** map, int x, int y) {
 	if (woodCount == grassCount) map[y][x] = WOOD;
 
 
+}
+
+NPC* createNPCs(int location) {
+	NPC* NPCs = (NPC*)malloc(4 * sizeof(NPC));
+	if (location == 1) {
+		NPCs[0].position = { 16, 3 };
+		NPCs[1].position = { 24, 3 };
+		NPCs[2].position = { 20, 10 };
+		NPCs[3].position = { 25, 15 };
+
+		NPCs[0].texture = generateTextureFromPNG("Textures\\NPC.png");
+		NPCs[1].texture = generateTextureFromPNG("Textures\\NPC.png");
+		NPCs[2].texture = generateTextureFromPNG("Textures\\NPC.png");
+		NPCs[3].texture = generateTextureFromPNG("Textures\\NPC.png");
+
+		NPCs[0].phrase = 1;
+		NPCs[1].phrase = 2;
+		NPCs[2].phrase = 3;
+		NPCs[3].phrase = 4;
+	}
+	return NPCs;
+}
+QuestNPC* createQuestNPCs(int location) {
+	QuestNPC* NPCs = (QuestNPC*)malloc(4 * sizeof(QuestNPC));
+
+	int questsCount;
+
+	Quest* ALLQuestsList = createAllQuests(questsCount);
+
+	if (location == 1) {
+		NPCs[0].position = { 5, 10 };
+
+		NPCs[0].texture = generateTextureFromPNG("Textures\\Older.png");
+
+		NPCs[0].quest = ALLQuestsList[0];
+	}
+	free(ALLQuestsList);
+	return NPCs;
 }
 
 Weapon createEmptyWeapon() {

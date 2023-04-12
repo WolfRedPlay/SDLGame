@@ -10,8 +10,6 @@ extern SDL_Renderer* ren;
 extern int window_width;
 extern int window_height;
 
-//extern int qountOfQustItems;
-//extern QuestItem* ALLQuestItemsList;
 #define UNIT_SIZE_X 40 //(window_width/48) //40
 #define UNIT_SIZE_Y 40 //(window_height/20) //54
 
@@ -249,8 +247,10 @@ int random(int min, int max);
 SDL_Texture* generateTextureFromPNG(const char* file);
 
 void readMap(char** map, const char* fileName, int size_x, int size_y);
-
 void deleteObject(char** map, int x, int y);
+
+NPC* createNPCs(int location);
+QuestNPC* createQuestNPCs(int location);
 
 void clearWeaponInventory(Weapon* weapons);
 void clearArmorInventory(Armor* armors);

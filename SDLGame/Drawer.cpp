@@ -94,7 +94,6 @@ void drawScreen(char** map, Coordinates playerPos) {
 	SDL_Texture* door = generateTextureFromPNG("Textures\\door.png");
 	SDL_Texture* chest = generateTextureFromPNG("Textures\\chest.png");
 	SDL_Texture* goldChest = generateTextureFromPNG("Textures\\Golden_chest.png");
-	SDL_Texture* npc = generateTextureFromPNG("Textures\\NPC.png");
 	SDL_Texture* inkeeper = generateTextureFromPNG("Textures\\Inkeeper.png");
 	SDL_Texture* weaponsSeller = generateTextureFromPNG("Textures\\Sell_weapon.png");
 	SDL_Texture* armorsSeller = generateTextureFromPNG("Textures\\Sell_armor.png");
@@ -136,11 +135,6 @@ void drawScreen(char** map, Coordinates playerPos) {
 					continue;
 				}
 
-				if (map[uppperBorder + i][leftBorder + j] == NPC_QUEST) {
-					SDL_SetRenderDrawColor(ren, 237, 28, 36, 255);
-					SDL_RenderFillRect(ren, &unit);
-				}
-
 				if (map[uppperBorder + i][leftBorder + j] == SHOP)
 				{
 					SDL_SetRenderDrawColor(ren, 128, 128, 0, 255);
@@ -165,20 +159,6 @@ void drawScreen(char** map, Coordinates playerPos) {
 				if (map[uppperBorder + i - 1][leftBorder + j] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
 				SDL_RenderCopy(ren, door, NULL, &unit);
 			}
-
-			/*if (map[uppperBorder + i][leftBorder + j] == NPC_SYM) {
-				if (map[uppperBorder + i][leftBorder + j - 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j - 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				npcFrame.w = 40;
-				npcFrame.h = 70;
-				npcFrame.x += npcFrame.w;
-				int different = npcFrame.h - unit.h;
-				unit.y -= different;
-				unit.h = npcFrame.h;
-				SDL_RenderCopy(ren, npc, &npcFrame, &unit);
-				unit.h = UNIT_SIZE_Y;
-				unit.y += different;
-			}*/
 
 			if (map[uppperBorder + i][leftBorder + j] == INKEEPER) {
 				if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
@@ -280,7 +260,6 @@ void drawScreen(char** map, Coordinates playerPos) {
 	SDL_DestroyTexture(door);
 	SDL_DestroyTexture(chest);
 	SDL_DestroyTexture(goldChest);
-	SDL_DestroyTexture(npc);
 	SDL_DestroyTexture(inkeeper);
 	SDL_DestroyTexture(weaponsSeller);
 	SDL_DestroyTexture(armorsSeller);
@@ -288,16 +267,24 @@ void drawScreen(char** map, Coordinates playerPos) {
 	SDL_DestroyTexture(abilitiesSeller);
 
 }
-void drawNPCs(NPC npcs[4]) {
+void drawNPCs(NPC* NPCs) {
 	SDL_FRect npcRect = {0,0,40,70 };
 	SDL_Rect npcFrame = { 40,0,40,70 };
 
 	for (int i = 0; i < 4; i++) {
-		npcRect.x = npcs[i].position.X * UNIT_SIZE_X;
-		npcRect.y = npcs[i].position.Y * UNIT_SIZE_Y;
-	SDL_RenderCopyF(ren, npcs[i].texture, &npcFrame, &npcRect);
+		npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
+		npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
+	SDL_RenderCopyF(ren, NPCs[i].texture, &npcFrame, &npcRect);
 	}
-	//SDL_RenderPresent(ren);
+}
+void drawQuestNPCs(QuestNPC* NPCs) {
+	SDL_FRect npcRect = {0,0,40,70 };
+
+	for (int i = 0; i < 1; i++) {
+		npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
+		npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
+	SDL_RenderCopyF(ren, NPCs[i].texture, NULL, &npcRect);
+	}
 }
 void drawPlayer(Coordinates playerPosition, int diraction, int frame) {
 

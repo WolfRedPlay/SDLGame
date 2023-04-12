@@ -15,6 +15,6 @@ extern Potion* ALLPotionsList;
 extern Ability* ALLAbilitiesList;
 //extern QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
-extern NPC npcs[4];
+extern NPC* NPCs;
 
 void interact(char** map, Player& player);

@@ -6,9 +6,9 @@
 	
 	bool checkForNPCCollision() {
 	for (int i = 0; i < 4; i++) {
-		if (npcs[i].position.X == tempMoveX1 && npcs[i].position.Y == tempMoveY1) return true;
-		if (npcs[i].position.X == tempMoveX2 && npcs[i].position.Y == tempMoveY1) return true;
-		if (npcs[i].position.X == tempMoveX1 && npcs[i].position.Y == tempMoveY2) return true;
+		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY1) return true;
+		if (NPCs[i].position.X == tempMoveX2 && NPCs[i].position.Y == tempMoveY1) return true;
+		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY2) return true;
 	}
 	return false;
 }
