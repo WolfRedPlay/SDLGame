@@ -6,3 +6,4 @@ extern void DeInit(int error);
 
 
 void NPCDialog(NPC npc);
+void QuestDialog(QuestNPC npc);

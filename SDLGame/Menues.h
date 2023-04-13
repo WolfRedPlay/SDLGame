@@ -7,12 +7,16 @@ extern int qountOfWeapons;
 extern int qountOfArmors;
 extern int qountOfPotions;
 extern int qountOfAbilities;
+extern int qountOfQusts;
 //extern int qountOfQustItems;
 extern Weapon* ALLWeaponsList;
 extern Armor* ALLArmorsList;
 extern Potion* ALLPotionsList;
 extern Ability* ALLAbilitiesList;
+extern Quest* questsList;
 //extern QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+
+
 
 extern bool inGame;
 

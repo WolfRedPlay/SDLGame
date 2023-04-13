@@ -40,12 +40,15 @@ int qountOfWeapons;
 int qountOfArmors;
 int qountOfPotions;
 int qountOfAbilities;
+int qountOfQusts;
 //int qountOfQustItems;
 Weapon* ALLWeaponsList = createAllWeapons(qountOfWeapons);
 Armor* ALLArmorsList = createAllArmors(qountOfArmors);
 Potion* ALLPotionsList = createAllPotions(qountOfPotions);
 Ability* ALLAbilitiesList = createAllAbilities(qountOfAbilities);
+Quest* questsList = createAllQuests(qountOfQusts);
 //QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
+
 
 
 void DeInit(int error) {

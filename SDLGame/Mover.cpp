@@ -1,14 +1,22 @@
 #include "Mover.h"
 
-	int tempMoveY1, tempMoveX1;
-	int tempMoveY2, tempMoveX2;
+int tempMoveY1, tempMoveX1;
+int tempMoveY2, tempMoveX2;
 
-	
-	bool checkForNPCCollision() {
+
+bool checkForNPCCollision() {
 	for (int i = 0; i < 4; i++) {
 		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY1) return true;
 		if (NPCs[i].position.X == tempMoveX2 && NPCs[i].position.Y == tempMoveY1) return true;
 		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY2) return true;
+	}
+	return false;
+}
+bool checkForQuestNPCCollision() {
+	for (int i = 0; i < 4; i++) {
+		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY1) return true;
+		if (questNPCs[i].position.X == tempMoveX2 && questNPCs[i].position.Y == tempMoveY1) return true;
+		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY2) return true;
 	}
 	return false;
 }
@@ -59,13 +67,13 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			else return false;
 		}
 		if (checkForNPCCollision()) return false;
+		if (checkForQuestNPCCollision()) return false;
 		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY1][tempMoveX2] == WOODEN_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY1][tempMoveX2] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY1][tempMoveX2] == WEAPON_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == POTION_SELLER || map[tempMoveY1][tempMoveX2] == POTION_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == ARMOR_SELLER || map[tempMoveY1][tempMoveX2] == ARMOR_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == ABILITIES_SELLER || map[tempMoveY1][tempMoveX2] == ABILITIES_SELLER) return false;
-		if (map[tempMoveY1][tempMoveX1] == NPC_QUEST || map[tempMoveY1][tempMoveX2] == NPC_QUEST) return false;
 		if (map[tempMoveY1][tempMoveX1] == INKEEPER || map[tempMoveY1][tempMoveX2] == INKEEPER) return false;
 		if (map[tempMoveY1][tempMoveX1] == CHEST || map[tempMoveY1][tempMoveX2] == CHEST) return false;
 		if (map[tempMoveY1][tempMoveX1] == QUEST_CHEST || map[tempMoveY1][tempMoveX2] == QUEST_CHEST) return false;
@@ -99,13 +107,13 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			else return false;
 		}
 		if (checkForNPCCollision()) return false;
+		if (checkForQuestNPCCollision()) return false;
 		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY2][tempMoveX1] == WOODEN_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY2][tempMoveX1] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY2][tempMoveX1] == WEAPON_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == POTION_SELLER || map[tempMoveY2][tempMoveX1] == POTION_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == ARMOR_SELLER || map[tempMoveY2][tempMoveX1] == ARMOR_SELLER) return false;
 		if (map[tempMoveY1][tempMoveX1] == ABILITIES_SELLER || map[tempMoveY2][tempMoveX1] == ABILITIES_SELLER) return false;
-		if (map[tempMoveY1][tempMoveX1] == NPC_QUEST || map[tempMoveY2][tempMoveX1] == NPC_QUEST) return false;
 		if (map[tempMoveY1][tempMoveX1] == INKEEPER || map[tempMoveY2][tempMoveX1] == INKEEPER) return false;
 		if (map[tempMoveY1][tempMoveX1] == CHEST || map[tempMoveY2][tempMoveX1] == CHEST) return false;
 		if (map[tempMoveY1][tempMoveX1] == QUEST_CHEST || map[tempMoveY2][tempMoveX1] == QUEST_CHEST) return false;

@@ -168,7 +168,7 @@ void inkeeper(Player& player, char** map) {
 }
 
 bool checkForNPCInteraction(NPC& npc) {
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < NPC_AMOUNT_1; i++) {
 		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY1) 
 		{
 			npc = NPCs[i];
@@ -188,10 +188,32 @@ bool checkForNPCInteraction(NPC& npc) {
 	}
 	return false;
 }
+bool checkForQuestNPCInteraction(QuestNPC& npc) {
+	for (int i = 0; i < QUEST_NPC_AMOUNT_1; i++) {
+		if (questNPCs[i].position.X == tempX1 && questNPCs[i].position.Y == tempY1)
+		{
+			npc = questNPCs[i];
+			return true;
+		}
+		if (questNPCs[i].position.X == tempX2 && questNPCs[i].position.Y == tempY1)
+		{
+			npc = questNPCs[i];
+			return true;
+
+		}
+		if (questNPCs[i].position.X == tempX1 && questNPCs[i].position.Y == tempY2)
+		{
+			npc = questNPCs[i];
+			return true;
+		}
+	}
+	return false;
+}
 
 void interact(char** map, Player& player) {
 
 	NPC npc;
+	QuestNPC questNPC;
 
 	if (player.diraction == UP) {
 		tempY1 = floorf(player.position.Y) - 1;
@@ -199,6 +221,7 @@ void interact(char** map, Player& player) {
 		tempX2 = ceilf(player.position.X);
 
 		if (checkForNPCInteraction(npc)) NPCDialog(npc);
+		if (checkForQuestNPCInteraction(questNPC)) QuestDialog(questNPC);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY1][tempX2] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY1][tempX2] == POTION_SELLER) potionSeller(player, 1, map);
@@ -216,6 +239,7 @@ void interact(char** map, Player& player) {
 		tempY2 = ceilf(player.position.Y);
 
 		if (checkForNPCInteraction(npc)) NPCDialog(npc);
+		if (checkForQuestNPCInteraction(questNPC)) QuestDialog(questNPC);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);
@@ -235,6 +259,7 @@ void interact(char** map, Player& player) {
 		tempY2 = ceilf(player.position.Y);
 
 		if (checkForNPCInteraction(npc)) NPCDialog(npc);
+		if (checkForQuestNPCInteraction(questNPC)) QuestDialog(questNPC);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);

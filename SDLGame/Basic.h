@@ -13,7 +13,8 @@ extern int window_height;
 #define UNIT_SIZE_X 40 //(window_width/48) //40
 #define UNIT_SIZE_Y 40 //(window_height/20) //54
 
-
+#define NPC_AMOUNT_1 4
+#define QUEST_NPC_AMOUNT_1 1
 
 #define MAP_SIZE_X 401
 #define MAP_SIZE_Y 100

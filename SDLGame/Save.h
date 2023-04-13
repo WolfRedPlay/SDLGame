@@ -17,5 +17,7 @@ extern Ability* ALLAbilitiesList;
 
 void setSaves(const char* fn, Player player);
 void setMapSaves(const char* fn, char** map);
+void setQuestsSaves(const char* fn, Quest* quests, int amountQuests);
 
 void loadSaves(const char* fn, Player& player);
+void loadQuestsSaves(const char* fn, Quest* quests, int amountQuests);

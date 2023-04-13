@@ -47,8 +47,9 @@ void deleteObject(char** map, int x, int y) {
 }
 
 NPC* createNPCs(int location) {
-	NPC* NPCs = (NPC*)malloc(4 * sizeof(NPC));
+	NPC* NPCs;
 	if (location == 1) {
+		NPCs = (NPC*)malloc(NPC_AMOUNT_1 * sizeof(NPC));
 		NPCs[0].position = { 16, 3 };
 		NPCs[1].position = { 24, 3 };
 		NPCs[2].position = { 20, 10 };
@@ -64,23 +65,29 @@ NPC* createNPCs(int location) {
 		NPCs[2].phrase = 3;
 		NPCs[3].phrase = 4;
 	}
+	else
+		NPCs = (NPC*)malloc(NPC_AMOUNT_1 * sizeof(NPC));
 	return NPCs;
 }
 QuestNPC* createQuestNPCs(int location) {
-	QuestNPC* NPCs = (QuestNPC*)malloc(4 * sizeof(QuestNPC));
+	QuestNPC* NPCs;
 
 	int questsCount;
 
 	Quest* ALLQuestsList = createAllQuests(questsCount);
 
 	if (location == 1) {
+		NPCs = (QuestNPC*)malloc(QUEST_NPC_AMOUNT_1 * sizeof(QuestNPC));
 		NPCs[0].position = { 5, 10 };
 
 		NPCs[0].texture = generateTextureFromPNG("Textures\\Older.png");
 
 		NPCs[0].quest = ALLQuestsList[0];
 	}
+	else
+		NPCs = (QuestNPC*)malloc(QUEST_NPC_AMOUNT_1 * sizeof(QuestNPC));
 	free(ALLQuestsList);
+	
 	return NPCs;
 }
 

@@ -38,22 +38,22 @@ Ability* scanIDAbilities(FILE* file, int& size) {
 
 	return list;
 }
-//Quest* scanQuests(FILE* file, int& size) {
-//	fscanf_s(file, "%d ", &size);
-//	Quest* list = (Quest*)malloc(size * sizeof(Quest));
-//	for (int i = 0; i < size; i++)
-//		fscanf_s(file, "%d ", &list[i].requiredItem.ID);
-//
-//	return list;
-//}
-//QuestItem* ScanIDQuestItems(FILE* file, int& size) {
-//	fscanf_s(file, "%d", &size);
-//	QuestItem* list = (QuestItem*)malloc(size * sizeof(QuestItem));
-//	for (int i = 0; i < size; i++)
-//		fscanf_s(file, "%d", &list[i].ID);
-//
-//	return list;
-//}
+Quest* scanQuests(FILE* file, int& size) {
+	fscanf_s(file, "%d ", &size);
+	Quest* list = (Quest*)malloc(size * sizeof(Quest));
+	for (int i = 0; i < size; i++)
+		fscanf_s(file, "%d ", &list[i].requiredItem.ID);
+
+	return list;
+}
+QuestItem* ScanIDQuestItems(FILE* file, int& size) {
+	fscanf_s(file, "%d", &size);
+	QuestItem* list = (QuestItem*)malloc(size * sizeof(QuestItem));
+	for (int i = 0; i < size; i++)
+		fscanf_s(file, "%d", &list[i].ID);
+
+	return list;
+}
 
 
 
@@ -84,21 +84,21 @@ void fillHeroAbilities(Hero& hero, int currentAbilityInventorySize, Ability* cur
 	for (int i = 0; i < currentAbilityInventorySize; i++)
 		addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, currentAbilities[i].ID, qountOfAbilities), hero.abilities);
 }
-//void fillPlayerQuestItems(Player& player, int currentQuestItemInventorySize, QuestItem* currentQuestItems) {
-//
-//	int qountOfQuestItems;
-//
-//	QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQuestItems);
-//	for (int i = 0; i < currentQuestItemInventorySize; i++)
-//		addQuestItemToInventory(findInQuestItemsList(ALLQuestItemsList, currentQuestItems[i].ID, qountOfQuestItems), player.questItems);
-//}
-//void fillPlayerQuests(Player& player, int currentQuestInventorySize, Quest* currentQuests) {
-//
-//	int qountOfQuests;
-//	Quest* ALLQuestsList = createAllQuests(qountOfQuests);
-//	for (int i = 0; i < currentQuestInventorySize; i++)
-//		addQuestToList(findQuestInList(ALLQuestsList, currentQuests[i].requiredItem.ID, qountOfQuests), player.quests);
-//}
+void fillPlayerQuestItems(Player& player, int currentQuestItemInventorySize, QuestItem* currentQuestItems) {
+
+	int qountOfQuestItems;
+
+	QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQuestItems);
+	for (int i = 0; i < currentQuestItemInventorySize; i++)
+		addQuestItemToInventory(findInQuestItemsList(ALLQuestItemsList, currentQuestItems[i].ID, qountOfQuestItems), player.questItems);
+}
+void fillPlayerQuests(Player& player, int currentQuestInventorySize, Quest* currentQuests) {
+
+	int qountOfQuests;
+	Quest* ALLQuestsList = createAllQuests(qountOfQuests);
+	for (int i = 0; i < currentQuestInventorySize; i++)
+		addQuestToList(findQuestInList(ALLQuestsList, currentQuests[i].requiredItem.ID, qountOfQuests), player.quests);
+}
 
 
 
@@ -171,7 +171,7 @@ void setSaves(const char* fn, Player player) {
 
 
 
-	/*currentSize = 0;
+	currentSize = 0;
 	for (int i = 0; i < MAX_QUESTS; i++)
 		if (player.quests[i].requiredItem.ID != 0)
 			currentSize++;
@@ -188,7 +188,7 @@ void setSaves(const char* fn, Player player) {
 	fprintf_s(saveFile, "%d ", currentSize);
 	for (int i = 0; i < currentSize; i++)
 		fprintf_s(saveFile, "%d ", player.questItems[i].ID);
-	fprintf_s(saveFile, "\n");*/
+	fprintf_s(saveFile, "\n");
 
 	fprintf_s(saveFile, "%d ", player.money);
 	fprintf_s(saveFile, "%d\n", player.keys);
@@ -201,23 +201,23 @@ void setSaves(const char* fn, Player player) {
 
 
 }
-//void setQuestsSaves(const char* fn, Quest* quests, int amountQuests) {
-//	FILE* saveFile;
-//	int completedQuestsAmount = 0;
-//	if (fopen_s(&saveFile, fn, "wt") != 0) {
-//		printf_s("Can not find saves\n");
-//		exit(1);
-//	}
-//
-//	for (int i = 0; i < amountQuests; i++)
-//		if (quests[i].isCompleted) completedQuestsAmount++;
-//	fprintf_s(saveFile, "%d\n", completedQuestsAmount);
-//	for (int i = 0; i < amountQuests; i++)
-//		if (quests[i].isCompleted) fprintf_s(saveFile, "%d ", quests[i].requiredItem.ID);
-//
-//	fclose(saveFile);
-//
-//}
+void setQuestsSaves(const char* fn, Quest* quests, int amountQuests) {
+	FILE* saveFile;
+	int completedQuestsAmount = 0;
+	if (fopen_s(&saveFile, fn, "wt") != 0) {
+		printf_s("Can not find saves\n");
+		exit(1);
+	}
+
+	for (int i = 0; i < amountQuests; i++)
+		if (quests[i].isCompleted) completedQuestsAmount++;
+	fprintf_s(saveFile, "%d\n", completedQuestsAmount);
+	for (int i = 0; i < amountQuests; i++)
+		if (quests[i].isCompleted) fprintf_s(saveFile, "%d ", quests[i].requiredItem.ID);
+
+	fclose(saveFile);
+
+}
 void setMapSaves(const char* fn, char** map) {
 	FILE* saveFile;
 
@@ -304,10 +304,10 @@ void loadSaves(const char* fn, Player& player) {
 	fillPlayerArmors(player, currentArmorInventorySize, currentArmors);
 	Potion* currentPotions = scanIDPotions(saveFile, currentPotionInventorySize);
 	fillPlayerPotions(player, currentPotionInventorySize, currentPotions);
-	/*Quest* currentQuests = scanQuests(saveFile, currentQuestsInentorySize);
+	Quest* currentQuests = scanQuests(saveFile, currentQuestsInentorySize);
 	fillPlayerQuests(player, currentQuestsInentorySize, currentQuests);
 	QuestItem* currentQuestItems = ScanIDQuestItems(saveFile, currentQuestItemInventorySize);
-	fillPlayerQuestItems(player, currentQuestItemInventorySize, currentQuestItems);*/
+	fillPlayerQuestItems(player, currentQuestItemInventorySize, currentQuestItems);
 	fscanf_s(saveFile, "%d ", &player.money);
 	fscanf_s(saveFile, "%d\n", &player.keys);
 
@@ -317,5 +317,23 @@ void loadSaves(const char* fn, Player& player) {
 
 	fclose(saveFile);
 
+
+}
+void loadQuestsSaves(const char* fn, Quest* quests, int amountQuests) {
+	FILE* saveFile;
+	int completedQuestsAmount = 0, completedQuestId = 0;
+	if (fopen_s(&saveFile, fn, "rt") != 0) {
+		printf_s("Can not find saves\n");
+		exit(1);
+	}
+
+	fscanf_s(saveFile, "%d", &completedQuestsAmount, sizeof(int));
+	for (int i = 0; i < completedQuestsAmount; i++) {
+		fscanf_s(saveFile, "%d", &completedQuestId, sizeof(int));
+		for (int j = 0; j < amountQuests; j++)
+			if (quests[j].requiredItem.ID == completedQuestId) quests[j].isCompleted = true;
+	}
+
+	fclose(saveFile);
 
 }

@@ -16,5 +16,6 @@ extern Ability* ALLAbilitiesList;
 //extern QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
 extern NPC* NPCs;
+extern QuestNPC* questNPCs;
 
 void interact(char** map, Player& player);

@@ -268,22 +268,22 @@ void drawScreen(char** map, Coordinates playerPos) {
 
 }
 void drawNPCs(NPC* NPCs) {
-	SDL_FRect npcRect = {0,0,40,70 };
+	SDL_FRect npcRect = { 0,0,40,70 };
 	SDL_Rect npcFrame = { 40,0,40,70 };
 
 	for (int i = 0; i < 4; i++) {
 		npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
 		npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
-	SDL_RenderCopyF(ren, NPCs[i].texture, &npcFrame, &npcRect);
+		SDL_RenderCopyF(ren, NPCs[i].texture, &npcFrame, &npcRect);
 	}
 }
 void drawQuestNPCs(QuestNPC* NPCs) {
-	SDL_FRect npcRect = {0,0,40,70 };
+	SDL_FRect npcRect = { 0,0,40,70 };
 
 	for (int i = 0; i < 1; i++) {
 		npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
 		npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
-	SDL_RenderCopyF(ren, NPCs[i].texture, NULL, &npcRect);
+		SDL_RenderCopyF(ren, NPCs[i].texture, NULL, &npcRect);
 	}
 }
 void drawPlayer(Coordinates playerPosition, int diraction, int frame) {
@@ -2100,6 +2100,7 @@ void drawNPCDialogWindow(NPC npc) {
 	window.y = window_height - 50 - window.h;
 	SDL_Texture* windowTex = generateTextureFromPNG("Textures\\window.png");
 	SDL_RenderCopy(ren, windowTex, NULL, &window);
+	SDL_DestroyTexture(windowTex);
 
 	SDL_Texture* face = generateTextureFromPNG("Textures\\InkeeperF.png");
 	SDL_Rect faceRect = { window.x + 80, window.y + 15, 120, 120 };
@@ -2137,6 +2138,66 @@ void drawNPCDialogWindow(NPC npc) {
 
 
 	SDL_RenderPresent(ren);
-	SDL_DestroyTexture(windowTex);
 	TTF_CloseFont(basicFont);
+}
+void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition) {
+	SDL_Rect window = { 0,0,window_width - 400,300 };
+	window.x = (window_width - window.w) / 2;
+	window.y = window_height - 50 - window.h;
+	SDL_Texture* windowTex = generateTextureFromPNG("Textures\\window.png");
+	SDL_RenderCopy(ren, windowTex, NULL, &window);
+	SDL_DestroyTexture(windowTex);
+
+
+	SDL_Texture* face = generateTextureFromPNG("Textures\\OlderF.png");
+	SDL_Rect faceRect = { window.x + 60, window.y + 25, 150, 150 };
+	SDL_RenderCopy(ren, face, NULL, &faceRect);
+	SDL_DestroyTexture(face);
+
+	TTF_Font* basicFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+	char phrase[100];
+
+	if (npc.quest.requiredItem.ID == -900) {
+		if (dialogeStage == 0) {
+			texture = generateTextureFromText(QUEST1_NPC_BEGINING1, basicFont, ttfRect, {0,0,0,255});
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+			texture = generateTextureFromText(QUEST1_NPC_BEGINING2, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 30;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			
+			texture = generateTextureFromText(QUEST1_NPC_BEGINING3, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 30;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+			texture = generateTextureFromText(QUEST1_PLAYER_ANSWER_1, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 60;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			
+			texture = generateTextureFromText(QUEST1_PLAYER_ANSWER_2, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 30;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			
+			texture = generateTextureFromText(QUEST1_PLAYER_ANSWER_3, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 30;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+		}
+
+
+
+	}
+
+	TTF_CloseFont(basicFont);
+	SDL_RenderPresent(ren);
 }

@@ -349,19 +349,19 @@ void startMenu(Player& player, char** map) {
 				if (isChoosen) {
 					if (slotChoice == 0) {
 						loadSaves("Saves\\save1.txt", player);
-						/*loadQuestsSaves("Saves\\CompletedQuests1.txt", quests, questsAmount);*/
+						loadQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
 						readMap(map, "Saves\\SavedMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
 						setMapSaves("Maps\\SavedMap.txt", map);
 					}
 					if (slotChoice == 1) {
 						loadSaves("Saves\\save2.txt", player);
-						/*loadQuestsSaves("Saves\\CompletedQuests2.txt", quests, questsAmount);*/
+						loadQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
 						readMap(map, "Saves\\SavedMap2.txt", MAP_SIZE_X, MAP_SIZE_Y);
 						setMapSaves("Maps\\SavedMap.txt", map);
 					}
 					if (slotChoice == 2) {
 						loadSaves("Saves\\save3.txt", player);
-						/*loadQuestsSaves("Saves\\CompletedQuests3.txt", quests, questsAmount);*/
+						loadQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
 						readMap(map, "Saves\\SavedMap3.txt", MAP_SIZE_X, MAP_SIZE_Y);
 						setMapSaves("Maps\\SavedMap.txt", map);
 					}
@@ -457,17 +457,17 @@ void gameMenu(Player& player, char** map) {
 					if (isChoosen) {
 						if (slotChoice == 0) {
 							setSaves("Saves\\save1.txt", player);
-							/*setQuestsSaves("Saves\\CompletedQuests1.txt", quests, questsAmount);*/
+							setQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
 							setMapSaves("Saves\\SavedMap1.txt", map);
 						}
 						if (slotChoice == 1) {
 							setSaves("Saves\\save2.txt", player);
-							/*setQuestsSaves("Saves\\CompletedQuests2.txt", quests, questsAmount);*/
+							setQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
 							setMapSaves("Saves\\SavedMap2.txt", map);
 						}
 						if (slotChoice == 2) {
 							setSaves("Saves\\save3.txt", player);
-							/*setQuestsSaves("Saves\\CompletedQuests3.txt", quests, questsAmount);*/
+							setQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
 							setMapSaves("Saves\\SavedMap3.txt", map);
 						}
 
@@ -518,19 +518,19 @@ void gameMenu(Player& player, char** map) {
 					if (isChoosen) {
 						if (slotChoice == 0) {
 							loadSaves("Saves\\save1.txt", player);
-							/*loadQuestsSaves("Saves\\CompletedQuests1.txt", quests, questsAmount);*/
+							loadQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
 							readMap(map, "Saves\\SavedMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
 							setMapSaves("Maps\\SavedMap.txt", map);
 						}
 						if (slotChoice == 1) {
 							loadSaves("Saves\\save2.txt", player);
-							/*loadQuestsSaves("Saves\\CompletedQuests2.txt", quests, questsAmount);*/
+							loadQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
 							readMap(map, "Saves\\SavedMap2.txt", MAP_SIZE_X, MAP_SIZE_Y);
 							setMapSaves("Maps\\SavedMap.txt", map);
 						}
 						if (slotChoice == 2) {
 							loadSaves("Saves\\save3.txt", player);
-							/*loadQuestsSaves("Saves\\CompletedQuests3.txt", quests, questsAmount);*/
+							loadQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
 							readMap(map, "Saves\\SavedMap3.txt", MAP_SIZE_X, MAP_SIZE_Y);
 							setMapSaves("Maps\\SavedMap.txt", map);
 						}

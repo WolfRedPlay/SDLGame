@@ -60,3 +60,4 @@ void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, 
 void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type, Hero hero);
 
 void drawNPCDialogWindow(NPC npc);
+void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition);
