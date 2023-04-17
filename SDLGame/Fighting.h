@@ -14,3 +14,4 @@ extern Armor* ALLArmorsList;
 extern Potion* ALLPotionsList;
 
 void startBattle(Player& player, EnemiesSquad enemies);
+void startBattle(Player& player, Enemy& boss);

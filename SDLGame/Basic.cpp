@@ -381,6 +381,7 @@ Quest* createAllQuests(int& amount) {
 		questsList[i].requiredItem = findInQuestItemsList(ALLQuestItemsList, itemID, qountOfQustItems);
 		fscanf_s(file, "%s ", &questsList[i].name, sizeof(questsList[0].name) / sizeof(char));
 		fscanf_s(file, "%d ", &questsList[i].moneyReward, sizeof(int));
+		fscanf_s(file, "%d ", &questsList[i].expReward, sizeof(int));
 		questsList[i].isCompleted = false;
 
 	}

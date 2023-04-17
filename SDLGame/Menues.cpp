@@ -141,7 +141,7 @@ bool createHeroesMenu(Player& player) {
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -801, qountOfAbilities), player.team[i].abilities);
 			addAbilityToAbilities(findInAbilitiesList(ALLAbilitiesList, -802, qountOfAbilities), player.team[i].abilities);
 			player.team[i].texture = generateTextureFromPNG("Textures\\Sell_potion.png");
-			
+
 			break;
 		}
 
@@ -273,7 +273,7 @@ void startMenu(Player& player, char** map) {
 	bool inStartMenu, inSaves, isChoosen;
 	SDL_Event ev;
 	while (true) {
-		inStartMenu = true; 
+		inStartMenu = true;
 		inSaves = false;
 		isChoosen = false;
 		coursorPosition = 0;
@@ -372,7 +372,7 @@ void startMenu(Player& player, char** map) {
 
 				drawSaveSlots(coursorPosition);
 			}
-			
+
 			break;
 		case 2: break;
 
@@ -390,167 +390,167 @@ void gameMenu(Player& player, char** map) {
 	int coursorPosition, choice, slotChoice;
 	SDL_Event ev;
 
-		inGameMenu = true;
-		isChoosen = false;
-		inSaves = false;
-		choice = -1;
-		coursorPosition = 0;
-		while (inGameMenu) {
-			while (SDL_PollEvent(&ev))
-				switch (ev.type) {
-				case SDL_QUIT:
-					DeInit(0);
-					break;
-				case SDL_KEYDOWN:
-					switch (ev.key.keysym.scancode) {
-					case SDL_SCANCODE_UP:
-						if (coursorPosition != 0) coursorPosition--;
-						break;
-					case SDL_SCANCODE_DOWN:
-						if (coursorPosition != 3) coursorPosition++;
-						break;
-					case SDL_SCANCODE_RETURN:
-						choice = coursorPosition;
-						inGameMenu = false;
-						break;
-					case SDL_SCANCODE_ESCAPE:
-						inGameMenu = false;
-						return;
-					}
-					break;
-				}
-			switch (choice) {
-			case 0: return;
-			case 1:
-#pragma region Set Saves
-				coursorPosition = 0;
-				inSaves = true;
-				while (inSaves) {
-					while (SDL_PollEvent(&ev))
-						switch (ev.type) {
-						case SDL_QUIT:
-							DeInit(0);
-							break;
-						case SDL_KEYDOWN:
-							switch (ev.key.keysym.scancode) {
-							case SDL_SCANCODE_UP:
-								if (coursorPosition != 0) coursorPosition--;
-								break;
-							case SDL_SCANCODE_DOWN:
-								if (coursorPosition != 2) coursorPosition++;
-								break;
-							case SDL_SCANCODE_RETURN:
-								slotChoice = coursorPosition;
-								inSaves = false;
-								isChoosen = true;
-								break;
-							case SDL_SCANCODE_ESCAPE:
-								inGameMenu = true;
-								inSaves = false;
-								isChoosen = false;
-								choice = -1;
-								coursorPosition = 0;
-								break;
-							}
-						}
-
-					if (isChoosen) {
-						if (slotChoice == 0) {
-							setSaves("Saves\\save1.txt", player);
-							setQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
-							setMapSaves("Saves\\SavedMap1.txt", map);
-						}
-						if (slotChoice == 1) {
-							setSaves("Saves\\save2.txt", player);
-							setQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
-							setMapSaves("Saves\\SavedMap2.txt", map);
-						}
-						if (slotChoice == 2) {
-							setSaves("Saves\\save3.txt", player);
-							setQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
-							setMapSaves("Saves\\SavedMap3.txt", map);
-						}
-
-						inGameMenu = true;
-						isChoosen = false;
-						choice = -1;
-						coursorPosition = 0;
-					}
-
-
-					drawSaveSlots(coursorPosition);
-				}
-#pragma endregion
+	inGameMenu = true;
+	isChoosen = false;
+	inSaves = false;
+	choice = -1;
+	coursorPosition = 0;
+	while (inGameMenu) {
+		while (SDL_PollEvent(&ev))
+			switch (ev.type) {
+			case SDL_QUIT:
+				DeInit(0);
 				break;
-			case 2:
-#pragma region Load Saves
-				coursorPosition = 0;
-				inSaves = true;
-				while (inSaves) {
-					while (SDL_PollEvent(&ev))
-						switch (ev.type) {
-						case SDL_QUIT:
-							DeInit(0);
-							break;
-						case SDL_KEYDOWN:
-							switch (ev.key.keysym.scancode) {
-							case SDL_SCANCODE_UP:
-								if (coursorPosition != 0) coursorPosition--;
-								break;
-							case SDL_SCANCODE_DOWN:
-								if (coursorPosition != 2) coursorPosition++;
-								break;
-							case SDL_SCANCODE_RETURN:
-								slotChoice = coursorPosition;
-								inSaves = false;
-								isChoosen = true;
-								break;
-							case SDL_SCANCODE_ESCAPE:
-								inGameMenu = true;
-								inSaves = false;
-								isChoosen = false;
-								choice = -1;
-								coursorPosition = 0;
-								break;
-							}
-						}
-
-					if (isChoosen) {
-						if (slotChoice == 0) {
-							loadSaves("Saves\\save1.txt", player);
-							loadQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
-							readMap(map, "Saves\\SavedMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
-							setMapSaves("Maps\\SavedMap.txt", map);
-						}
-						if (slotChoice == 1) {
-							loadSaves("Saves\\save2.txt", player);
-							loadQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
-							readMap(map, "Saves\\SavedMap2.txt", MAP_SIZE_X, MAP_SIZE_Y);
-							setMapSaves("Maps\\SavedMap.txt", map);
-						}
-						if (slotChoice == 2) {
-							loadSaves("Saves\\save3.txt", player);
-							loadQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
-							readMap(map, "Saves\\SavedMap3.txt", MAP_SIZE_X, MAP_SIZE_Y);
-							setMapSaves("Maps\\SavedMap.txt", map);
-						}
-
-						return;
-					}
-
-
-					drawSaveSlots(coursorPosition);
-				} 
-#pragma endregion
+			case SDL_KEYDOWN:
+				switch (ev.key.keysym.scancode) {
+				case SDL_SCANCODE_UP:
+					if (coursorPosition != 0) coursorPosition--;
+					break;
+				case SDL_SCANCODE_DOWN:
+					if (coursorPosition != 3) coursorPosition++;
+					break;
+				case SDL_SCANCODE_RETURN:
+					choice = coursorPosition;
+					inGameMenu = false;
+					break;
+				case SDL_SCANCODE_ESCAPE:
+					inGameMenu = false;
+					return;
+				}
 				break;
-			case 3:
-				inGame = false;
-				
-				return;
 			}
+		switch (choice) {
+		case 0: return;
+		case 1:
+#pragma region Set Saves
+			coursorPosition = 0;
+			inSaves = true;
+			while (inSaves) {
+				while (SDL_PollEvent(&ev))
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_UP:
+							if (coursorPosition != 0) coursorPosition--;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition != 2) coursorPosition++;
+							break;
+						case SDL_SCANCODE_RETURN:
+							slotChoice = coursorPosition;
+							inSaves = false;
+							isChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inGameMenu = true;
+							inSaves = false;
+							isChoosen = false;
+							choice = -1;
+							coursorPosition = 0;
+							break;
+						}
+					}
 
-			drawGameMenu(coursorPosition);
+				if (isChoosen) {
+					if (slotChoice == 0) {
+						setSaves("Saves\\save1.txt", player);
+						setQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
+						setMapSaves("Saves\\SavedMap1.txt", map);
+					}
+					if (slotChoice == 1) {
+						setSaves("Saves\\save2.txt", player);
+						setQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
+						setMapSaves("Saves\\SavedMap2.txt", map);
+					}
+					if (slotChoice == 2) {
+						setSaves("Saves\\save3.txt", player);
+						setQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
+						setMapSaves("Saves\\SavedMap3.txt", map);
+					}
+
+					inGameMenu = true;
+					isChoosen = false;
+					choice = -1;
+					coursorPosition = 0;
+				}
+
+
+				drawSaveSlots(coursorPosition);
+			}
+#pragma endregion
+			break;
+		case 2:
+#pragma region Load Saves
+			coursorPosition = 0;
+			inSaves = true;
+			while (inSaves) {
+				while (SDL_PollEvent(&ev))
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_UP:
+							if (coursorPosition != 0) coursorPosition--;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition != 2) coursorPosition++;
+							break;
+						case SDL_SCANCODE_RETURN:
+							slotChoice = coursorPosition;
+							inSaves = false;
+							isChoosen = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inGameMenu = true;
+							inSaves = false;
+							isChoosen = false;
+							choice = -1;
+							coursorPosition = 0;
+							break;
+						}
+					}
+
+				if (isChoosen) {
+					if (slotChoice == 0) {
+						loadSaves("Saves\\save1.txt", player);
+						loadQuestsSaves("Saves\\CompletedQuests1.txt", questsList, qountOfQusts);
+						readMap(map, "Saves\\SavedMap1.txt", MAP_SIZE_X, MAP_SIZE_Y);
+						setMapSaves("Maps\\SavedMap.txt", map);
+					}
+					if (slotChoice == 1) {
+						loadSaves("Saves\\save2.txt", player);
+						loadQuestsSaves("Saves\\CompletedQuests2.txt", questsList, qountOfQusts);
+						readMap(map, "Saves\\SavedMap2.txt", MAP_SIZE_X, MAP_SIZE_Y);
+						setMapSaves("Maps\\SavedMap.txt", map);
+					}
+					if (slotChoice == 2) {
+						loadSaves("Saves\\save3.txt", player);
+						loadQuestsSaves("Saves\\CompletedQuests3.txt", questsList, qountOfQusts);
+						readMap(map, "Saves\\SavedMap3.txt", MAP_SIZE_X, MAP_SIZE_Y);
+						setMapSaves("Maps\\SavedMap.txt", map);
+					}
+
+					return;
+				}
+
+
+				drawSaveSlots(coursorPosition);
+			}
+#pragma endregion
+			break;
+		case 3:
+			inGame = false;
+
+			return;
 		}
+
+		drawGameMenu(coursorPosition);
+	}
 
 }
 
@@ -606,7 +606,7 @@ void playerMenu(Player& player) {
 		}
 		switch (choice) {
 		case 0:
-#pragma region HERO STATS
+#pragma region HERO_STATS
 			inHeroesStats = true;
 			while (inHeroesStats) {
 				while (SDL_PollEvent(&ev)) {
@@ -638,7 +638,7 @@ void playerMenu(Player& player) {
 #pragma endregion
 			break;
 		case 1:
-#pragma region WEAPON INVENTORY
+#pragma region WEAPON_INVENTORY
 			inInventory = true;
 			coursorPosition = 0;
 
@@ -735,7 +735,7 @@ void playerMenu(Player& player) {
 #pragma endregion
 			break;
 		case 2:
-#pragma region ARMOR INVENTORY
+#pragma region ARMOR_INVENTORY
 			inInventory = true;
 			coursorPosition = 0;
 			while (inInventory) {
@@ -831,7 +831,7 @@ void playerMenu(Player& player) {
 #pragma endregion
 			break;
 		case 3:
-#pragma region POTION INVENTORY
+#pragma region POTION_INVENTORY
 			inInventory = true;
 			coursorPosition = 0;
 			while (inInventory) {
@@ -929,7 +929,7 @@ void playerMenu(Player& player) {
 #pragma endregion
 			break;
 		case 4:
-#pragma region ABILITIES LIST
+#pragma region ABILITIES_LIST
 			inHeroChoosing = true;
 			isHeroChoosen = false;
 			inInventory = false;
@@ -978,7 +978,7 @@ void playerMenu(Player& player) {
 					coursorPosition = 0;
 				}
 				while (inInventory) {
-					while (SDL_PollEvent(&ev)) 
+					while (SDL_PollEvent(&ev))
 						switch (ev.type) {
 						case SDL_QUIT:
 							DeInit(0);
@@ -1018,7 +1018,7 @@ void playerMenu(Player& player) {
 							break;
 						}
 
-					
+
 
 
 					while (isItemChoosen) {
@@ -1058,8 +1058,90 @@ void playerMenu(Player& player) {
 
 #pragma endregion
 			break;
-		case 5:break;
-		case 6:break;
+		case 5:
+#pragma region QUESTS_LIST
+			inInventory = true;
+			coursorPosition = 0;
+			while (inInventory) {
+				while (SDL_PollEvent(&ev))
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_RETURN:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_TAB:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						}
+
+
+						break;
+					}
+
+
+				drawQuestsList(player);
+			}
+#pragma endregion
+			break;
+		case 6:
+#pragma region QUEST_ITEMS_LIST
+			inInventory = true;
+			coursorPosition = 0;
+			while (inInventory) {
+				while (SDL_PollEvent(&ev))
+					switch (ev.type) {
+					case SDL_QUIT:
+						DeInit(0);
+						break;
+
+					case SDL_KEYDOWN:
+						switch (ev.key.keysym.scancode) {
+						case SDL_SCANCODE_LEFT:
+							if (coursorPosition != 0 && coursorPosition != 5) coursorPosition--;
+							break;
+						case SDL_SCANCODE_RIGHT:
+							if (coursorPosition != 4 && coursorPosition != 9) coursorPosition++;
+							break;
+						case SDL_SCANCODE_UP:
+							if (coursorPosition >= 5) coursorPosition -= 5;
+							break;
+						case SDL_SCANCODE_DOWN:
+							if (coursorPosition <= 4) coursorPosition += 5;
+							break;
+						case SDL_SCANCODE_RETURN:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_ESCAPE:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						case SDL_SCANCODE_TAB:
+							inInventory = false;
+							inPlayerMenu = true;
+							break;
+						}
+
+
+						break;
+					}
+
+
+				drawQuestItems(player, coursorPosition);
+			}
+#pragma endregion
+			break;
 		}
 	}
 

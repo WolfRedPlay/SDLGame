@@ -14,6 +14,10 @@ extern int dt;
 
 extern int mapSizeX, mapSizeY;
 
+extern int qountOfQusts;
+extern Quest* questsList;
+
+
 void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 void drawNPCs(NPC* npcs);
@@ -41,7 +45,8 @@ void drawPlayerWeapons(Player& player, int coursorPosition);
 void drawPlayerArmors(Player& player, int coursorPosition);
 void drawPlayerPotions(Player& player, int coursorPosition);
 void drawHeroAbilities(Hero& hero, int coursorPosition);
-
+void drawQuestsList(Player player);
+void drawQuestItems(Player player, int coursorPosition);
 
 
 void drawSeller(int typeOfSeller, int coursorPosition);

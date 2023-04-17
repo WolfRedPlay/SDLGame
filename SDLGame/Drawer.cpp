@@ -1355,7 +1355,106 @@ void drawHeroAbilities(Hero& hero, int coursorPosition) {
 	TTF_CloseFont(choicesFont);
 
 }
+void drawQuestsList(Player player) {
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 80);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 30);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+	SDL_Texture* winTex = generateTextureFromPNG("Textures\\window.png");
 
+	SDL_RenderCopy(ren, winTex, NULL, &window);
+
+	texture = generateTextureFromText("QUESTS LIST", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
+	ttfRect.y = window.y + 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+	char text[150];
+	ttfRect.y = window.y + 160;
+	ttfRect.x = 200;
+	for (int i = 0; i < MAX_QUESTS; i++) {
+		if (player.quests[i].requiredItem.ID != 0) {
+			sprintf_s(text, "%-30s Required item: %-15s Money reward: %-4d Exp reward: %-4d", player.quests[i].name, player.quests[i].requiredItem.name, player.quests[i].moneyReward, player.quests[i].expReward);
+			texture = generateTextureFromText(text, choicesFont, ttfRect, { 0,0,0,255 });
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			ttfRect.y += 40;
+		}
+	}
+
+	SDL_RenderPresent(ren);
+
+	SDL_DestroyTexture(winTex);
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}
+void drawQuestItems(Player player, int coursorPosition) {
+	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
+	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
+	TTF_Font* choicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 40);
+	SDL_Rect ttfRect;
+	SDL_Rect itemRect = { 0,0,264,265 };
+	SDL_Texture* texture;
+	SDL_Texture* winTex = generateTextureFromPNG("Textures\\window.png");
+
+	SDL_RenderCopy(ren, winTex, NULL, &window);
+
+
+	texture = generateTextureFromText("QUEST ITEMS INVENTORY", headerFont, ttfRect, { 0,0,0,255 });
+	ttfRect.x = window_width / 2 - ttfRect.w / 2;
+	ttfRect.y = 70;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
+
+
+	char textureWay[100], weaponName[22], weaponDMG[10], weaponPrice[30];
+
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+		sprintf_s(textureWay, "Textures\\%d.png", player.weapons[i].ID);
+		if (player.weapons[i].ID != 0) texture = generateTextureFromPNG(textureWay);
+
+		if (i <= (MAX_PLAYER_INVENTORY_SIZE / 2) - 1)
+		{
+			itemRect.x = window.x + 200 + itemRect.w * i;
+			itemRect.y = window.y + 100;
+		}
+		else {
+			itemRect.x = window.x + 200 + itemRect.w * (i % 5);
+			itemRect.y = window.y + 100 + itemRect.h;
+		}
+		if (i == coursorPosition) SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
+		else SDL_SetRenderDrawColor(ren, 0, 200, 192, 255);
+		SDL_RenderDrawRect(ren, &itemRect);
+		SDL_RenderCopy(ren, texture, NULL, &itemRect);
+		if (player.weapons[i].ID != 0) SDL_DestroyTexture(texture);
+	}
+
+	if (player.weapons[coursorPosition].ID != 0) {
+		sprintf_s(weaponName, "NAME: %s", player.questItems[coursorPosition].name);
+		sprintf_s(weaponDMG, "QUEST: %s", findQuestInList(questsList, player.questItems[coursorPosition].ID, qountOfQusts).name);
+		texture = generateTextureFromText(weaponName, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y = 780;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+
+		texture = generateTextureFromText(weaponDMG, choicesFont, ttfRect, { 0,0,0,255 });
+		ttfRect.x = window.x + 200;
+		ttfRect.y += 50;
+		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+		SDL_DestroyTexture(texture);
+;
+	}
+
+	SDL_RenderPresent(ren);
+
+	TTF_CloseFont(headerFont);
+	TTF_CloseFont(choicesFont);
+
+}
 
 
 void drawSeller(int typeOfSeller, int coursorPosition) {
@@ -2161,7 +2260,7 @@ void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition) 
 
 	if (npc.quest.requiredItem.ID == -900) {
 		if (dialogeStage == 0) {
-			texture = generateTextureFromText(QUEST1_NPC_BEGINING1, basicFont, ttfRect, {0,0,0,255});
+			texture = generateTextureFromText(QUEST1_NPC_BEGINING1, basicFont, ttfRect, { 0,0,0,255 });
 			ttfRect.x = faceRect.x + faceRect.w + 30;
 			ttfRect.y = faceRect.y + 10;
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
@@ -2171,7 +2270,7 @@ void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition) 
 			ttfRect.y += 30;
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 			SDL_DestroyTexture(texture);
-			
+
 			texture = generateTextureFromText(QUEST1_NPC_BEGINING3, basicFont, ttfRect, { 0,0,0,255 });
 			ttfRect.y += 30;
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
@@ -2181,17 +2280,81 @@ void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition) 
 			ttfRect.y += 60;
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 			SDL_DestroyTexture(texture);
-			
+			if (coursorPosition == 0) {
+				ttfRect.x += ttfRect.w;
+				texture = generateTextureFromText("<", basicFont, ttfRect, { 0,0,0,255 });
+				SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+				SDL_DestroyTexture(texture);
+			}
+
+
 			texture = generateTextureFromText(QUEST1_PLAYER_ANSWER_2, basicFont, ttfRect, { 0,0,0,255 });
 			ttfRect.y += 30;
+			ttfRect.x = faceRect.x + faceRect.w + 30;
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 			SDL_DestroyTexture(texture);
-			
+			if (coursorPosition == 1) {
+				ttfRect.x += ttfRect.w;
+				texture = generateTextureFromText("<", basicFont, ttfRect, { 0,0,0,255 });
+				SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+				SDL_DestroyTexture(texture);
+			}
+
 			texture = generateTextureFromText(QUEST1_PLAYER_ANSWER_3, basicFont, ttfRect, { 0,0,0,255 });
 			ttfRect.y += 30;
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			if (coursorPosition == 2) {
+				ttfRect.x += ttfRect.w;
+				texture = generateTextureFromText("<", basicFont, ttfRect, { 0,0,0,255 });
+				SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+				SDL_DestroyTexture(texture);
+			}
+
+		}
+		if (dialogeStage == 1) {
+			texture = generateTextureFromText(QUEST1_NPC_ANSWER_TO_1, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 			SDL_DestroyTexture(texture);
 
+		}
+		if (dialogeStage == 2) {
+			texture = generateTextureFromText(QUEST1_NPC_ANSWER_TO_2, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
+		if (dialogeStage == 3) {
+			texture = generateTextureFromText(QUEST1_NPC_ANSWER_TO_3, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
+		if (dialogeStage == 4) {
+			texture = generateTextureFromText(QUEST1_NPC_ANSWER_NOT_ENOGH_PLACE, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
+		if (dialogeStage == 5) {
+			texture = generateTextureFromText(QUEST1_NPC_REWARDING, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
+		if (dialogeStage == 6) {
+			texture = generateTextureFromText(QUEST1_NPC_COMPLETED, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
 		}
 
 

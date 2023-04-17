@@ -67,6 +67,23 @@ void cast(Hero& attacker, Ability& ability, Enemy& defender) {
 	}
 
 }
+void cast(Hero& attacker, Ability& ability, EnemiesSquad& defender) {
+	for (int i = 0; i < 4; i++) {
+		if (defender.enemies[i].status != DEAD && defender.enemies[i].status != ESCAPED)
+		{
+			defender.enemies[i].health -= ability.damage;
+			if (ability.effect != NORMAL) defender.enemies[i].status = ability.effect;
+			if (defender.enemies[i].health <= 0) {
+				defender.enemies[i].health = 0;
+				defender.enemies[i].status = DEAD;
+			}
+		}
+	}
+	attacker.mana -= ability.manaCost;
+	attacker.stamina -= ability.staminaCost;
+
+
+}
 void cast(Hero& buffer, Ability& ability, Hero& buffed) {
 	buffer.mana -= ability.manaCost;
 	buffer.stamina -= ability.staminaCost;
@@ -81,6 +98,33 @@ void cast(Hero& buffer, Ability& ability, Hero& buffed) {
 	if (ability.buffedCharacteristic == DAMAGE) {
 		buffed.damage += ability.buff;
 	}
+}
+void cast(Hero& buffer, Ability& ability, Hero buffed[4]) {
+	buffer.mana -= ability.manaCost;
+	buffer.stamina -= ability.staminaCost;
+	if (ability.buffedCharacteristic == HEALTH)
+		for (int i = 0; i < 4; i++)
+		{
+			if (buffed[i].status != DEAD && buffed[i].status != ESCAPED)
+			{
+				if (buffed[i].health <= buffed[i].maxHealth - ability.buff)buffed[i].health += ability.buff;
+				else buffed[i].health = buffed[i].maxHealth;
+			}
+		}
+	if (ability.buffedCharacteristic == ARMOR)
+		for (int i = 0; i < 4; i++) {
+			if (buffed[i].status != DEAD && buffed[i].status != ESCAPED)
+			{
+				if (buffed[i].armor <= 100 - ability.buff)buffed[i].armor += ability.buff;
+				else buffed[i].armor = 100;
+			}
+		}
+	if (ability.buffedCharacteristic == DAMAGE)
+		for (int i = 0; i < 4; i++)
+		{
+			if (buffed[i].status != DEAD && buffed[i].status != ESCAPED)
+				buffed[i].damage += ability.buff;
+		}
 }
 void cast(Enemy& attacker, Ability& ability, Hero& defender) {
 	defender.health -= ability.damage;
@@ -332,87 +376,432 @@ int playerAct(Player& player, EnemiesSquad& enemies) {
 
 				}
 				if (player.team[heroChoice].abilities[choice].type == ATTACKING)
-					while (inEnemyChoosing) {
-						while (SDL_PollEvent(&ev))
-							switch (ev.type) {
-							case SDL_QUIT:
-								DeInit(0);
-								break;
-							case SDL_KEYDOWN:
-								switch (ev.key.keysym.scancode) {
-								case SDL_SCANCODE_UP:
-									if (coursorPosition != 0) coursorPosition--;
+				{
+					if (player.team[heroChoice].abilities[choice].aoe) {
+						inEnemyChoosing = false;
+						inAction = false;
+						inHeroChoosing = true;
+						freeHeroes[heroChoice] = false;
+						coursorPosition = 0;
+						cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], enemies);
+						player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+					}
+					else
+					{
+						while (inEnemyChoosing) {
+							while (SDL_PollEvent(&ev))
+								switch (ev.type) {
+								case SDL_QUIT:
+									DeInit(0);
 									break;
-								case SDL_SCANCODE_DOWN:
-									if (coursorPosition != 4) coursorPosition++;
-									break;
-								case SDL_SCANCODE_RETURN:
-									if (enemies.enemies[coursorPosition].status != DEAD && enemies.enemies[coursorPosition].status != ESCAPED)
-									{
-										enemyChoice = coursorPosition;
+								case SDL_KEYDOWN:
+									switch (ev.key.keysym.scancode) {
+									case SDL_SCANCODE_UP:
+										if (coursorPosition != 0) coursorPosition--;
+										break;
+									case SDL_SCANCODE_DOWN:
+										if (coursorPosition != 4) coursorPosition++;
+										break;
+									case SDL_SCANCODE_RETURN:
+										if (enemies.enemies[coursorPosition].status != DEAD && enemies.enemies[coursorPosition].status != ESCAPED)
+										{
+											enemyChoice = coursorPosition;
+											inEnemyChoosing = false;
+											inAction = false;
+											inHeroChoosing = true;
+											freeHeroes[heroChoice] = false;
+											coursorPosition = 0;
+											cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], enemies.enemies[enemyChoice]);
+											player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+										}
+										break;
+									case SDL_SCANCODE_ESCAPE:
 										inEnemyChoosing = false;
 										inAction = false;
-										inHeroChoosing = true;
-										freeHeroes[heroChoice] = false;
+										inActionChoosing = true;
 										coursorPosition = 0;
-										cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], enemies.enemies[enemyChoice]);
-										player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+										break;
 									}
-									break;
-								case SDL_SCANCODE_ESCAPE:
-									inEnemyChoosing = false;
-									inAction = false;
-									inActionChoosing = true;
-									coursorPosition = 0;
+
 									break;
 								}
 
-								break;
-							}
-
-						drawFightingScene(player, enemies, coursorPosition, 2);
+							drawFightingScene(player, enemies, coursorPosition, 2);
+						}
 					}
+				}
 				else
-					while (inEnemyChoosing) {
-						while (SDL_PollEvent(&ev))
-							switch (ev.type) {
-							case SDL_QUIT:
-								DeInit(0);
-								break;
-							case SDL_KEYDOWN:
-								switch (ev.key.keysym.scancode) {
-								case SDL_SCANCODE_UP:
-									if (coursorPosition != 0) coursorPosition--;
+				{
+					if (player.team[heroChoice].abilities[choice].aoe) {
+						inEnemyChoosing = false;
+						inAction = false;
+						inHeroChoosing = true;
+						freeHeroes[heroChoice] = false;
+						coursorPosition = 0;
+						cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], player.team);
+						player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+					}
+					else {
+						while (inEnemyChoosing) {
+							while (SDL_PollEvent(&ev))
+								switch (ev.type) {
+								case SDL_QUIT:
+									DeInit(0);
 									break;
-								case SDL_SCANCODE_DOWN:
-									if (coursorPosition != 4) coursorPosition++;
-									break;
-								case SDL_SCANCODE_RETURN:
-									if (enemies.enemies[coursorPosition].status != DEAD && enemies.enemies[coursorPosition].status != ESCAPED)
-									{
-										enemyChoice = coursorPosition;
+								case SDL_KEYDOWN:
+									switch (ev.key.keysym.scancode) {
+									case SDL_SCANCODE_UP:
+										if (coursorPosition != 0) coursorPosition--;
+										break;
+									case SDL_SCANCODE_DOWN:
+										if (coursorPosition != 4) coursorPosition++;
+										break;
+									case SDL_SCANCODE_RETURN:
+										if (player.team[coursorPosition].status != DEAD && player.team[coursorPosition].status != ESCAPED)
+										{
+											enemyChoice = coursorPosition;
+											inEnemyChoosing = false;
+											inAction = false;
+											inHeroChoosing = true;
+											freeHeroes[heroChoice] = false;
+											coursorPosition = 0;
+											cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], player.team[enemyChoice]);
+											player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+										}
+										break;
+									case SDL_SCANCODE_ESCAPE:
 										inEnemyChoosing = false;
 										inAction = false;
-										inHeroChoosing = true;
-										freeHeroes[heroChoice] = false;
+										inActionChoosing = true;
 										coursorPosition = 0;
-										cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], player.team[enemyChoice]);
-										player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+										break;
 									}
-									break;
-								case SDL_SCANCODE_ESCAPE:
-									inEnemyChoosing = false;
-									inAction = false;
-									inActionChoosing = true;
-									coursorPosition = 0;
+
 									break;
 								}
 
+							drawFightingScene(player, enemies, coursorPosition, 0);
+						}
+					}
+				}
+#pragma endregion
+				break;
+
+			case 2:
+#pragma region POTION
+				inChoosing = true;
+				while (inChoosing) {
+
+					while (SDL_PollEvent(&ev))
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_LEFT:
+								if (coursorPosition != 0 && coursorPosition != 5) coursorPosition--;
+								break;
+							case SDL_SCANCODE_RIGHT:
+								if (coursorPosition != 4 && coursorPosition != 9) coursorPosition++;
+								break;
+							case SDL_SCANCODE_UP:
+								if (coursorPosition >= 5) coursorPosition -= 5;
+								break;
+							case SDL_SCANCODE_DOWN:
+								if (coursorPosition <= 4) coursorPosition += 5;
+								break;
+							case SDL_SCANCODE_RETURN:
+								if ((player.potions[coursorPosition].health != 0 && player.team[heroChoice].health != player.team[heroChoice].maxHealth) ||
+									(player.potions[coursorPosition].mana != 0 && player.team[heroChoice].mana != player.team[heroChoice].maxMana)) {
+									choice = coursorPosition;
+									inChoosing = false;
+									inHeroChoosing = true;
+									freeHeroes[heroChoice] = false;
+									Potion usedPotion = takePotionFromInventory(player.potions, choice);
+									usePotion(player.team[heroChoice], usedPotion);
+								}
+
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								inChoosing = false;
+								inAction = false;
+								inActionChoosing = true;
 								break;
 							}
 
-						drawFightingScene(player, enemies, coursorPosition, 0);
+
+							break;
+						}
+
+					drawPlayerPotions(player, coursorPosition);
+
+
+				}
+#pragma endregion
+				break;
+			case 3:
+				increaseProtection(player.team[heroChoice]);
+				freeHeroes[heroChoice] = false;
+				inAction = false;
+				inHeroChoosing = true;
+				break;
+			case 4:
+				tryToEscape(player.team[heroChoice]);
+				freeHeroes[heroChoice] = false;
+				inAction = false;
+				inHeroChoosing = true;
+				break;
+			}
+		}
+	}
+	if ((player.team[0].status == DEAD || player.team[0].status == ESCAPED) &&
+		(player.team[1].status == DEAD || player.team[1].status == ESCAPED) &&
+		(player.team[2].status == DEAD || player.team[2].status == ESCAPED) &&
+		(player.team[3].status == DEAD || player.team[3].status == ESCAPED))
+	{
+		if (player.team[0].status == ESCAPED || player.team[1].status == ESCAPED || player.team[2].status == ESCAPED || player.team[3].status == ESCAPED) return ESCAPE;
+		else return LOSE;
+	}
+	return CONTINUE;
+}
+int playerAct(Player& player, Enemy& boss) {
+	int coursorPosition = 0, heroChoice, choice, enemyChoice;
+
+	bool inHeroChoosing = true, inActionChoosing = false, inAction = false, inEnemyChoosing = false, inChoosing = false;
+
+
+	for (int i = 0; i < 4; i++) {
+		if (player.team[i].status == BURN) {
+			if (burnTimers[i] == 5)
+			{
+				burnTimers[i] = 0;
+				player.team[i].status = NORMAL;
+			}
+			else burnTimers[i]++;
+			player.team[i].health -= 10;
+		}
+		if (player.team[i].status == POISONED) {
+			if (poisonTimers[i] == 8)
+			{
+				poisonTimers[i] = 0;
+				player.team[i].status = NORMAL;
+			}
+			else poisonTimers[i]++;
+			player.team[i].health -= 6;
+		}
+		if (player.team[i].status == STUNED) {
+			freeHeroes[i] = false;
+
+		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		if (boss.status == STUNED) boss.status = NORMAL;
+	}
+
+	for (int i = 0; i < 4; i++)
+		if (player.team[i].status == DEAD || player.team[i].status == ESCAPED) freeHeroes[i] = false;
+
+	while (freeHeroes[0] || freeHeroes[1] || freeHeroes[2] || freeHeroes[3]) {
+
+		if (boss.status == DEAD) {
+			return WIN;
+		}
+		coursorPosition = 0;
+
+		while (inHeroChoosing) {
+			while (SDL_PollEvent(&ev))
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_UP:
+						if (coursorPosition != 0) coursorPosition--;
+						break;
+					case SDL_SCANCODE_DOWN:
+						if (coursorPosition != 3) coursorPosition++;
+						break;
+					case SDL_SCANCODE_RETURN:
+						if (freeHeroes[coursorPosition])
+						{
+							heroChoice = coursorPosition;
+							inHeroChoosing = false;
+							inActionChoosing = true;
+
+
+						}
+						break;
 					}
+
+					break;
+				}
+			//переделать для босса
+			//drawFightingScene(player, enemies, coursorPosition, 0);
+		}
+		coursorPosition = 0;
+		while (inActionChoosing) {
+
+			while (SDL_PollEvent(&ev))
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_UP:
+						if (coursorPosition != 0) coursorPosition--;
+						break;
+					case SDL_SCANCODE_DOWN:
+						if (coursorPosition != 4) coursorPosition++;
+						break;
+					case SDL_SCANCODE_RETURN:
+						choice = coursorPosition;
+						inActionChoosing = false;
+						inAction = true;
+						coursorPosition = 0;
+						break;
+					case SDL_SCANCODE_ESCAPE:
+						inActionChoosing = false;
+						inHeroChoosing = true;
+						break;
+					}
+
+					break;
+				}
+			//переделать для босса
+			//drawFightingScene(player, enemies, coursorPosition, 1);
+
+		}
+		coursorPosition = 0;
+		while (inAction) {
+
+			switch (choice) {
+			case 0:
+#pragma region ATTACK
+				inAction = false;
+				inHeroChoosing = true;
+				freeHeroes[heroChoice] = false;
+				attack(player.team[heroChoice], boss);
+				//анимация
+#pragma endregion
+				break;
+			case 1:
+#pragma region ABILITY
+				inChoosing = true;
+				while (inChoosing) {
+
+					while (SDL_PollEvent(&ev))
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_LEFT:
+								if (coursorPosition != 0 && coursorPosition != 4) coursorPosition--;
+								break;
+							case SDL_SCANCODE_RIGHT:
+								if (coursorPosition != 3 && coursorPosition != 7) coursorPosition++;
+								break;
+							case SDL_SCANCODE_UP:
+								if (coursorPosition >= 4) coursorPosition -= 4;
+								break;
+							case SDL_SCANCODE_DOWN:
+								if (coursorPosition <= 3) coursorPosition += 4;
+								break;
+							case SDL_SCANCODE_RETURN:
+								if (player.team[heroChoice].mana >= player.team[heroChoice].abilities[coursorPosition].manaCost &&
+									player.team[heroChoice].stamina >= player.team[heroChoice].abilities[coursorPosition].staminaCost &&
+									player.team[heroChoice].abilities[coursorPosition].cooldown == 0) {
+									choice = coursorPosition;
+									inChoosing = false;
+									inEnemyChoosing = true;
+								}
+
+								break;
+							case SDL_SCANCODE_ESCAPE:
+								inChoosing = false;
+								inAction = false;
+								inActionChoosing = true;
+								break;
+							}
+
+
+							break;
+						}
+
+					drawHeroAbilities(player.team[heroChoice], coursorPosition);
+
+
+				}
+				if (player.team[heroChoice].abilities[choice].type == ATTACKING)
+				{
+					inAction = false;
+					inHeroChoosing = true;
+					freeHeroes[heroChoice] = false;
+					coursorPosition = 0;
+					cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], boss);
+					player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+				}
+				else
+				{
+					if (player.team[heroChoice].abilities[choice].aoe) {
+						inEnemyChoosing = false;
+						inAction = false;
+						inHeroChoosing = true;
+						freeHeroes[heroChoice] = false;
+						coursorPosition = 0;
+						cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], player.team);
+						player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+					}
+					else {
+						while (inEnemyChoosing) {
+							while (SDL_PollEvent(&ev))
+								switch (ev.type) {
+								case SDL_QUIT:
+									DeInit(0);
+									break;
+								case SDL_KEYDOWN:
+									switch (ev.key.keysym.scancode) {
+									case SDL_SCANCODE_UP:
+										if (coursorPosition != 0) coursorPosition--;
+										break;
+									case SDL_SCANCODE_DOWN:
+										if (coursorPosition != 4) coursorPosition++;
+										break;
+									case SDL_SCANCODE_RETURN:
+										if (player.team[coursorPosition].status != DEAD && player.team[coursorPosition].status != ESCAPED)
+										{
+											enemyChoice = coursorPosition;
+											inEnemyChoosing = false;
+											inAction = false;
+											inHeroChoosing = true;
+											freeHeroes[heroChoice] = false;
+											coursorPosition = 0;
+											cast(player.team[heroChoice], player.team[heroChoice].abilities[choice], player.team[enemyChoice]);
+											player.team[heroChoice].abilities[choice].cooldown = heroesCooldowns[heroChoice][choice];
+										}
+										break;
+									case SDL_SCANCODE_ESCAPE:
+										inEnemyChoosing = false;
+										inAction = false;
+										inActionChoosing = true;
+										coursorPosition = 0;
+										break;
+									}
+
+									break;
+								}
+
+							drawFightingScene(player, enemies, coursorPosition, 0);
+						}
+					}
+				}
 #pragma endregion
 				break;
 
@@ -705,6 +1094,93 @@ void startBattle(Player& player, EnemiesSquad enemies) {
 		}
 		for (int i = 0; i < 4; i++) {
 			enemies.enemies[i].ability.cooldown--;
+			for (int j = 0; j < MAX_ABILITIES; j++) {
+				if (player.team[i].abilities[j].ID != 0 && player.team[i].abilities[j].cooldown != 0) player.team[i].abilities[j].cooldown--;
+			}
+		}
+
+
+
+
+
+	}
+
+
+
+}
+void startBattle(Player& player, Enemy& boss) {
+
+	int result = CONTINUE;
+	int chance = random(1, 100);
+
+	enemiesCooldowns[0] = boss.ability.cooldown + 1;
+	boss.ability.cooldown = 0;
+	for (int i = 0; i < 4; i++) {
+		saveMaxColldowns(player.team[i].abilities, heroesCooldowns[i]);
+		setCooldownsToZero(player.team[i].abilities);
+	}
+
+	while (true) {
+
+		//if ((player.team[0].status == DEAD || player.team[0].status == ESCAPED) &&
+		//	(player.team[1].status == DEAD || player.team[1].status == ESCAPED) &&
+		//	(player.team[2].status == DEAD || player.team[2].status == ESCAPED) &&
+		//	(player.team[3].status == DEAD || player.team[3].status == ESCAPED)) {
+		//	//победа
+		//}
+
+		if (chance >= 60 && result == CONTINUE)
+		{
+			for (int i = 0; i < 4; i++) freeHeroes[i] = true;
+			result = playerAct(player, boss);
+		}
+
+		if (result == WIN) {
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
+			win(player, enemies);
+			return;
+		}
+		if (result == ESCAPE) {
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
+			return;
+		}
+		if (result == LOSE) {
+			inGame = false;
+			return;
+		}
+
+		if (chance >= 60) SDL_Delay(2500);
+		chance = 100;
+		if (result == CONTINUE) {
+			for (int i = 0; i < 4; i++) freeEnemies[i] = true;
+			result = enemiesAct(player, enemies);
+		}
+
+		if (result == WIN) {
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
+			win(player, enemies);
+			return;
+		}
+
+		if (result == ESCAPE) {
+			for (int i = 0; i < 4; i++) {
+				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
+			}
+			return;
+		}
+
+		if (result == LOSE) {
+			inGame = false;
+			return;
+		}
+			boss.ability.cooldown--;
+		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < MAX_ABILITIES; j++) {
 				if (player.team[i].abilities[j].ID != 0 && player.team[i].abilities[j].cooldown != 0) player.team[i].abilities[j].cooldown--;
 			}
