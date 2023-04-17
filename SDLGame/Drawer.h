@@ -20,8 +20,8 @@ extern Quest* questsList;
 
 void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
-void drawNPCs(NPC* npcs);
-void drawQuestNPCs(QuestNPC* NPCs);
+void drawNPCs(NPC* npcs, Coordinates playerPos);
+void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos);
 
 
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);
@@ -62,7 +62,7 @@ void drawInkeeperReject();
 
 
 void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type);
-void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type, Hero hero);
+void drawFightingScene(Player player, Enemy boss, int coursorPosition, int type);
 
 void drawNPCDialogWindow(NPC npc);
 void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition);

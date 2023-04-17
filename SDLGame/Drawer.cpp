@@ -107,9 +107,9 @@ void drawScreen(char** map, Coordinates playerPos) {
 
 	int x = 0, y = 0;
 
-	while (playerPos.X >= (window_width - 1) / UNIT_SIZE_X) {
-		playerPos.X -= (window_width - 1) / UNIT_SIZE_X;
-		leftBorder += (window_width - 1) / UNIT_SIZE_X;
+	while (playerPos.X >= window_width / UNIT_SIZE_X) {
+		playerPos.X -= window_width / UNIT_SIZE_X;
+		leftBorder += window_width / UNIT_SIZE_X;
 	}
 	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
 		playerPos.Y -= window_height / UNIT_SIZE_Y;
@@ -267,23 +267,55 @@ void drawScreen(char** map, Coordinates playerPos) {
 	SDL_DestroyTexture(abilitiesSeller);
 
 }
-void drawNPCs(NPC* NPCs) {
+void drawNPCs(NPC* NPCs, Coordinates playerPos) {
 	SDL_FRect npcRect = { 0,0,40,70 };
 	SDL_Rect npcFrame = { 40,0,40,70 };
+	int leftBorder = 0, upperBorder = 0;
+	int rightBorder = 0, downBorder = 0;
 
+	while (playerPos.X >= window_width / UNIT_SIZE_X) {
+		playerPos.X -= window_width / UNIT_SIZE_X;
+		leftBorder += window_width / UNIT_SIZE_X;
+	}
+	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
+	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
+		playerPos.Y -= window_height / UNIT_SIZE_Y;
+		upperBorder += window_height / UNIT_SIZE_Y;
+	}
+	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
 	for (int i = 0; i < 4; i++) {
-		npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
-		npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
-		SDL_RenderCopyF(ren, NPCs[i].texture, &npcFrame, &npcRect);
+		if (NPCs[i].position.X > leftBorder && NPCs[i].position.X < rightBorder &&
+			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder) {
+			npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
+			npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
+			SDL_RenderCopyF(ren, NPCs[i].texture, &npcFrame, &npcRect);
+		}
 	}
 }
-void drawQuestNPCs(QuestNPC* NPCs) {
+void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos) {
 	SDL_FRect npcRect = { 0,0,40,70 };
+	
+	int leftBorder = 0, upperBorder = 0;
+	int rightBorder = 0, downBorder = 0;
+
+	while (playerPos.X >= window_width / UNIT_SIZE_X) {
+		playerPos.X -= window_width / UNIT_SIZE_X;
+		leftBorder += window_width / UNIT_SIZE_X;
+	}
+	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
+	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
+		playerPos.Y -= window_height / UNIT_SIZE_Y;
+		upperBorder += window_height / UNIT_SIZE_Y;
+	}
+	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
 
 	for (int i = 0; i < 1; i++) {
-		npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
-		npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
-		SDL_RenderCopyF(ren, NPCs[i].texture, NULL, &npcRect);
+		if (NPCs[i].position.X > leftBorder && NPCs[i].position.X < rightBorder &&
+			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder) {
+			npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
+			npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
+			SDL_RenderCopyF(ren, NPCs[i].texture, NULL, &npcRect);
+		}
 	}
 }
 void drawPlayer(Coordinates playerPosition, int diraction, int frame) {
@@ -1446,7 +1478,6 @@ void drawQuestItems(Player player, int coursorPosition) {
 		ttfRect.y += 50;
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
-;
 	}
 
 	SDL_RenderPresent(ren);
@@ -1455,7 +1486,6 @@ void drawQuestItems(Player player, int coursorPosition) {
 	TTF_CloseFont(choicesFont);
 
 }
-
 
 void drawSeller(int typeOfSeller, int coursorPosition) {
 	SDL_Rect window = { 0,0,UNIT_SIZE_X * 20,UNIT_SIZE_Y * 20 };
@@ -2063,11 +2093,10 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 	SDL_RenderPresent(ren);
 
 }
-void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition, int type, Hero hero) {
+void drawFightingScene(Player player, Enemy boss, int coursorPosition, int type) {
 	SDL_SetRenderDrawColor(ren, 0, 162, 232, 255);
 	SDL_RenderClear(ren);
 	char text[100];
-
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
 	TTF_Font* basicFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
 
@@ -2080,9 +2109,7 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 	charRect.y = 50;
 	ttfRect.x = charRect.x;
 
-
 	for (int i = 0; i < 4; i++) {
-
 		sprintf_s(text, "HP: %d", player.team[i].health);
 		texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
 		ttfRect.y = charRect.y - ttfRect.h;
@@ -2094,19 +2121,18 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 	}
 
 	charRect.x = window_width - charRect.w - 200;
-	charRect.y = 50;
+	charRect.y = 125;
 	ttfRect.x = charRect.x;
-	for (int i = 0; i < 4; i++) {
 
-		sprintf_s(text, "HP: %d", enemies.enemies[i].health);
-		texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
-		ttfRect.y = charRect.y - ttfRect.h;
-		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
-		SDL_DestroyTexture(texture);
+	sprintf_s(text, "HP: %d", boss.health);
+	texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
+	ttfRect.y = charRect.y - ttfRect.h;
+	SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+	SDL_DestroyTexture(texture);
 
-		SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
-		charRect.y += charRect.h + 50;
-	}
+	SDL_RenderCopy(ren, boss.texture, NULL, &charRect);
+	charRect.y += charRect.h + 50;
+
 
 	SDL_Rect actionArea = { 0,0,window_width, 200 };
 
@@ -2151,35 +2177,6 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 
 	if (type == 0 || type == 2)drawChoosingRect(type, coursorPosition);
 
-	/*if (type == 3) {
-		ttfRect.x = 250;
-		ttfRect.y = actionArea.y + 50;
-		for (int i = 0; i < MAX_ABILITIES; i++) {
-			if (hero.abilities[i].ID != 0)
-			{
-				if (i == coursorPosition){
-					if (hero.abilities[i].type == ATTACKING) sprintf_s(text, ">%-15s DMG:%-3d MANACOST:%-3d STAMINACOST:%-3d COOLDOWN:%-3d",
-						hero.abilities[i].name, hero.abilities[i].damage, hero.abilities[i].manaCost, hero.abilities[i].staminaCost, hero.abilities[i].cooldown);
-
-					else sprintf_s(text, ">%-15s BUFF:%-3d MANACOST:%-3d STAMINACOST:%-3d COOLDOWN:%-3d",
-						hero.abilities[i].name, hero.abilities[i].buff, hero.abilities[i].manaCost, hero.abilities[i].staminaCost, hero.abilities[i].cooldown);
-				}
-				else {
-					if (hero.abilities[i].type == ATTACKING) sprintf_s(text, "%-15s DMG:%-3d MANACOST:%-3d STAMINACOST:%-3d COOLDOWN:%-3d",
-						hero.abilities[i].name, hero.abilities[i].damage, hero.abilities[i].manaCost, hero.abilities[i].staminaCost, hero.abilities[i].cooldown);
-
-					else sprintf_s(text, "%-15s BUFF:%-3d MANACOST:%-3d STAMINACOST:%-3d COOLDOWN:%-3d",
-						hero.abilities[i].name, hero.abilities[i].buff, hero.abilities[i].manaCost, hero.abilities[i].staminaCost, hero.abilities[i].cooldown);
-				}
-
-				texture = generateTextureFromText(text, basicFont, ttfRect, {0,0,0,255});
-				SDL_RenderCopy(ren, texture, NULL, &ttfRect);
-				SDL_DestroyTexture(texture);
-				ttfRect.y += 30;
-
-			}
-		}
-	}*/
 
 	if (type == 4) {
 

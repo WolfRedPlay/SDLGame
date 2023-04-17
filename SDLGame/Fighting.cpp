@@ -639,8 +639,8 @@ int playerAct(Player& player, Enemy& boss) {
 
 					break;
 				}
-			//переделать для босса
-			//drawFightingScene(player, enemies, coursorPosition, 0);
+
+			drawFightingScene(player, boss, coursorPosition, 0);
 		}
 		coursorPosition = 0;
 		while (inActionChoosing) {
@@ -798,7 +798,7 @@ int playerAct(Player& player, Enemy& boss) {
 									break;
 								}
 
-							drawFightingScene(player, enemies, coursorPosition, 0);
+							drawFightingScene(player, boss, coursorPosition, 0);
 						}
 					}
 				}
@@ -965,6 +965,76 @@ int enemiesAct(Player& player, EnemiesSquad& enemies) {
 	}
 	return CONTINUE;
 }
+int enemiesAct(Player& player, Enemy& boss) {
+	int heroChoice;
+
+
+		if (boss.status == BURN) {
+			if (burnTimers[4] == 5)
+			{
+				burnTimers[4] = 0;
+				boss.status = NORMAL;
+			}
+			else burnTimers[4]++;
+			boss.health -= 10;
+		}
+		if (boss.status == POISONED) {
+			if (poisonTimers[4] == 8)
+			{
+				poisonTimers[4] = 0;
+				boss.status = NORMAL;
+			}
+			else poisonTimers[4]++;
+			boss.health -= 6;
+		}
+		if (boss.status == STUNED) {
+			freeEnemies[0] = false;
+
+		}
+
+
+	for (int i = 0; i < 4; i++) {
+		if (player.team[i].status == STUNED) player.team[i].status = NORMAL;
+	}
+
+		if (boss.status == DEAD) freeEnemies[0] = false;
+	while (freeEnemies[0]) {
+
+		if ((player.team[0].status == DEAD || player.team[0].status == ESCAPED) &&
+			(player.team[1].status == DEAD || player.team[1].status == ESCAPED) &&
+			(player.team[2].status == DEAD || player.team[2].status == ESCAPED) &&
+			(player.team[3].status == DEAD || player.team[3].status == ESCAPED)) {
+			break;
+		}
+
+		if (boss.ability.cooldown != 0 &&
+			boss.mana >= boss.ability.manaCost &&
+			boss.stamina >= boss.ability.staminaCost) {
+			do {
+				heroChoice = random(0, 3);
+			} while (player.team[heroChoice].status == DEAD || player.team[heroChoice].status == ESCAPED);
+			cast(boss, boss.ability, player.team[heroChoice]);
+			boss.ability.cooldown = enemiesCooldowns[0];
+			freeEnemies[0] = false;
+		}
+		else {
+			do {
+				heroChoice = random(0, 3);
+			} while (player.team[heroChoice].status == DEAD || player.team[heroChoice].status == ESCAPED);
+			attack(boss, player.team[heroChoice]);
+			freeEnemies[0] = false;
+		}
+		drawFightingScene(player, boss, 0, -1);
+	}
+	if ((player.team[0].status == DEAD || player.team[0].status == ESCAPED) &&
+		(player.team[1].status == DEAD || player.team[1].status == ESCAPED) &&
+		(player.team[2].status == DEAD || player.team[2].status == ESCAPED) &&
+		(player.team[3].status == DEAD || player.team[3].status == ESCAPED)) {
+		if (player.team[0].status == DEAD && player.team[1].status == DEAD && player.team[2].status == DEAD && player.team[3].status == DEAD) return LOSE;
+		else return ESCAPE;
+	}
+	return CONTINUE;
+}
 
 void win(Player& player, EnemiesSquad& enemies) {
 	int chance = 0;
@@ -1016,6 +1086,35 @@ void win(Player& player, EnemiesSquad& enemies) {
 
 
 
+	}
+}
+void win(Player& player, Enemy boss) {
+	int chance = 0;
+
+
+	chance = random(1, 100);
+	if (chance >= 50) {
+		Weapon givedWeapon = findInWeaponsList(ALLWeaponsList, boss.IDweaponDrop, qountOfWeapons);
+		addWeaponToInventory(givedWeapon, player.weapons);
+	}
+	chance = random(1, 100);
+	if (chance >= 50) {
+		Armor givedArmor = findInArmorsList(ALLArmorsList, boss.IDarmorDrop, qountOfArmors);
+		addArmorToInventory(givedArmor, player.armors);
+	}
+
+	chance = random(1, 100);
+	if (chance >= 50) {
+		Potion givedPotion = findInPotionsList(ALLPotionsList, boss.IDpotionDrop, qountOfPotions);
+		addPotionToInventory(givedPotion, player.potions);
+	}
+
+	player.money += boss.moneyDrop;
+
+	for (int i = 0; i < 4; i++) {
+		if (player.team[i].status != DEAD && player.team[i].status != ESCAPED) {
+			player.team[i].exp += boss.expDrop;
+		}
 	}
 }
 
@@ -1139,7 +1238,7 @@ void startBattle(Player& player, Enemy& boss) {
 			for (int i = 0; i < 4; i++) {
 				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
 			}
-			win(player, enemies);
+			win(player, boss);
 			return;
 		}
 		if (result == ESCAPE) {
@@ -1157,14 +1256,14 @@ void startBattle(Player& player, Enemy& boss) {
 		chance = 100;
 		if (result == CONTINUE) {
 			for (int i = 0; i < 4; i++) freeEnemies[i] = true;
-			result = enemiesAct(player, enemies);
+			result = enemiesAct(player, boss);
 		}
 
 		if (result == WIN) {
 			for (int i = 0; i < 4; i++) {
 				setCooldownsToMax(player.team[i].abilities, heroesCooldowns[i]);
 			}
-			win(player, enemies);
+			win(player, boss);
 			return;
 		}
 
@@ -1179,19 +1278,11 @@ void startBattle(Player& player, Enemy& boss) {
 			inGame = false;
 			return;
 		}
-			boss.ability.cooldown--;
+		boss.ability.cooldown--;
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < MAX_ABILITIES; j++) {
 				if (player.team[i].abilities[j].ID != 0 && player.team[i].abilities[j].cooldown != 0) player.team[i].abilities[j].cooldown--;
 			}
 		}
-
-
-
-
-
 	}
-
-
-
 }

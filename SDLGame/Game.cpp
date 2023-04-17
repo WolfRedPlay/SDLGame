@@ -282,8 +282,8 @@ int main(int argc, char* argv[]) {
 
 
 				drawScreen(map, player.position);
-				drawNPCs(NPCs);
-				drawQuestNPCs(questNPCs);
+				drawNPCs(NPCs, player.position);
+				drawQuestNPCs(questNPCs, player.position);
 				drawPlayer(player.position, player.diraction, frame);
 
 				//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
