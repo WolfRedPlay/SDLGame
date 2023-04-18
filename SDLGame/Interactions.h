@@ -19,5 +19,6 @@ extern Ability* ALLAbilitiesList;
 extern NPC* NPCs;
 extern QuestNPC* questNPCs;
 extern Enemy* bosses;
+extern QuestChest* chests;
 
 void interact(char** map, Player& player);

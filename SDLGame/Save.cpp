@@ -286,13 +286,13 @@ void loadSaves(const char* fn, Player& player) {
 			player.team[i].texture = generateTextureFromPNG("Textures\\Knight.png");
 			break;
 		case ROGUE: 
-			player.team[i].texture = generateTextureFromPNG("Textures\\Inkeeper.png");
+			player.team[i].texture = generateTextureFromPNG("Textures\\Rogue.png");
 			break;
 		case MAGE: 
 			player.team[i].texture = generateTextureFromPNG("Textures\\Mage.png");
 			break;
 		case HEALER: 
-			player.team[i].texture = generateTextureFromPNG("Textures\\Sell_potion.png");
+			player.team[i].texture = generateTextureFromPNG("Textures\\Healer.png");
 			break;
 		}
 	}

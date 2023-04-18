@@ -674,7 +674,7 @@ void weaponSeller(Player& player, int stage, char** map)
 			break;
 		case 1: 
 			sellWeapon(player, seller);
-			drawScreen(map, player.position);
+			drawScreen(player.position);
 			drawPlayer(player.position, player.diraction, 0);
 			inSeller = true;
 			break;
@@ -747,7 +747,7 @@ void armorSeller(Player& player, int stage, char** map)
 			break;
 		case 1: 
 			sellArmor(player, seller);
-			drawScreen(map, player.position);
+			drawScreen(player.position);
 			drawPlayer(player.position, player.diraction, 0);
 			inSeller = true;
 			break;
@@ -822,7 +822,7 @@ void potionSeller(Player& player, int stage, char** map)
 			break;
 		case 1: 
 			sellPotion(player, seller);
-			drawScreen(map, player.position);
+			drawScreen(player.position);
 			drawPlayer(player.position, player.diraction, 0);
 			inSeller = true;
 			break;
@@ -895,13 +895,13 @@ void abilitySeller(Player& player, int stage, char** map)
 		{
 		case 0: 
 			buyAbility(player, seller);
-			drawScreen(map, player.position);
+			drawScreen(player.position);
 			drawPlayer(player.position, player.diraction, 0);
 			inSeller = true;
 			break;
 		case 1: 
 			forgetAbility(player);
-			drawScreen(map, player.position);
+			drawScreen(player.position);
 			drawPlayer(player.position, player.diraction, 0);
 			inSeller = true;
 			break;

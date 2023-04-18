@@ -16,6 +16,7 @@ extern int window_height;
 #define NPC_AMOUNT_1 4
 #define QUEST_NPC_AMOUNT_1 1
 #define BOSSES_AMOUNT_1 1
+#define CHESTS_AMOUNT_1 1
 
 #define MAP_SIZE_X 401
 #define MAP_SIZE_Y 100
@@ -57,6 +58,7 @@ enum Symbols {
 	EMPTY = ' ',
 	GRASS = '.',
 	WOOD = ',',
+	STONE = 'm',
 	SHOP = 'S',
 	DUNGE = '0',  //
 	LOCATION = 'O',//
@@ -71,7 +73,6 @@ enum Symbols {
 	KEY = 'K',
 	DOOR = 'D',
 	CHEST = 'C',
-	QUEST_CHEST = 'G',
 	PUZZLE_MAN = '?'//
 
 };
@@ -262,6 +263,7 @@ void deleteObject(char** map, int x, int y);
 NPC* createNPCs(int location);
 QuestNPC* createQuestNPCs(int location);
 Enemy* createBosses(int location);
+QuestChest* createChests(int location);
 
 void clearWeaponInventory(Weapon* weapons);
 void clearArmorInventory(Armor* armors);

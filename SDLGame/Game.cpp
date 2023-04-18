@@ -19,6 +19,7 @@ SDL_Renderer* ren = NULL;
 int window_width = 1920;
 int window_height = 1080;
 
+char** map;
 
 bool inGame = false;
 
@@ -34,6 +35,7 @@ Coordinates temp = { 0.f,0.f };
 NPC* NPCs;
 QuestNPC* questNPCs;
 Enemy* bosses;
+QuestChest* chests;
 
 int shopStage = 0, dungeType = 0;
 
@@ -114,7 +116,7 @@ int main(int argc, char* argv[]) {
 
 	int enemyCounter = 0; bool enemyCounterRandomed = false; int startFight = 0;
 
-	char** map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
+	map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;
 	Player player;
 	Init();
@@ -136,6 +138,7 @@ int main(int argc, char* argv[]) {
 		NPCs = createNPCs(player.currentLocation);
 		questNPCs = createQuestNPCs(player.currentLocation);
 		bosses = createBosses(player.currentLocation);
+		chests = createChests(player.currentLocation);
 		while (inGame) {
 
 			while (SDL_PollEvent(&ev)) {
@@ -283,7 +286,8 @@ int main(int argc, char* argv[]) {
 
 
 
-			drawScreen(map, player.position);
+			drawScreen(player.position);
+			drawChests(chests, player.position);
 			drawNPCs(NPCs, player.position);
 			drawQuestNPCs(questNPCs, player.position);
 			drawBosses(bosses, player.position);

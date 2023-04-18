@@ -6,8 +6,25 @@ bool checkForRequiredItem(QuestItem item, QuestItem* items) {
 	return false;
 }
 
-void giveReward(Player& player, QuestNPC npc) {
+int findIndexOfItem(QuestItem* items, QuestItem item) {
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+		if (items[i].ID == item.ID) return i;
+	}
+}
+int findIndexOfQuest(Quest* quests, Quest quest) {
+	for (int i = 0; i < MAX_PLAYER_INVENTORY_SIZE; i++) {
+		if (quests[i].requiredItem.ID == quest.requiredItem.ID) return i;
+	}
+	return -1;
+}
+
+void completeQuest(Player& player, QuestNPC npc) {
 	int aliveHeroCount = 4;
+	int itemIndex = findIndexOfItem(player.questItems, npc.quest.requiredItem);
+	int questIndex = findIndexOfQuest(player.quests, npc.quest);
+	takeQuestItemFromInventory(player.questItems, itemIndex);
+	if (questIndex != -1) takeQuestFromList(player.quests, questIndex);
+
 	player.money += npc.quest.moneyReward;
 	for (int i = 0; i < 4; i++)
 		if (player.team[i].status == DEAD) aliveHeroCount--;
@@ -154,12 +171,12 @@ void QuestDialog(QuestNPC npc, Player& player) {
 							switch (ev.key.keysym.scancode) {
 							case SDL_SCANCODE_RETURN:
 								inStartPhrase = false;
-								giveReward(player, npc);
+								completeQuest(player, npc);
 								return;
 
 							case SDL_SCANCODE_ESCAPE:
 								inStartPhrase = false;
-								giveReward(player, npc);
+								completeQuest(player, npc);
 								return;
 							}
 							break;
@@ -180,12 +197,12 @@ void QuestDialog(QuestNPC npc, Player& player) {
 						switch (ev.key.keysym.scancode) {
 						case SDL_SCANCODE_RETURN:
 							inStartPhrase = false;
-							giveReward(player, npc);
+							completeQuest(player, npc);
 							return;
 
 						case SDL_SCANCODE_ESCAPE:
 							inStartPhrase = false;
-							giveReward(player, npc);
+							completeQuest(player, npc);
 							return;
 						}
 						break;

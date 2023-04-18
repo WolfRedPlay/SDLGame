@@ -122,6 +122,23 @@ Enemy* createBosses(int location) {
 
 	return bosses;
 }
+QuestChest* createChests(int location) {
+	QuestChest* chests = NULL;
+
+	int questItemsCount;
+
+	QuestItem* ALLQuestItemsList = createAllQuestItems(questItemsCount);
+
+	if (location == 1) {
+		chests = (QuestChest*)malloc(CHESTS_AMOUNT_1 * sizeof(QuestChest));
+		chests[0].position = {68, 36};
+		chests[0].item = findInQuestItemsList(ALLQuestItemsList, -900, questItemsCount);
+		
+	}
+
+	free(ALLQuestItemsList);
+	return chests;
+}
 
 Weapon createEmptyWeapon() {
 	Weapon empty;

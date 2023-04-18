@@ -17,16 +17,17 @@ extern int mapSizeX, mapSizeY;
 extern int qountOfQusts;
 extern Quest* questsList;
 
+extern char** map;
 
-void drawScreen(char** map, Coordinates playerPos);
+void drawScreen(Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 void drawNPCs(NPC* npcs, Coordinates playerPos);
 void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos);
 void drawBosses(Enemy* bosses, Coordinates playerPos);
-
+void drawChests(QuestChest* chests, Coordinates playerPos);
 
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);
-//void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney, QuestItem item);
+void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney, QuestItem item);
 
 void drawHeroChoice(Player player, int coursorPosition);
 void drawConfirmation();
