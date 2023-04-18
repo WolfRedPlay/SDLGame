@@ -1093,7 +1093,7 @@ void win(Player& player, EnemiesSquad& enemies) {
 
 	}
 }
-void win(Player& player, Enemy boss) {
+void win(Player& player, Enemy& boss) {
 	int chance = 0;
 
 
@@ -1121,6 +1121,9 @@ void win(Player& player, Enemy boss) {
 			player.team[i].exp += boss.expDrop;
 		}
 	}
+
+	boss.position.X = -100;
+	boss.position.Y = -100;
 }
 
 

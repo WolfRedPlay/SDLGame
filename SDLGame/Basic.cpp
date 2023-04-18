@@ -95,7 +95,7 @@ Enemy* createBosses(int location) {
 
 	if (location == 1) {
 		bosses = (Enemy*)malloc(BOSSES_AMOUNT_1 * sizeof(Enemy));
-		bosses[0].health = 1000;
+		bosses[0].health = 100;
 		bosses[0].mana = 100;
 		bosses[0].stamina = 100;
 		bosses[0].status = NORMAL;

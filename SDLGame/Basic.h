@@ -226,6 +226,10 @@ struct QuestNPC {
 	SDL_Texture* texture;
 	Quest quest;
 };
+struct QuestChest {
+	QuestItem item;
+	Coordinates position;
+};
 
 struct SellerOfWeapons {
 
