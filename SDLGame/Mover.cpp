@@ -5,18 +5,26 @@ int tempMoveY2, tempMoveX2;
 
 
 bool checkForNPCCollision() {
-	for (int i = 0; i < 4; i++) {
-		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY1) return true;
-		if (NPCs[i].position.X == tempMoveX2 && NPCs[i].position.Y == tempMoveY1) return true;
-		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY2) return true;
+	for (int i = 0; i < NPC_AMOUNT_1; i++) {
+		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == (tempMoveY1 - 0.5f)) return true;
+		if (NPCs[i].position.X == tempMoveX2 && NPCs[i].position.Y == (tempMoveY1 - 0.5f)) return true;
+		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == (tempMoveY2 - 0.5f)) return true;
 	}
 	return false;
 }
 bool checkForQuestNPCCollision() {
-	for (int i = 0; i < 4; i++) {
-		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY1) return true;
-		if (questNPCs[i].position.X == tempMoveX2 && questNPCs[i].position.Y == tempMoveY1) return true;
-		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY2) return true;
+	for (int i = 0; i < QUEST_NPC_AMOUNT_1; i++) {
+		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == (tempMoveY1 - 0.5f)) return true;
+		if (questNPCs[i].position.X == tempMoveX2 && questNPCs[i].position.Y == (tempMoveY1 - 0.5f)) return true;
+		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == (tempMoveY2 - 0.5f)) return true;
+	}
+	return false;
+}
+bool checkForBossCollision() {
+	for (int i = 0; i < BOSSES_AMOUNT_1; i++) {
+		if (bosses[i].position.X == tempMoveX1 && bosses[i].position.Y == tempMoveY1) return true;
+		if (bosses[i].position.X == tempMoveX2 && bosses[i].position.Y == tempMoveY1) return true;
+		if (bosses[i].position.X == tempMoveX1 && bosses[i].position.Y == tempMoveY2) return true;
 	}
 	return false;
 }
@@ -68,6 +76,7 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		}
 		if (checkForNPCCollision()) return false;
 		if (checkForQuestNPCCollision()) return false;
+		if (checkForBossCollision()) return false;
 		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY1][tempMoveX2] == WOODEN_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY1][tempMoveX2] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY1][tempMoveX2] == WEAPON_SELLER) return false;
@@ -77,7 +86,6 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		if (map[tempMoveY1][tempMoveX1] == INKEEPER || map[tempMoveY1][tempMoveX2] == INKEEPER) return false;
 		if (map[tempMoveY1][tempMoveX1] == CHEST || map[tempMoveY1][tempMoveX2] == CHEST) return false;
 		if (map[tempMoveY1][tempMoveX1] == QUEST_CHEST || map[tempMoveY1][tempMoveX2] == QUEST_CHEST) return false;
-		if (map[tempMoveY1][tempMoveX1] == BANDITS_LEADER || map[tempMoveY1][tempMoveX2] == BANDITS_LEADER) return false;
 		if (map[tempMoveY1][tempMoveX1] == PUZZLE_MAN || map[tempMoveY1][tempMoveX2] == PUZZLE_MAN) return false;
 		if (map[tempMoveY1][tempMoveX1] == KEY || map[tempMoveY1][tempMoveX2] == KEY) {
 			if (map[tempMoveY1][tempMoveX1] == KEY) deleteObject(map, tempMoveX1, tempMoveY1);
@@ -108,6 +116,7 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		}
 		if (checkForNPCCollision()) return false;
 		if (checkForQuestNPCCollision()) return false;
+		if (checkForBossCollision()) return false;
 		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY2][tempMoveX1] == WOODEN_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY2][tempMoveX1] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY2][tempMoveX1] == WEAPON_SELLER) return false;
@@ -117,7 +126,6 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 		if (map[tempMoveY1][tempMoveX1] == INKEEPER || map[tempMoveY2][tempMoveX1] == INKEEPER) return false;
 		if (map[tempMoveY1][tempMoveX1] == CHEST || map[tempMoveY2][tempMoveX1] == CHEST) return false;
 		if (map[tempMoveY1][tempMoveX1] == QUEST_CHEST || map[tempMoveY2][tempMoveX1] == QUEST_CHEST) return false;
-		if (map[tempMoveY1][tempMoveX1] == BANDITS_LEADER || map[tempMoveY2][tempMoveX1] == BANDITS_LEADER) return false;
 		if (map[tempMoveY1][tempMoveX1] == PUZZLE_MAN || map[tempMoveY2][tempMoveX1] == PUZZLE_MAN) return false;
 		if (map[tempMoveY1][tempMoveX1] == KEY || map[tempMoveY2][tempMoveX1] == KEY) {
 			if (map[tempMoveY1][tempMoveX1] == KEY) deleteObject(map, tempMoveX1, tempMoveY1);

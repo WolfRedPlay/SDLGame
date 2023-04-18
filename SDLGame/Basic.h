@@ -11,10 +11,11 @@ extern int window_width;
 extern int window_height;
 
 #define UNIT_SIZE_X 40 //(window_width/48) //40
-#define UNIT_SIZE_Y 40 //(window_height/20) //54
+#define UNIT_SIZE_Y 40 //(window_height/20) //549
 
 #define NPC_AMOUNT_1 4
 #define QUEST_NPC_AMOUNT_1 1
+#define BOSSES_AMOUNT_1 1
 
 #define MAP_SIZE_X 401
 #define MAP_SIZE_Y 100
@@ -67,13 +68,16 @@ enum Symbols {
 	NPC_QUEST = 'Q',
 	INKEEPER = 'I',
 	DUNGE_BOSS = 'B',//
-	BANDITS_LEADER = 'L',//
 	KEY = 'K',
 	DOOR = 'D',
 	CHEST = 'C',
 	QUEST_CHEST = 'G',
 	PUZZLE_MAN = '?'//
 
+};
+
+enum Bosses {
+	BANDIT_LEADER = 100
 };
 
 enum AbilityTypes {
@@ -205,6 +209,7 @@ struct Enemy {
 	int stamina;
 	int lvl;
 	SDL_Texture* texture;
+	Coordinates position;
 };
 
 struct EnemiesSquad {
@@ -252,6 +257,7 @@ void deleteObject(char** map, int x, int y);
 
 NPC* createNPCs(int location);
 QuestNPC* createQuestNPCs(int location);
+Enemy* createBosses(int location);
 
 void clearWeaponInventory(Weapon* weapons);
 void clearArmorInventory(Armor* armors);
@@ -290,3 +296,6 @@ Potion takePotionFromInventory(Potion* potions, int itemIndex);
 Quest takeQuestFromList(Quest* questsList, int questIndex);
 QuestItem takeQuestItemFromInventory(QuestItem* items, int itemIndex);
 Ability takeAbilityFromList(Ability* abilities, int abilityIndex);
+
+extern int qountOfAbilities;
+extern Ability* ALLAbilitiesList;

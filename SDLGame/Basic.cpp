@@ -90,6 +90,38 @@ QuestNPC* createQuestNPCs(int location) {
 	
 	return NPCs;
 }
+Enemy* createBosses(int location) {
+	Enemy* bosses = NULL;
+
+	if (location == 1) {
+		bosses = (Enemy*)malloc(BOSSES_AMOUNT_1 * sizeof(Enemy));
+		bosses[0].health = 1000;
+		bosses[0].mana = 100;
+		bosses[0].stamina = 100;
+		bosses[0].status = NORMAL;
+		bosses[0].damage = 20;
+		bosses[0].armor = 10;
+		bosses[0].expDrop = 100;
+		bosses[0].moneyDrop = 1000;
+		bosses[0].lvl = 5;
+		bosses[0].name[0] = 'L';
+		bosses[0].name[1] = 'e';
+		bosses[0].name[2] = 'a';
+		bosses[0].name[3] = 'd';
+		bosses[0].name[4] = 'e';
+		bosses[0].name[5] = 'r';
+		bosses[0].name[6] = '\0';
+		bosses[0].IDarmorDrop = -203;
+		bosses[0].IDpotionDrop = -301;
+		bosses[0].IDweaponDrop = -104;
+		bosses[0].ability = findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities);
+		bosses[0].ID = BANDIT_LEADER;
+		bosses[0].texture = generateTextureFromPNG("Textures\\Sell_weapon.png");
+		bosses[0].position = { 68, 37 };
+	}
+
+	return bosses;
+}
 
 Weapon createEmptyWeapon() {
 	Weapon empty;

@@ -20,6 +20,8 @@ void giveReward(Player& player, QuestNPC npc) {
 }
 
 
+
+
 void NPCDialog(NPC npc) {
 	SDL_Event ev;
 
@@ -193,5 +195,118 @@ void QuestDialog(QuestNPC npc, Player& player) {
 			}
 		}
 	}
+}
 
+bool banditDialog(Enemy boss) {
+	int coursorPosition = 0, choice;
+
+	bool inDialog = true;
+
+	SDL_Event ev;
+	while (inDialog)
+	{
+		while(SDL_PollEvent(&ev))
+			switch (ev.type) {
+			case SDL_QUIT:
+				DeInit(0);
+				break;
+			case SDL_KEYDOWN:
+				switch (ev.key.keysym.scancode) {
+				case SDL_SCANCODE_UP:
+					if (coursorPosition != 0) coursorPosition--;
+					break;
+				
+				case SDL_SCANCODE_DOWN:
+					if (coursorPosition != 1) coursorPosition++;
+					break;
+
+					case SDL_SCANCODE_1:
+						choice = 0;
+						inDialog = false;
+					break;
+					case SDL_SCANCODE_2:
+						choice = 1;
+						inDialog = false;
+					break;
+
+				case SDL_SCANCODE_RETURN:
+					choice = coursorPosition;
+					inDialog = false;
+					break;
+
+				case SDL_SCANCODE_ESCAPE:
+					return false;
+				}
+				break;
+			}
+
+
+
+		drawBanditLeaderDialogWindow(boss, 0, coursorPosition);
+
+	}
+
+	if (choice == 0) {
+		while (true){
+			while (SDL_PollEvent(&ev))
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					
+					case SDL_SCANCODE_RETURN:
+
+						return true;
+
+					case SDL_SCANCODE_ESCAPE:
+						return true;
+					}
+					break;
+				}
+
+			drawBanditLeaderDialogWindow(boss, 1, 0);
+		}
+		
+	}
+
+	if (choice == 1) {
+		while (true) {
+			while (SDL_PollEvent(&ev))
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+
+					case SDL_SCANCODE_RETURN:
+						return false;
+
+					case SDL_SCANCODE_ESCAPE:
+						return false;
+					}
+					break;
+				}
+
+			drawBanditLeaderDialogWindow(boss, 2, 0);
+		}
+	}
+
+
+}
+
+
+
+
+
+
+bool BossDialog(Enemy boss){
+	switch (boss.ID) {
+	case BANDIT_LEADER:
+		return banditDialog(boss);
+		break;
+
+	}
 }

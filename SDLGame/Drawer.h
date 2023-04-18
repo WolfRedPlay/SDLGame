@@ -22,6 +22,7 @@ void drawScreen(char** map, Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 void drawNPCs(NPC* npcs, Coordinates playerPos);
 void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos);
+void drawBosses(Enemy* bosses, Coordinates playerPos);
 
 
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);
@@ -66,3 +67,4 @@ void drawFightingScene(Player player, Enemy boss, int coursorPosition, int type)
 
 void drawNPCDialogWindow(NPC npc);
 void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition);
+void drawBanditLeaderDialogWindow(Enemy boss, int dialogeStage, int coursorPosition);

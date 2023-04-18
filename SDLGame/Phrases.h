@@ -21,3 +21,9 @@
 
 #define QUEST1_NPC_REWARDING "Oh... It's you... And you have my Thing! Give it to me!"
 #define QUEST1_NPC_COMPLETED "I don't have businesses for you. Go away!"
+
+#define BANDITS_LEADER_BEGINING "What are you doing here little kid?"
+#define BANDITS_LEADER_PLAYER_ANSWER_1 "1. I'm looking for some significant thing."
+#define BANDITS_LEADER_PLAYER_ANSWER_2 "2. I'm just walking."
+#define BANDITS_LEADER_ANSWER_1 "I have it, and it's mine. In addition, I'm going to kill you and take your things too. Hahaha..."
+#define BANDITS_LEADER_ANSWER_2 "So, go away and never come this place!"

@@ -107,9 +107,9 @@ void drawScreen(char** map, Coordinates playerPos) {
 
 	int x = 0, y = 0;
 
-	while (playerPos.X >= window_width / UNIT_SIZE_X) {
-		playerPos.X -= window_width / UNIT_SIZE_X;
-		leftBorder += window_width / UNIT_SIZE_X;
+	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
+		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
 		playerPos.Y -= window_height / UNIT_SIZE_Y;
@@ -267,15 +267,16 @@ void drawScreen(char** map, Coordinates playerPos) {
 	SDL_DestroyTexture(abilitiesSeller);
 
 }
+
 void drawNPCs(NPC* NPCs, Coordinates playerPos) {
 	SDL_FRect npcRect = { 0,0,40,70 };
 	SDL_Rect npcFrame = { 40,0,40,70 };
 	int leftBorder = 0, upperBorder = 0;
 	int rightBorder = 0, downBorder = 0;
 
-	while (playerPos.X >= window_width / UNIT_SIZE_X) {
-		playerPos.X -= window_width / UNIT_SIZE_X;
-		leftBorder += window_width / UNIT_SIZE_X;
+	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
+		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
 	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
@@ -294,13 +295,14 @@ void drawNPCs(NPC* NPCs, Coordinates playerPos) {
 }
 void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos) {
 	SDL_FRect npcRect = { 0,0,40,70 };
-	
+
 	int leftBorder = 0, upperBorder = 0;
 	int rightBorder = 0, downBorder = 0;
 
-	while (playerPos.X >= window_width / UNIT_SIZE_X) {
-		playerPos.X -= window_width / UNIT_SIZE_X;
-		leftBorder += window_width / UNIT_SIZE_X;
+
+	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
+		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
 	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
@@ -318,6 +320,42 @@ void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos) {
 		}
 	}
 }
+void drawBosses(Enemy* bosses, Coordinates playerPos) {
+	SDL_FRect npcRect = { 0,0,40,70 };
+
+	int leftBorder = 0, upperBorder = 0;
+	int rightBorder = 0, downBorder = 0;
+
+
+	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
+		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+		leftBorder += (window_width / UNIT_SIZE_X) - 1;
+	}
+	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
+	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
+		playerPos.Y -= window_height / UNIT_SIZE_Y;
+		upperBorder += window_height / UNIT_SIZE_Y;
+	}
+	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
+
+	for (int i = 0; i < 1; i++) {
+		if (bosses[i].position.X > leftBorder && bosses[i].position.X < rightBorder &&
+			bosses[i].position.Y > upperBorder && bosses[i].position.Y < downBorder) {
+			float x = bosses[i].position.X;
+			float y = bosses[i].position.Y;
+			while (x>= (window_width / UNIT_SIZE_X) - 1) {
+				x -= (window_width / UNIT_SIZE_X) - 1;
+			}
+			while (y >= window_height / UNIT_SIZE_Y) {
+				y -= window_height / UNIT_SIZE_Y;
+			}
+			npcRect.x = x * UNIT_SIZE_X;
+			npcRect.y = y * UNIT_SIZE_Y - npcRect.h / 2;
+			SDL_RenderCopyF(ren, bosses[i].texture, NULL, &npcRect);
+		}
+	}
+}
+
 void drawPlayer(Coordinates playerPosition, int diraction, int frame) {
 
 
@@ -2121,7 +2159,7 @@ void drawFightingScene(Player player, Enemy boss, int coursorPosition, int type)
 	}
 
 	charRect.x = window_width - charRect.w - 200;
-	charRect.y = 125;
+	charRect.y = 350;
 	ttfRect.x = charRect.x;
 
 	sprintf_s(text, "HP: %d", boss.health);
@@ -2360,4 +2398,79 @@ void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition) 
 
 	TTF_CloseFont(basicFont);
 	SDL_RenderPresent(ren);
+}
+void drawBanditLeaderDialogWindow(Enemy boss, int dialogeStage, int coursorPosition) {
+	SDL_Rect window = { 0,0,window_width - 400,300 };
+	window.x = (window_width - window.w) / 2;
+	window.y = window_height - 50 - window.h;
+	SDL_Texture* windowTex = generateTextureFromPNG("Textures\\window.png");
+	SDL_RenderCopy(ren, windowTex, NULL, &window);
+	SDL_DestroyTexture(windowTex);
+	
+	TTF_Font* basicFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
+	SDL_Rect ttfRect;
+	SDL_Texture* texture;
+
+	switch (boss.ID) {
+	case BANDIT_LEADER:
+		
+		SDL_Texture* face = generateTextureFromPNG("Textures\\Sell_weaponF.png");
+		SDL_Rect faceRect = { window.x + 60, window.y + 25, 150, 150 };
+		SDL_RenderCopy(ren, face, NULL, &faceRect);
+		SDL_DestroyTexture(face);
+		
+		if (dialogeStage == 0) {
+			texture = generateTextureFromText(BANDITS_LEADER_BEGINING, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+
+
+			texture = generateTextureFromText(BANDITS_LEADER_PLAYER_ANSWER_1, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 60;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			if (coursorPosition == 0) {
+				ttfRect.x += ttfRect.w;
+				texture = generateTextureFromText("<", basicFont, ttfRect, { 0,0,0,255 });
+				SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+				SDL_DestroyTexture(texture);
+			}
+
+
+			texture = generateTextureFromText(BANDITS_LEADER_PLAYER_ANSWER_2, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.y += 30;
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+			if (coursorPosition == 1) {
+				ttfRect.x += ttfRect.w;
+				texture = generateTextureFromText("<", basicFont, ttfRect, { 0,0,0,255 });
+				SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+				SDL_DestroyTexture(texture);
+			}
+		}
+		if (dialogeStage == 1) {
+			texture = generateTextureFromText(BANDITS_LEADER_ANSWER_1, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
+		if (dialogeStage == 2) {
+			texture = generateTextureFromText(BANDITS_LEADER_ANSWER_2, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
+
+		break;
+	}
+
+	SDL_RenderPresent(ren);
+	TTF_CloseFont(basicFont);
+
+
 }

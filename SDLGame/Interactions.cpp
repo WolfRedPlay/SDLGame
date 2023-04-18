@@ -209,11 +209,33 @@ bool checkForQuestNPCInteraction(QuestNPC& npc) {
 	}
 	return false;
 }
+bool checkForBossInteraction(Enemy& boss) {
+	for (int i = 0; i < BOSSES_AMOUNT_1; i++) {
+		if (bosses[i].position.X == tempX1 && bosses[i].position.Y == tempY1)
+		{
+			boss = bosses[i];
+			return true;
+		}
+		if (bosses[i].position.X == tempX2 && bosses[i].position.Y == tempY1)
+		{
+			boss = bosses[i];
+			return true;
+
+		}
+		if (bosses[i].position.X == tempX1 && bosses[i].position.Y == tempY2)
+		{
+			boss = bosses[i];
+			return true;
+		}
+	}
+	return false;
+}
 
 void interact(char** map, Player& player) {
 
 	NPC npc;
 	QuestNPC questNPC;
+	Enemy boss;
 
 	if (player.diraction == UP) {
 		tempY1 = floorf(player.position.Y) - 1;
@@ -222,6 +244,10 @@ void interact(char** map, Player& player) {
 
 		if (checkForNPCInteraction(npc)) NPCDialog(npc);
 		if (checkForQuestNPCInteraction(questNPC)) QuestDialog(questNPC, player);
+		if (checkForBossInteraction(boss))
+		{
+			if(BossDialog(boss)) startBattle(player, boss);
+		}
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY1][tempX2] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY1][tempX2] == POTION_SELLER) potionSeller(player, 1, map);
@@ -240,6 +266,10 @@ void interact(char** map, Player& player) {
 
 		if (checkForNPCInteraction(npc)) NPCDialog(npc);
 		if (checkForQuestNPCInteraction(questNPC)) QuestDialog(questNPC, player);
+		if (checkForBossInteraction(boss))
+		{
+			if (BossDialog(boss)) startBattle(player, boss);
+		}
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);
@@ -260,6 +290,10 @@ void interact(char** map, Player& player) {
 
 		if (checkForNPCInteraction(npc)) NPCDialog(npc);
 		if (checkForQuestNPCInteraction(questNPC)) QuestDialog(questNPC, player);
+		if (checkForBossInteraction(boss))
+		{
+			if (BossDialog(boss)) startBattle(player, boss);
+		}
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);

@@ -33,6 +33,7 @@ Coordinates temp = { 0.f,0.f };
 
 NPC* NPCs;
 QuestNPC* questNPCs;
+Enemy* bosses;
 
 int shopStage = 0, dungeType = 0;
 
@@ -109,7 +110,7 @@ int main(int argc, char* argv[]) {
 	int current_frametime = 0;
 	int max_frametime = 1000 / 4;
 
-
+	
 
 	int enemyCounter = 0; bool enemyCounterRandomed = false; int startFight = 0;
 
@@ -122,175 +123,177 @@ int main(int argc, char* argv[]) {
 	int newtime;
 	int dt = 0;
 
-	
 
-		while (true) {
-			inShop = false;
-			inDunge = false;
-			inGlobal = true;
-			shopMapReaded = false;
-			dungeMapReaded = false;
-			globalMapReaded = false;
-			startMenu(player, map);
-			NPCs = createNPCs(player.currentLocation);
-			questNPCs = createQuestNPCs(player.currentLocation);
-			while (inGame) {
 
-				while (SDL_PollEvent(&ev)) {
-					switch (ev.type) {
-					case SDL_QUIT:
-						DeInit(0);
+	while (true) {
+		inShop = false;
+		inDunge = false;
+		inGlobal = true;
+		shopMapReaded = false;
+		dungeMapReaded = false;
+		globalMapReaded = false;
+		startMenu(player, map);
+		NPCs = createNPCs(player.currentLocation);
+		questNPCs = createQuestNPCs(player.currentLocation);
+		bosses = createBosses(player.currentLocation);
+		while (inGame) {
+
+			while (SDL_PollEvent(&ev)) {
+				switch (ev.type) {
+				case SDL_QUIT:
+					DeInit(0);
+					break;
+				case SDL_KEYDOWN:
+					switch (ev.key.keysym.scancode) {
+					case SDL_SCANCODE_ESCAPE:
+						gameMenu(player, map);
 						break;
-					case SDL_KEYDOWN:
-						switch (ev.key.keysym.scancode) {
-						case SDL_SCANCODE_ESCAPE:
-							gameMenu(player, map);
-							break;
-						case SDL_SCANCODE_TAB:
-							playerMenu(player);
-							break;
-
-						case SDL_SCANCODE_E:
-							interact(map, player);
-							break;
-
-
-
-
-						}
+					case SDL_SCANCODE_TAB:
+						playerMenu(player);
 						break;
 
+					case SDL_SCANCODE_E:
+						interact(map, player);
+						break;
+
+
+
+
 					}
+					break;
+
 				}
-
-				newtime = SDL_GetTicks();
-				dt = newtime - lasttime;
-				lasttime = newtime;
-
-
-				isMoving = false;
-
-				if (state[SDL_SCANCODE_LSHIFT]) {
-					speed = 4.f;
-					max_frametime = 1000 / 6;
-				}
-				if (!state[SDL_SCANCODE_LSHIFT]) {
-					speed = 2.f;
-					max_frametime = 1000 / 4;
-				}
-				if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
-					if (movePlayer(map, player, { 0, -speed * dt / 1000 })) enemyCounter++;
-					player.diraction = UP;
-					isMoving = true;
-				}
-				if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) {
-					if (movePlayer(map, player, { 0,  speed * dt / 1000 })) enemyCounter++;
-					player.diraction = DOWN;
-					isMoving = true;
-				}
-				if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT])
-				{
-					if (movePlayer(map, player, { -speed * dt / 1000, 0 })) enemyCounter++;
-					player.diraction = LEFT;
-					isMoving = true;
-				}
-				if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) {
-					if (movePlayer(map, player, { speed * dt / 1000, 0 })) enemyCounter++;
-					player.diraction = RIGHT;
-					isMoving = true;
-				}
-
-				if (isMoving) {
-					current_frametime += dt;
-					if (current_frametime >= max_frametime) {
-						current_frametime -= max_frametime;
-						frame = (frame + 1) % framCount;
-					}
-				}
-				else frame = 0;
-
-
-
-
-				if (inShop) {
-					if (!shopMapReaded) {
-						map = createMapArray(SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
-						readMap(map, "Maps\\Shop.txt", SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
-						globalMapReaded = false;
-						dungeMapReaded = false;
-						shopMapReaded = true;
-					}
-				}
-				else if (inDunge) {
-					if (!dungeMapReaded) {
-						map = createMapArray(DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
-						if (dungeType == 1)readMap(map, "Maps\\Dunge1.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
-						if (dungeType == 2)readMap(map, "Maps\\Dunge2.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
-						globalMapReaded = false;
-						shopMapReaded = false;
-						dungeMapReaded = true;
-					}
-				}
-				else if (inGlobal) {
-					if (!globalMapReaded) {
-						map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
-						readMap(map, "Maps\\SavedMap.txt", MAP_SIZE_X, MAP_SIZE_Y);
-						shopMapReaded = false;
-						dungeMapReaded = false;
-						globalMapReaded = true;
-					}
-				}
-
-				if (!enemyCounterRandomed) {
-					startFight = random(MIN_ENEMY_COUNTER, MAX_ENEMY_COUNTER);
-					enemyCounterRandomed = true;
-				}
-
-				if (enemyCounter >= startFight) {
-					int enemyCount;
-					Enemy* enemyList = createAllEnemies(enemyCount);
-					int enemyRandNum;
-					int maxLvl = 0;
-					for (int i = 0; i < 4; i++)
-						if (player.team[i].lvl >= maxLvl) maxLvl = player.team[i].lvl;
-					EnemiesSquad randomEnemiesSquad;
-
-					do {
-						enemyRandNum = random(0, enemyCount);
-					} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
-					randomEnemiesSquad.enemies[0] = enemyList[enemyRandNum - 1];
-					do {
-						enemyRandNum = random(0, enemyCount);
-					} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
-					randomEnemiesSquad.enemies[1] = enemyList[enemyRandNum - 1];
-					do {
-						enemyRandNum = random(0, enemyCount);
-					} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
-					randomEnemiesSquad.enemies[2] = enemyList[enemyRandNum - 1];
-					do {
-						enemyRandNum = random(0, enemyCount);
-					} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
-					randomEnemiesSquad.enemies[3] = enemyList[enemyRandNum - 1];
-
-					startBattle(player, randomEnemiesSquad);
-
-					enemyCounter = 0;
-					enemyCounterRandomed = false;
-				}
-
-
-
-
-				drawScreen(map, player.position);
-				drawNPCs(NPCs, player.position);
-				drawQuestNPCs(questNPCs, player.position);
-				drawPlayer(player.position, player.diraction, frame);
-
-				//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
-
-				SDL_RenderPresent(ren);
 			}
+
+			newtime = SDL_GetTicks();
+			dt = newtime - lasttime;
+			lasttime = newtime;
+
+
+			isMoving = false;
+
+			if (state[SDL_SCANCODE_LSHIFT]) {
+				speed = 4.f;
+				max_frametime = 1000 / 6;
+			}
+			if (!state[SDL_SCANCODE_LSHIFT]) {
+				speed = 2.f;
+				max_frametime = 1000 / 4;
+			}
+			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
+				if (movePlayer(map, player, { 0, -speed * dt / 1000 })) enemyCounter++;
+				player.diraction = UP;
+				isMoving = true;
+			}
+			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) {
+				if (movePlayer(map, player, { 0,  speed * dt / 1000 })) enemyCounter++;
+				player.diraction = DOWN;
+				isMoving = true;
+			}
+			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT])
+			{
+				if (movePlayer(map, player, { -speed * dt / 1000, 0 })) enemyCounter++;
+				player.diraction = LEFT;
+				isMoving = true;
+			}
+			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) {
+				if (movePlayer(map, player, { speed * dt / 1000, 0 })) enemyCounter++;
+				player.diraction = RIGHT;
+				isMoving = true;
+			}
+
+			if (isMoving) {
+				current_frametime += dt;
+				if (current_frametime >= max_frametime) {
+					current_frametime -= max_frametime;
+					frame = (frame + 1) % framCount;
+				}
+			}
+			else frame = 0;
+
+
+
+
+			if (inShop) {
+				if (!shopMapReaded) {
+					map = createMapArray(SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
+					readMap(map, "Maps\\Shop.txt", SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
+					globalMapReaded = false;
+					dungeMapReaded = false;
+					shopMapReaded = true;
+				}
+			}
+			else if (inDunge) {
+				if (!dungeMapReaded) {
+					map = createMapArray(DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					if (dungeType == 1)readMap(map, "Maps\\Dunge1.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					if (dungeType == 2)readMap(map, "Maps\\Dunge2.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
+					globalMapReaded = false;
+					shopMapReaded = false;
+					dungeMapReaded = true;
+				}
+			}
+			else if (inGlobal) {
+				if (!globalMapReaded) {
+					map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
+					readMap(map, "Maps\\SavedMap.txt", MAP_SIZE_X, MAP_SIZE_Y);
+					shopMapReaded = false;
+					dungeMapReaded = false;
+					globalMapReaded = true;
+				}
+			}
+
+			if (!enemyCounterRandomed) {
+				startFight = random(MIN_ENEMY_COUNTER, MAX_ENEMY_COUNTER);
+				enemyCounterRandomed = true;
+			}
+
+			if (enemyCounter >= startFight) {
+				int enemyCount;
+				Enemy* enemyList = createAllEnemies(enemyCount);
+				int enemyRandNum;
+				int maxLvl = 0;
+				for (int i = 0; i < 4; i++)
+					if (player.team[i].lvl >= maxLvl) maxLvl = player.team[i].lvl;
+				EnemiesSquad randomEnemiesSquad;
+
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[0] = enemyList[enemyRandNum - 1];
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[1] = enemyList[enemyRandNum - 1];
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[2] = enemyList[enemyRandNum - 1];
+				do {
+					enemyRandNum = random(0, enemyCount);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				randomEnemiesSquad.enemies[3] = enemyList[enemyRandNum - 1];
+
+				startBattle(player, randomEnemiesSquad);
+
+				enemyCounter = 0;
+				enemyCounterRandomed = false;
+			}
+
+
+
+
+			drawScreen(map, player.position);
+			drawNPCs(NPCs, player.position);
+			drawQuestNPCs(questNPCs, player.position);
+			drawBosses(bosses, player.position);
+			drawPlayer(player.position, player.diraction, frame);
+
+			//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
+
+			SDL_RenderPresent(ren);
 		}
+	}
 	free(NPCs);
 	free(map);
 	DeInit(0);

@@ -3,6 +3,7 @@
 #include "Drawer.h"
 #include "Shop.h"
 #include "Dialogs.h"
+#include "Fighting.h"
 
 extern int qountOfWeapons;
 extern int qountOfArmors;
@@ -17,5 +18,6 @@ extern Ability* ALLAbilitiesList;
 
 extern NPC* NPCs;
 extern QuestNPC* questNPCs;
+extern Enemy* bosses;
 
 void interact(char** map, Player& player);
