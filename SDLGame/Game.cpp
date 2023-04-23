@@ -158,10 +158,6 @@ int main(int argc, char* argv[]) {
 					case SDL_SCANCODE_E:
 						interact(map, player);
 						break;
-
-
-
-
 					}
 					break;
 
@@ -219,6 +215,7 @@ int main(int argc, char* argv[]) {
 
 			if (inShop) {
 				if (!shopMapReaded) {
+					setMapSaves("Maps\\SavedMap.txt", map);
 					map = createMapArray(SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
 					readMap(map, "Maps\\Shop.txt", SHOP_MAP_SIZE_X, SHOP_MAP_SIZE_Y);
 					globalMapReaded = false;
@@ -228,6 +225,7 @@ int main(int argc, char* argv[]) {
 			}
 			else if (inDunge) {
 				if (!dungeMapReaded) {
+					setMapSaves("Maps\\SavedMap.txt", map);
 					map = createMapArray(DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
 					if (dungeType == 1)readMap(map, "Maps\\Dunge1.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);
 					if (dungeType == 2)readMap(map, "Maps\\Dunge2.txt", DUNGE_MAP_SIZE_X, DUNGE_MAP_SIZE_Y);

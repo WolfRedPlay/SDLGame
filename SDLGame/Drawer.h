@@ -19,6 +19,8 @@ extern Quest* questsList;
 
 extern char** map;
 
+extern bool inGlobal;
+
 void drawScreen(Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
 void drawNPCs(NPC* npcs, Coordinates playerPos);

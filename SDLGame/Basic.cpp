@@ -51,7 +51,7 @@ NPC* createNPCs(int location) {
 	if (location == 1) {
 		NPCs = (NPC*)malloc(NPC_AMOUNT_1 * sizeof(NPC));
 		NPCs[0].position = { 16, 3 };
-		NPCs[1].position = { 24, 3 };
+		NPCs[1].position = { 26, 3 };
 		NPCs[2].position = { 20, 10 };
 		NPCs[3].position = { 25, 15 };
 
@@ -116,7 +116,7 @@ Enemy* createBosses(int location) {
 		bosses[0].IDweaponDrop = -104;
 		bosses[0].ability = findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities);
 		bosses[0].ID = BANDIT_LEADER;
-		bosses[0].texture = generateTextureFromPNG("Textures\\Sell_weapon.png");
+		bosses[0].texture = generateTextureFromPNG("Textures\\BanditLeader.png");
 		bosses[0].position = { 68, 37 };
 	}
 

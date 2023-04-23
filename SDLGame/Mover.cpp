@@ -147,8 +147,8 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			inShop = false;
 			inDunge = false;
 			inGlobal = true;
-			player.position.X = temp.X - 1;
-			player.position.Y = temp.Y;
+			player.position.X = temp.X;
+			player.position.Y = temp.Y + 0.5f;
 			temp = { 0,0 };
 			shopStage = 0;
 			dungeType = 0;
