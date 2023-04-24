@@ -2669,6 +2669,13 @@ void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition) 
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 			SDL_DestroyTexture(texture);
 		}
+		if (dialogeStage == 7) {
+			texture = generateTextureFromText(QUEST1_NPC_WAITTING, basicFont, ttfRect, { 0,0,0,255 });
+			ttfRect.x = faceRect.x + faceRect.w + 30;
+			ttfRect.y = faceRect.y + 10;
+			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
+			SDL_DestroyTexture(texture);
+		}
 
 
 

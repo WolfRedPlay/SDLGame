@@ -53,6 +53,7 @@ Quest* questsList = createAllQuests(qountOfQusts);
 //QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
 
+int dt = 0;
 
 void DeInit(int error) {
 	if (ren != NULL) SDL_DestroyRenderer(ren);
@@ -112,7 +113,7 @@ int main(int argc, char* argv[]) {
 	int current_frametime = 0;
 	int max_frametime = 1000 / 4;
 
-	
+
 
 	int enemyCounter = 0; bool enemyCounterRandomed = false; int startFight = 0;
 
@@ -123,7 +124,6 @@ int main(int argc, char* argv[]) {
 
 	int lasttime = SDL_GetTicks();
 	int newtime;
-	int dt = 0;
 
 
 

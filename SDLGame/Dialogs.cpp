@@ -18,7 +18,7 @@ int findIndexOfQuest(Quest* quests, Quest quest) {
 	return -1;
 }
 
-void completeQuest(Player& player, QuestNPC npc) {
+void completeQuest(Player& player, QuestNPC& npc) {
 	int aliveHeroCount = 4;
 	int itemIndex = findIndexOfItem(player.questItems, npc.quest.requiredItem);
 	int questIndex = findIndexOfQuest(player.quests, npc.quest);
@@ -33,7 +33,19 @@ void completeQuest(Player& player, QuestNPC npc) {
 	for (int i = 0; i < 4; i++) 
 		if (player.team[i].status == DEAD) player.team[i].exp += expReward;
 	
+	npc.quest.isCompleted = true;
+	for (int i = 0; i < qountOfQusts; i++) {
+		if (npc.quest.requiredItem.ID == questsList[i].requiredItem.ID) questsList[i].isCompleted = true;
+	}
 
+
+}
+
+bool checkForQuest(Player player, Quest quest) {
+	for (int i = 0; i < MAX_QUESTS; i++) {
+		if (player.quests[i].requiredItem.ID == quest.requiredItem.ID) return true;
+	}
+	return false;
 }
 
 
@@ -65,7 +77,7 @@ void NPCDialog(NPC npc) {
 
 }
 
-void QuestDialog(QuestNPC npc, Player& player) {
+void QuestDialog(QuestNPC& npc, Player& player) {
 	SDL_Event ev;
 	int coursorPosition, choice;
 	int dialogeStage = 0;
@@ -77,7 +89,7 @@ void QuestDialog(QuestNPC npc, Player& player) {
 		if (!npc.quest.isCompleted)
 		{
 
-			if (!checkForRequiredItem(npc.quest.requiredItem, player.questItems)){
+			if (!checkForRequiredItem(npc.quest.requiredItem, player.questItems) && !checkForQuest(player, npc.quest)){
 				while (inStartPhrase) {
 					while (SDL_PollEvent(&ev))
 						switch (ev.type) {
@@ -160,7 +172,7 @@ void QuestDialog(QuestNPC npc, Player& player) {
 					drawQuestDialogWindow(npc, dialogeStage, coursorPosition);
 				}
 			}
-			else {
+			else if (checkForRequiredItem(npc.quest.requiredItem, player.questItems)){
 				while (inStartPhrase) {
 					while (SDL_PollEvent(&ev))
 						switch (ev.type) {
@@ -172,6 +184,7 @@ void QuestDialog(QuestNPC npc, Player& player) {
 							case SDL_SCANCODE_RETURN:
 								inStartPhrase = false;
 								completeQuest(player, npc);
+
 								return;
 
 							case SDL_SCANCODE_ESCAPE:
@@ -183,6 +196,29 @@ void QuestDialog(QuestNPC npc, Player& player) {
 						}
 
 					drawQuestDialogWindow(npc, 5, 0);
+				}
+			}
+			else {
+				while (inStartPhrase) {
+					while (SDL_PollEvent(&ev))
+						switch (ev.type) {
+						case SDL_QUIT:
+							DeInit(0);
+							break;
+						case SDL_KEYDOWN:
+							switch (ev.key.keysym.scancode) {
+							case SDL_SCANCODE_RETURN:
+								inStartPhrase = false;
+								return;
+
+							case SDL_SCANCODE_ESCAPE:
+								inStartPhrase = false;
+								return;
+							}
+							break;
+						}
+
+					drawQuestDialogWindow(npc, 7, coursorPosition);
 				}
 			}
 		}
@@ -197,12 +233,10 @@ void QuestDialog(QuestNPC npc, Player& player) {
 						switch (ev.key.keysym.scancode) {
 						case SDL_SCANCODE_RETURN:
 							inStartPhrase = false;
-							completeQuest(player, npc);
 							return;
 
 						case SDL_SCANCODE_ESCAPE:
 							inStartPhrase = false;
-							completeQuest(player, npc);
 							return;
 						}
 						break;

@@ -289,6 +289,7 @@ void clearPlayer(Player& player) {
 	for (int i = 0; i < MAX_QUESTS; i++) {
 		player.quests[i] = createEmptyQuest();
 	}
+
 }
 
 

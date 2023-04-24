@@ -21,6 +21,7 @@
 
 #define QUEST1_NPC_REWARDING "Oh... It's you... And you have my Thing! Give it to me!"
 #define QUEST1_NPC_COMPLETED "I don't have businesses for you. Go away!"
+#define QUEST1_NPC_WAITTING "I'm still watting for my thing!"
 
 #define BANDITS_LEADER_BEGINING "What are you doing here little kid?"
 #define BANDITS_LEADER_PLAYER_ANSWER_1 "1. I'm looking for some significant thing."
