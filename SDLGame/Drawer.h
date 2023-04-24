@@ -10,8 +10,6 @@ extern int window_width;
 extern int window_height;
 
 extern bool isMoving;
-extern int dt;
-
 extern int mapSizeX, mapSizeY;
 
 extern int qountOfQusts;
@@ -67,6 +65,8 @@ void drawInkeeperReject();
 
 void drawFightingScene(Player player,EnemiesSquad enemies, int coursorPosition, int type);
 void drawFightingScene(Player player, Enemy boss, int coursorPosition, int type);
+
+void attackAnimation(Player player, EnemiesSquad enemies, int attacker, int defender);
 
 void drawNPCDialogWindow(NPC npc);
 void drawQuestDialogWindow(QuestNPC npc, int dialogeStage, int coursorPosition);

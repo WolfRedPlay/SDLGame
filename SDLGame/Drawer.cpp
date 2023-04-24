@@ -1566,6 +1566,7 @@ void drawQuestsList(Player player) {
 	TTF_CloseFont(choicesFont);
 
 }
+
 void drawQuestItems(Player player, int coursorPosition) {
 	SDL_Rect window = { 100, 50, window_width - 200, window_height - 100 };
 	TTF_Font* headerFont = TTF_OpenFont("Fonts\\basicFont.ttf", 50);
@@ -2185,7 +2186,7 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 	charRect.x = window_width - charRect.w - 200;
 	charRect.y = 250;
 	ttfRect.x = charRect.x;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i <= 3; i++) {
 		sprintf_s(text, "HP: %d", enemies.enemies[i].health);
 		texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
 		ttfRect.y = charRect.y - ttfRect.h;
@@ -2195,6 +2196,8 @@ void drawFightingScene(Player player, EnemiesSquad enemies, int coursorPosition,
 		SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
 		charRect.y += charRect.h + 50;
 	}
+
+
 
 	SDL_Rect actionArea = { 0,0,window_width, 200 };
 
@@ -2369,7 +2372,7 @@ void drawFightingScene(Player player, Enemy boss, int coursorPosition, int type)
 
 }
 
-void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy defender) {
+void attackAnimation(Player player, EnemiesSquad enemies, int attacker, int defender) {
 	SDL_Texture* background;
 	int x = floorf(player.position.X);
 	int y = floorf(player.position.Y);
@@ -2377,13 +2380,9 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 		background = generateTextureFromPNG("Textures\\Stone_Backgraund.png");
 	}
 	else
-	{
 		background = generateTextureFromPNG("Textures\\Field_Backgraund.png");
-	}
-	SDL_Rect backRect = { 0,0,1920, 1080 };
 
-	SDL_RenderCopy(ren, background, NULL, &backRect);
-	SDL_DestroyTexture(background);
+	SDL_Rect backRect = { 0,0,1920, 1080 };
 
 	char text[100];
 	TTF_Font* ChoicesFont = TTF_OpenFont("Fonts\\basicFont.ttf", 20);
@@ -2393,20 +2392,32 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 	SDL_Rect ttfRect = { 0,0,0,0 };
 
 	SDL_Rect charRect = { 0,0,75, 100 };
-
 	int posX = 0, posY = 0;
 	int tempX = 0, tempY = 0;
 
-
-	charRect.x = window_width - charRect.w - 200;
-	charRect.y = 250;
-	ttfRect.x = charRect.x;
-
-	int frameTime = 1000 / 4;
+	int frameTime = 1000 / 8;
 	int currentTime = 0;
 	int frame = 0;
 
-	while(true){
+	int dt = 0;
+	int lasttime = SDL_GetTicks();
+	int newtime;
+
+
+	while (true) {
+
+		newtime = SDL_GetTicks();
+		dt = newtime - lasttime;
+		lasttime = newtime;
+
+		SDL_RenderCopy(ren, background, NULL, &backRect);
+
+
+
+
+		charRect.x = window_width - charRect.w - 200;
+		charRect.y = 250;
+		ttfRect.x = charRect.x;
 		for (int i = 0; i < 4; i++) {
 			sprintf_s(text, "HP: %d", enemies.enemies[i].health);
 			texture = generateTextureFromText(text, basicFont, ttfRect, { 0,0,0,255 });
@@ -2414,13 +2425,32 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 			SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 			SDL_DestroyTexture(texture);
 
-			if (defender.ID == enemies.enemies[i].ID)
+			if (i == defender)
 			{
-				posX = charRect.x;
+				posX = charRect.x - charRect.w - 50;
 				posY = charRect.y;
-			}
 
-			SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
+
+
+			}
+		/*	if (i == defender && frame >= 2)
+			{
+				unsigned char r, g, b;
+				SDL_GetTextureColorMod(enemies.enemies[i].texture, &r,&g,&b);
+				if (frame < 4){
+					g -= 20;
+					b -= 20;
+				}
+				else
+				{
+					g +=20;
+					b +=20;
+				}
+				SDL_SetTextureColorMod(enemies.enemies[i].texture, r,g,b);
+				SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
+			}
+			else*/
+				SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
 			charRect.y += charRect.h + 50;
 		}
 
@@ -2428,11 +2458,11 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 		charRect.y = 250;
 		ttfRect.x = charRect.x;
 		for (int i = 0; i < 4; i++) {
-			if (attacker.name == player.team[i].name) {
+			if (i == attacker) {
 				tempX = charRect.x;
 				tempY = charRect.y;
-				charRect.x = posX - charRect.w;
-				charRect.y = posY - charRect.h;
+				charRect.x = posX;
+				charRect.y = posY;
 				SDL_RenderCopy(ren, player.team[i].texture, NULL, &charRect);
 				charRect.x = tempX;
 				charRect.y = tempY;
@@ -2450,7 +2480,19 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 			}
 			charRect.y += charRect.h + 50;
 		}
-
+		SDL_Texture* weapon = generateTextureFromPNG("Textures\\sword.png");
+		SDL_Rect weaponFrameRect = { 0,0,75,100 };
+		SDL_Rect weaponRect = { posX + 20,posY,75,100 };
+		currentTime += dt;
+		if (currentTime >= frameTime) {
+			currentTime = 0;
+			frame++;
+		}
+		if (frame == 6) return;
+		weaponFrameRect.x = frame * 75;
+		weaponFrameRect.y = 0;
+		SDL_RenderCopy(ren, weapon, &weaponFrameRect, &weaponRect);
+		SDL_DestroyTexture(weapon);
 
 
 		SDL_Rect actionArea = { 0,0,window_width, 200 };
@@ -2487,10 +2529,7 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 		SDL_RenderCopy(ren, texture, NULL, &ttfRect);
 		SDL_DestroyTexture(texture);
 
-		currentTime += dt;
-		if (currentTime >= frameTime){
-			frame++;
-		}
+
 
 
 
@@ -2498,9 +2537,10 @@ void attackAnimation(Player player, EnemiesSquad enemies, Hero attacker, Enemy d
 
 		SDL_RenderPresent(ren);
 	}
-
+	SDL_DestroyTexture(background);
 	TTF_CloseFont(ChoicesFont);
 	TTF_CloseFont(basicFont);
+
 
 
 }

@@ -10,8 +10,8 @@
 
 float speed = 2.f;
 
-#define MAX_ENEMY_COUNTER 100000
-#define MIN_ENEMY_COUNTER 50000
+#define MAX_ENEMY_COUNTER 100
+#define MIN_ENEMY_COUNTER 50
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -53,7 +53,6 @@ Quest* questsList = createAllQuests(qountOfQusts);
 //QuestItem* ALLQuestItemsList = createAllQuestItems(qountOfQustItems);
 
 
-int dt = 0;
 
 void DeInit(int error) {
 	if (ren != NULL) SDL_DestroyRenderer(ren);
@@ -122,6 +121,7 @@ int main(int argc, char* argv[]) {
 	Player player;
 	Init();
 
+	int dt = 0;
 	int lasttime = SDL_GetTicks();
 	int newtime;
 
@@ -259,19 +259,19 @@ int main(int argc, char* argv[]) {
 				EnemiesSquad randomEnemiesSquad;
 
 				do {
-					enemyRandNum = random(0, enemyCount);
+					enemyRandNum = random(1, enemyCount);
 				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
 				randomEnemiesSquad.enemies[0] = enemyList[enemyRandNum - 1];
 				do {
-					enemyRandNum = random(0, enemyCount);
+					enemyRandNum = random(1, enemyCount);
 				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
 				randomEnemiesSquad.enemies[1] = enemyList[enemyRandNum - 1];
 				do {
-					enemyRandNum = random(0, enemyCount);
+					enemyRandNum = random(1, enemyCount);
 				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
 				randomEnemiesSquad.enemies[2] = enemyList[enemyRandNum - 1];
 				do {
-					enemyRandNum = random(0, enemyCount);
+					enemyRandNum = random(1, enemyCount);
 				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
 				randomEnemiesSquad.enemies[3] = enemyList[enemyRandNum - 1];
 

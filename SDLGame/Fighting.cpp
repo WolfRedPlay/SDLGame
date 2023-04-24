@@ -306,7 +306,7 @@ int playerAct(Player& player, EnemiesSquad& enemies) {
 									inAction = false;
 									inHeroChoosing = true;
 									freeHeroes[heroChoice] = false;
-
+									attackAnimation(player, enemies, heroChoice, enemyChoice);
 									attack(player.team[heroChoice], enemies.enemies[enemyChoice]);
 								}
 								break;
