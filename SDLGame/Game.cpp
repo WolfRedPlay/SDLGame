@@ -10,8 +10,8 @@
 
 float speed = 2.f;
 
-#define MAX_ENEMY_COUNTER 100
-#define MIN_ENEMY_COUNTER 50
+#define MAX_ENEMY_COUNTER 1000000
+#define MIN_ENEMY_COUNTER 500000
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;
@@ -37,7 +37,7 @@ QuestNPC* questNPCs;
 Enemy* bosses;
 QuestChest* chests;
 
-int shopStage = 0, dungeType = 0;
+int shopStage = 0, dungeType = 1;
 
 int qountOfWeapons;
 int qountOfArmors;

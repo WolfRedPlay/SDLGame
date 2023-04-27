@@ -74,6 +74,26 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			player.position = { 12, 9 };
 			return true;
 		}
+		if (map[tempMoveY1][tempMoveX1] == DUNGE || map[tempMoveY1][tempMoveX2] == DUNGE && inGlobal) {
+
+			/*if (player.position.Y == 5 && player.position.X == 47) shopStage = 1;
+			if (player.position.Y == 2 && player.position.X == 196) shopStage = 2;*/
+
+			inDunge = true;
+			inGlobal = false;
+			temp = player.position;
+			player.position = { 6, 9 };
+			return true;
+		}
+		if (map[tempMoveY1][tempMoveX1] == DUNGE || map[tempMoveY1][tempMoveX2] == DUNGE && inDunge) {
+
+
+			inDunge = false;
+			inGlobal = true;
+			player.position = temp;
+			temp = {0,0};
+			return true;
+		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY1][tempMoveX2] == DOOR) {
 			if (player.keys >= 1) {
 				if (map[tempMoveY1][tempMoveX1] == DOOR) deleteObject(map, tempMoveX1, tempMoveY1);
@@ -112,6 +132,26 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			inGlobal = false;
 			temp = player.position;
 			player.position = { 12, 9 };
+			return true;
+		}
+		if (map[tempMoveY1][tempMoveX1] == DUNGE || map[tempMoveY2][tempMoveX1] == DUNGE && inGlobal) {
+
+			/*if (player.position.Y == 5 && player.position.X == 47) shopStage = 1;
+			if (player.position.Y == 2 && player.position.X == 196) shopStage = 2;*/
+
+			inDunge = true;
+			inGlobal = false;
+			temp = player.position;
+			player.position = { 6, 9 };
+			return true;
+		}
+		if (map[tempMoveY1][tempMoveX1] == DUNGE || map[tempMoveY2][tempMoveX1] == DUNGE && inDunge) {
+
+
+			inDunge = false;
+			inGlobal = true;
+			player.position = temp;
+			temp = { 0,0 };
 			return true;
 		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY2][tempMoveX1] == DOOR) {
