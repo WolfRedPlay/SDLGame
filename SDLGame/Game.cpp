@@ -180,23 +180,23 @@ int main(int argc, char* argv[]) {
 				max_frametime = 1000 / 4;
 			}
 			if (state[SDL_SCANCODE_UP] && !state[SDL_SCANCODE_DOWN]) {
-				if (movePlayer(map, player, { 0, -speed * dt / 1000 })) enemyCounter++;
+				if (movePlayer(map, player, { 0, -speed * dt / 1000 }) && !inShop) enemyCounter++;
 				player.diraction = UP;
 				isMoving = true;
 			}
 			if (!state[SDL_SCANCODE_UP] && state[SDL_SCANCODE_DOWN]) {
-				if (movePlayer(map, player, { 0,  speed * dt / 1000 })) enemyCounter++;
+				if (movePlayer(map, player, { 0,  speed * dt / 1000 }) && !inShop) enemyCounter++;
 				player.diraction = DOWN;
 				isMoving = true;
 			}
 			if (state[SDL_SCANCODE_LEFT] && !state[SDL_SCANCODE_RIGHT])
 			{
-				if (movePlayer(map, player, { -speed * dt / 1000, 0 })) enemyCounter++;
+				if (movePlayer(map, player, { -speed * dt / 1000, 0 }) && !inShop) enemyCounter++;
 				player.diraction = LEFT;
 				isMoving = true;
 			}
 			if (!state[SDL_SCANCODE_LEFT] && state[SDL_SCANCODE_RIGHT]) {
-				if (movePlayer(map, player, { speed * dt / 1000, 0 })) enemyCounter++;
+				if (movePlayer(map, player, { speed * dt / 1000, 0 }) && !inShop) enemyCounter++;
 				player.diraction = RIGHT;
 				isMoving = true;
 			}
@@ -249,7 +249,7 @@ int main(int argc, char* argv[]) {
 				enemyCounterRandomed = true;
 			}
 
-			if (enemyCounter >= startFight) {
+			if (enemyCounter >= startFight && !inShop) {
 				int enemyCount;
 				Enemy* enemyList = createAllEnemies(enemyCount);
 				int enemyRandNum;
@@ -258,27 +258,31 @@ int main(int argc, char* argv[]) {
 					if (player.team[i].lvl >= maxLvl) maxLvl = player.team[i].lvl;
 				EnemiesSquad randomEnemiesSquad;
 
+				int levelDiference = 1;
+				if (inDunge) levelDiference = 3;
+
 				do {
 					enemyRandNum = random(1, enemyCount);
-				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > levelDiference);
 				randomEnemiesSquad.enemies[0] = enemyList[enemyRandNum - 1];
 				do {
 					enemyRandNum = random(1, enemyCount);
-				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > levelDiference);
 				randomEnemiesSquad.enemies[1] = enemyList[enemyRandNum - 1];
 				do {
 					enemyRandNum = random(1, enemyCount);
-				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > levelDiference);
 				randomEnemiesSquad.enemies[2] = enemyList[enemyRandNum - 1];
 				do {
 					enemyRandNum = random(1, enemyCount);
-				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > 1);
+				} while ((enemyList[enemyRandNum - 1].lvl - maxLvl) > levelDiference);
 				randomEnemiesSquad.enemies[3] = enemyList[enemyRandNum - 1];
 
 				startBattle(player, randomEnemiesSquad);
 
 				enemyCounter = 0;
 				enemyCounterRandomed = false;
+				free(enemyList);
 			}
 
 

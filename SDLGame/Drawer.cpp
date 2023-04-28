@@ -109,7 +109,7 @@ void drawScreen(Coordinates playerPos) {
 
 	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
 		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
-		leftBorder += (window_width / UNIT_SIZE_X) - 1;
+		leftBorder += (window_width / UNIT_SIZE_X);
 	}
 	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
 		playerPos.Y -= window_height / UNIT_SIZE_Y;
@@ -140,113 +140,113 @@ void drawScreen(Coordinates playerPos) {
 					SDL_SetRenderDrawColor(ren, 128, 128, 0, 255);
 				}
 
+				if (map[uppperBorder + i][leftBorder + j] == WOODEN_WALL) {
+					SDL_RenderCopy(ren, woodWall, NULL, &unit);
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == CHEST) {
+					SDL_RenderCopy(ren, chest, NULL, &unit);
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == DOOR) {
+					if (map[uppperBorder + i - 1][leftBorder + j] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i - 1][leftBorder + j] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+					SDL_RenderCopy(ren, door, NULL, &unit);
+				}
+				if (map[uppperBorder + i][leftBorder + j] == SHOP) {
+					SDL_RenderCopy(ren, wood, NULL, &unit);
+					SDL_RenderCopy(ren, shop, NULL, &unit);
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == INKEEPER) {
+					if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+					npcFrame.w = 40;
+					npcFrame.h = 70;
+					npcFrame.x += npcFrame.w;
+					int different = npcFrame.h - unit.h;
+					unit.y -= different;
+					unit.h = npcFrame.h;
+					SDL_RenderCopy(ren, inkeeper, NULL, &unit);
+					unit.h = UNIT_SIZE_Y;
+					unit.y += different;
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == WEAPON_SELLER) {
+					if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+					npcFrame.w = 40;
+					npcFrame.h = 70;
+					npcFrame.x += npcFrame.w;
+					int different = npcFrame.h - unit.h;
+					unit.y -= different;
+					unit.h = npcFrame.h;
+					SDL_RenderCopy(ren, weaponsSeller, NULL, &unit);
+					unit.h = UNIT_SIZE_Y;
+					unit.y += different;
+				}
+				if (map[uppperBorder + i][leftBorder + j] == ARMOR_SELLER) {
+					if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+					npcFrame.w = 40;
+					npcFrame.h = 70;
+					npcFrame.x += npcFrame.w;
+					int different = npcFrame.h - unit.h;
+					unit.y -= different;
+					unit.h = npcFrame.h;
+					SDL_RenderCopy(ren, armorsSeller, NULL, &unit);
+					unit.h = UNIT_SIZE_Y;
+					unit.y += different;
+				}
+				if (map[uppperBorder + i][leftBorder + j] == POTION_SELLER) {
+					if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+					npcFrame.w = 40;
+					npcFrame.h = 70;
+					npcFrame.x += npcFrame.w;
+					int different = npcFrame.h - unit.h;
+					unit.y -= different;
+					unit.h = npcFrame.h;
+					SDL_RenderCopy(ren, potionsSeller, NULL, &unit);
+					unit.h = UNIT_SIZE_Y;
+					unit.y += different;
+				}
+				if (map[uppperBorder + i][leftBorder + j] == ABILITIES_SELLER) {
+					if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+					npcFrame.w = 40;
+					npcFrame.h = 70;
+					npcFrame.x += npcFrame.w;
+					int different = npcFrame.h - unit.h;
+					unit.y -= different;
+					unit.h = npcFrame.h;
+					SDL_RenderCopy(ren, abilitiesSeller, NULL, &unit);
+					unit.h = UNIT_SIZE_Y;
+					unit.y += different;
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == KEY) {
+					if (map[uppperBorder + i][leftBorder + j - 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
+					if (map[uppperBorder + i][leftBorder + j - 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
+
+					SDL_RenderCopy(ren, key, NULL, &unit);
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == GRASS) {
+					SDL_RenderCopy(ren, grass, NULL, &unit);
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == WOOD) {
+					SDL_RenderCopy(ren, wood, NULL, &unit);
+				}
+
+				if (map[uppperBorder + i][leftBorder + j] == STONE_WALL) {
+					SDL_RenderCopy(ren, stoneWall, NULL, &unit);
+				}
 
 			}
-			if (map[uppperBorder + i][leftBorder + j] == WOODEN_WALL) {
-				SDL_RenderCopy(ren, woodWall, NULL, &unit);
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == CHEST) {
-				SDL_RenderCopy(ren, chest, NULL, &unit);
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == DOOR) {
-				if (map[uppperBorder + i - 1][leftBorder + j] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i - 1][leftBorder + j] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				SDL_RenderCopy(ren, door, NULL, &unit);
-			}
-			if (map[uppperBorder + i][leftBorder + j] == SHOP) {
-				SDL_RenderCopy(ren, wood, NULL, &unit);
-				SDL_RenderCopy(ren, shop, NULL, &unit);
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == INKEEPER) {
-				if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				npcFrame.w = 40;
-				npcFrame.h = 70;
-				npcFrame.x += npcFrame.w;
-				int different = npcFrame.h - unit.h;
-				unit.y -= different;
-				unit.h = npcFrame.h;
-				SDL_RenderCopy(ren, inkeeper, NULL, &unit);
-				unit.h = UNIT_SIZE_Y;
-				unit.y += different;
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == WEAPON_SELLER) {
-				if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				npcFrame.w = 40;
-				npcFrame.h = 70;
-				npcFrame.x += npcFrame.w;
-				int different = npcFrame.h - unit.h;
-				unit.y -= different;
-				unit.h = npcFrame.h;
-				SDL_RenderCopy(ren, weaponsSeller, NULL, &unit);
-				unit.h = UNIT_SIZE_Y;
-				unit.y += different;
-			}
-			if (map[uppperBorder + i][leftBorder + j] == ARMOR_SELLER) {
-				if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				npcFrame.w = 40;
-				npcFrame.h = 70;
-				npcFrame.x += npcFrame.w;
-				int different = npcFrame.h - unit.h;
-				unit.y -= different;
-				unit.h = npcFrame.h;
-				SDL_RenderCopy(ren, armorsSeller, NULL, &unit);
-				unit.h = UNIT_SIZE_Y;
-				unit.y += different;
-			}
-			if (map[uppperBorder + i][leftBorder + j] == POTION_SELLER) {
-				if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				npcFrame.w = 40;
-				npcFrame.h = 70;
-				npcFrame.x += npcFrame.w;
-				int different = npcFrame.h - unit.h;
-				unit.y -= different;
-				unit.h = npcFrame.h;
-				SDL_RenderCopy(ren, potionsSeller, NULL, &unit);
-				unit.h = UNIT_SIZE_Y;
-				unit.y += different;
-			}
-			if (map[uppperBorder + i][leftBorder + j] == ABILITIES_SELLER) {
-				if (map[uppperBorder + i][leftBorder + j + 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j + 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-				npcFrame.w = 40;
-				npcFrame.h = 70;
-				npcFrame.x += npcFrame.w;
-				int different = npcFrame.h - unit.h;
-				unit.y -= different;
-				unit.h = npcFrame.h;
-				SDL_RenderCopy(ren, abilitiesSeller, NULL, &unit);
-				unit.h = UNIT_SIZE_Y;
-				unit.y += different;
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == KEY) {
-				if (map[uppperBorder + i][leftBorder + j - 1] == GRASS)SDL_RenderCopy(ren, grass, NULL, &unit);
-				if (map[uppperBorder + i][leftBorder + j - 1] == WOOD)SDL_RenderCopy(ren, wood, NULL, &unit);
-
-				SDL_RenderCopy(ren, key, NULL, &unit);
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == GRASS) {
-				SDL_RenderCopy(ren, grass, NULL, &unit);
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == WOOD) {
-				SDL_RenderCopy(ren, wood, NULL, &unit);
-			}
-
-			if (map[uppperBorder + i][leftBorder + j] == STONE_WALL) {
-				SDL_RenderCopy(ren, stoneWall, NULL, &unit);
-			}
-
-
+			/*SDL_SetRenderDrawColor(ren, 255,0,0,255);
+			SDL_RenderDrawRect(ren,&unit);*/
 			unit.x += unit.w;
 		}
 		unit.x = 0;

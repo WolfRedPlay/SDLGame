@@ -18,7 +18,7 @@ extern int window_height;
 #define BOSSES_AMOUNT_1 1
 #define CHESTS_AMOUNT_1 1
 
-#define MAP_SIZE_X 401
+#define MAP_SIZE_X 402
 #define MAP_SIZE_Y 100
 
 #define SHOP_MAP_SIZE_X 27
