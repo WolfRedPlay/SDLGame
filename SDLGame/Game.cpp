@@ -21,6 +21,8 @@ int window_height = 1080;
 
 char** map;
 
+int enemyCounter = 0;
+
 bool inGame = false;
 
 int mapSizeX, mapSizeY;
@@ -28,6 +30,7 @@ int mapSizeX, mapSizeY;
 bool inShop, inDunge, inGlobal,
 shopMapReaded, dungeMapReaded, globalMapReaded,
 isMoving;
+
 
 
 Coordinates temp = { 0.f,0.f };
@@ -114,7 +117,7 @@ int main(int argc, char* argv[]) {
 
 
 
-	int enemyCounter = 0; bool enemyCounterRandomed = false; int startFight = 0;
+	bool enemyCounterRandomed = false; int startFight = 0;
 
 	map = createMapArray(MAP_SIZE_X, MAP_SIZE_Y);
 	SDL_Event ev;
@@ -135,10 +138,10 @@ int main(int argc, char* argv[]) {
 		dungeMapReaded = false;
 		globalMapReaded = false;
 		startMenu(player, map);
-		NPCs = createNPCs(player.currentLocation);
-		questNPCs = createQuestNPCs(player.currentLocation);
-		bosses = createBosses(player.currentLocation);
-		chests = createChests(player.currentLocation);
+		NPCs = createNPCs();
+		questNPCs = createQuestNPCs();
+		bosses = createBosses();
+		chests = createChests();
 		while (inGame) {
 
 			while (SDL_PollEvent(&ev)) {
@@ -289,13 +292,13 @@ int main(int argc, char* argv[]) {
 
 
 			drawScreen(player.position);
-			drawChests(chests, player.position);
-			drawNPCs(NPCs, player.position);
-			drawQuestNPCs(questNPCs, player.position);
-			drawBosses(bosses, player.position);
+			drawChests(chests, player);
+			drawNPCs(NPCs, player);
+			drawQuestNPCs(questNPCs, player);
+			drawBosses(bosses, player);
 			drawPlayer(player.position, player.diraction, frame);
 
-			//printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
+			printf_s("x: %f y: %f \n", player.position.X, player.position.Y);
 
 			SDL_RenderPresent(ren);
 		}

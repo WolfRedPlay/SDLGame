@@ -4,35 +4,35 @@ int tempMoveY1, tempMoveX1;
 int tempMoveY2, tempMoveX2;
 
 
-bool checkForNPCCollision() {
+bool checkForNPCCollision(Player player) {
 	for (int i = 0; i < NPC_AMOUNT_1; i++) {
-		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY1) return true;
-		if (NPCs[i].position.X == tempMoveX2 && NPCs[i].position.Y == tempMoveY1) return true;
-		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY2) return true;
+		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY1 && NPCs[i].location == player.currentLocation) return true;
+		if (NPCs[i].position.X == tempMoveX2 && NPCs[i].position.Y == tempMoveY1 && NPCs[i].location == player.currentLocation) return true;
+		if (NPCs[i].position.X == tempMoveX1 && NPCs[i].position.Y == tempMoveY2 && NPCs[i].location == player.currentLocation) return true;
 	}
 	return false;
 }
-bool checkForQuestNPCCollision() {
+bool checkForQuestNPCCollision(Player player) {
 	for (int i = 0; i < QUEST_NPC_AMOUNT_1; i++) {
-		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY1) return true;
-		if (questNPCs[i].position.X == tempMoveX2 && questNPCs[i].position.Y == tempMoveY1) return true;
-		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY2) return true;
+		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY1 && questNPCs[i].location == player.currentLocation) return true;
+		if (questNPCs[i].position.X == tempMoveX2 && questNPCs[i].position.Y == tempMoveY1 && questNPCs[i].location == player.currentLocation) return true;
+		if (questNPCs[i].position.X == tempMoveX1 && questNPCs[i].position.Y == tempMoveY2 && questNPCs[i].location == player.currentLocation) return true;
 	}
 	return false;
 }
-bool checkForBossCollision() {
+bool checkForBossCollision(Player player) {
 	for (int i = 0; i < BOSSES_AMOUNT_1; i++) {
-		if (bosses[i].position.X == tempMoveX1 && bosses[i].position.Y == tempMoveY1) return true;
-		if (bosses[i].position.X == tempMoveX2 && bosses[i].position.Y == tempMoveY1) return true;
-		if (bosses[i].position.X == tempMoveX1 && bosses[i].position.Y == tempMoveY2) return true;
+		if (bosses[i].position.X == tempMoveX1 && bosses[i].position.Y == tempMoveY1 && bosses[i].location == player.currentLocation) return true;
+		if (bosses[i].position.X == tempMoveX2 && bosses[i].position.Y == tempMoveY1 && bosses[i].location == player.currentLocation) return true;
+		if (bosses[i].position.X == tempMoveX1 && bosses[i].position.Y == tempMoveY2 && bosses[i].location == player.currentLocation) return true;
 	}
 	return false;
 }
-bool checkForChestCollision() {
+bool checkForChestCollision(Player player) {
 	for (int i = 0; i < CHESTS_AMOUNT_1; i++) {
-		if (chests[i].position.X == tempMoveX1 && chests[i].position.Y == tempMoveY1) return true;
-		if (chests[i].position.X == tempMoveX2 && chests[i].position.Y == tempMoveY1) return true;
-		if (chests[i].position.X == tempMoveX1 && chests[i].position.Y == tempMoveY2) return true;
+		if (chests[i].position.X == tempMoveX1 && chests[i].position.Y == tempMoveY1 && chests[i].location == player.currentLocation) return true;
+		if (chests[i].position.X == tempMoveX2 && chests[i].position.Y == tempMoveY1 && chests[i].location == player.currentLocation) return true;
+		if (chests[i].position.X == tempMoveX1 && chests[i].position.Y == tempMoveY2 && chests[i].location == player.currentLocation) return true;
 	}
 	return false;
 }
@@ -94,6 +94,33 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			temp = {0,0};
 			return true;
 		}
+		if (map[tempMoveY1][tempMoveX1] == LOCATION || map[tempMoveY1][tempMoveX2] == LOCATION) {
+			if (player.position.X > 300) {
+				player.currentLocation++;
+				char way[100];
+				sprintf_s(way, "Maps\\GlobalMap%d.txt", player.currentLocation);
+				readMap(map, way, MAP_SIZE_X, MAP_SIZE_Y);
+				setMapSaves("Maps\\SavedMap.txt", map);
+				globalMapReaded = false;
+				player.position.X = 5;
+				player.position.Y = 7;
+
+			}
+			else {
+				player.currentLocation--;
+				char way[100];
+				sprintf_s(way, "Maps\\GlobalMap%d.txt", player.currentLocation);
+				readMap(map, way, MAP_SIZE_X, MAP_SIZE_Y);
+				setMapSaves("Maps\\SavedMap.txt", map);
+				globalMapReaded = false;
+				player.position.X = 391;
+				player.position.Y = 96;
+
+			}
+
+			
+			return true;
+		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY1][tempMoveX2] == DOOR) {
 			if (player.keys >= 1) {
 				if (map[tempMoveY1][tempMoveX1] == DOOR) deleteObject(map, tempMoveX1, tempMoveY1);
@@ -102,10 +129,10 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			}
 			else return false;
 		}
-		if (checkForNPCCollision()) return false;
-		if (checkForQuestNPCCollision()) return false;
-		if (checkForBossCollision()) return false;
-		if (checkForChestCollision()) return false;
+		if (checkForNPCCollision(player)) return false;
+		if (checkForQuestNPCCollision(player)) return false;
+		if (checkForBossCollision(player)) return false;
+		if (checkForChestCollision(player)) return false;
 		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY1][tempMoveX2] == WOODEN_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY1][tempMoveX2] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY1][tempMoveX2] == WEAPON_SELLER) return false;
@@ -154,6 +181,33 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			temp = { 0,0 };
 			return true;
 		}
+		if (map[tempMoveY1][tempMoveX1] == LOCATION || map[tempMoveY2][tempMoveX1] == LOCATION) {
+			if (player.position.X > 300) {
+				player.currentLocation++;
+				char way[100];
+				sprintf_s(way, "Maps\\GlobalMap%d.txt", player.currentLocation);
+				readMap(map, way, MAP_SIZE_X, MAP_SIZE_Y);
+				setMapSaves("Maps\\SavedMap.txt", map);
+				globalMapReaded = false;
+				player.position.X = 5;
+				player.position.Y = 7;
+
+			}
+			else {
+				player.currentLocation--;
+				char way[100];
+				sprintf_s(way, "Maps\\GlobalMap%d.txt", player.currentLocation);
+				readMap(map, way, MAP_SIZE_X, MAP_SIZE_Y);
+				setMapSaves("Maps\\SavedMap.txt", map);
+				globalMapReaded = false;
+				player.position.X = 391;
+				player.position.Y = 96;
+
+			}
+
+
+			return true;
+		}
 		if (map[tempMoveY1][tempMoveX1] == DOOR || map[tempMoveY2][tempMoveX1] == DOOR) {
 			if (player.keys >= 1) {
 				if (map[tempMoveY1][tempMoveX1] == DOOR) deleteObject(map, tempMoveX1, tempMoveY1);
@@ -162,10 +216,10 @@ bool movePlayer(char** map, Player& player, Coordinates move) {
 			}
 			else return false;
 		}
-		if (checkForNPCCollision()) return false;
-		if (checkForQuestNPCCollision()) return false;
-		if (checkForBossCollision()) return false;
-		if (checkForChestCollision()) return false;
+		if (checkForNPCCollision(player)) return false;
+		if (checkForQuestNPCCollision(player)) return false;
+		if (checkForBossCollision(player)) return false;
+		if (checkForChestCollision(player)) return false;
 		if (map[tempMoveY1][tempMoveX1] == WOODEN_WALL || map[tempMoveY2][tempMoveX1] == WOODEN_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == STONE_WALL || map[tempMoveY2][tempMoveX1] == STONE_WALL) return false;
 		if (map[tempMoveY1][tempMoveX1] == WEAPON_SELLER || map[tempMoveY2][tempMoveX1] == WEAPON_SELLER) return false;

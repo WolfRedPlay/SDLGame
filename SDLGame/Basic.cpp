@@ -46,98 +46,103 @@ void deleteObject(char** map, int x, int y) {
 
 }
 
-NPC* createNPCs(int location) {
-	NPC* NPCs;
-	if (location == 1) {
-		NPCs = (NPC*)malloc(NPC_AMOUNT_1 * sizeof(NPC));
-		NPCs[0].position = { 16, 3 };
-		NPCs[1].position = { 26, 3 };
-		NPCs[2].position = { 20, 10 };
-		NPCs[3].position = { 25, 15 };
+NPC* createNPCs() {
 
-		NPCs[0].texture = generateTextureFromPNG("Textures\\NPC.png");
-		NPCs[1].texture = generateTextureFromPNG("Textures\\NPC.png");
-		NPCs[2].texture = generateTextureFromPNG("Textures\\NPC.png");
-		NPCs[3].texture = generateTextureFromPNG("Textures\\NPC.png");
+	NPC* newNPCs;
 
-		NPCs[0].phrase = 1;
-		NPCs[1].phrase = 2;
-		NPCs[2].phrase = 3;
-		NPCs[3].phrase = 4;
-	}
-	else
-		NPCs = (NPC*)malloc(NPC_AMOUNT_1 * sizeof(NPC));
-	return NPCs;
+	newNPCs = (NPC*)malloc(NPC_AMOUNT_1 * sizeof(NPC));
+	newNPCs[0].position = { 16, 3 };
+	newNPCs[0].texture = generateTextureFromPNG("Textures\\NPC.png");
+	newNPCs[0].phrase = 1;
+	newNPCs[0].location = 1;
+
+	newNPCs[1].position = { 26, 3 };
+	newNPCs[1].texture = generateTextureFromPNG("Textures\\NPC.png");
+	newNPCs[1].phrase = 2;
+	newNPCs[1].location = 1;
+
+	newNPCs[2].position = { 20, 10 };
+	newNPCs[2].texture = generateTextureFromPNG("Textures\\NPC.png");
+	newNPCs[2].phrase = 3;
+	newNPCs[2].location = 1;
+
+	newNPCs[3].position = { 25, 15 };
+	newNPCs[3].texture = generateTextureFromPNG("Textures\\NPC.png");
+	newNPCs[3].phrase = 4;
+	newNPCs[3].location = 1;
+
+	newNPCs[4].position = { 10, 5 };
+	newNPCs[4].texture = generateTextureFromPNG("Textures\\NPC.png");
+	newNPCs[4].phrase = 1;
+	newNPCs[4].location = 2;
+
+
+
+	return newNPCs;
 }
-QuestNPC* createQuestNPCs(int location) {
-	QuestNPC* NPCs;
+QuestNPC* createQuestNPCs() {
 
-	int questsCount;
+	QuestNPC* newNPCs;
 
-	Quest* ALLQuestsList = createAllQuests(questsCount);
 
-	if (location == 1) {
-		NPCs = (QuestNPC*)malloc(QUEST_NPC_AMOUNT_1 * sizeof(QuestNPC));
-		NPCs[0].position = { 5, 10 };
+	newNPCs = (QuestNPC*)malloc(QUEST_NPC_AMOUNT_1 * sizeof(QuestNPC));
 
-		NPCs[0].texture = generateTextureFromPNG("Textures\\Older.png");
 
-		NPCs[0].quest = ALLQuestsList[0];
-	}
-	else
-		NPCs = (QuestNPC*)malloc(QUEST_NPC_AMOUNT_1 * sizeof(QuestNPC));
-	free(ALLQuestsList);
-	
-	return NPCs;
+	newNPCs[0].position = { 5, 10 };
+	newNPCs[0].location = 1;
+	newNPCs[0].texture = generateTextureFromPNG("Textures\\Older.png");
+	newNPCs[0].quest = questsList[0];
+
+	return newNPCs;
 }
-Enemy* createBosses(int location) {
-	Enemy* bosses = NULL;
+Enemy* createBosses()	 {
 
-	if (location == 1) {
-		bosses = (Enemy*)malloc(BOSSES_AMOUNT_1 * sizeof(Enemy));
-		bosses[0].health = 100;
-		bosses[0].mana = 100;
-		bosses[0].stamina = 100;
-		bosses[0].status = NORMAL;
-		bosses[0].damage = 20;
-		bosses[0].armor = 10;
-		bosses[0].expDrop = 100;
-		bosses[0].moneyDrop = 1000;
-		bosses[0].lvl = 5;
-		bosses[0].name[0] = 'L';
-		bosses[0].name[1] = 'e';
-		bosses[0].name[2] = 'a';
-		bosses[0].name[3] = 'd';
-		bosses[0].name[4] = 'e';
-		bosses[0].name[5] = 'r';
-		bosses[0].name[6] = '\0';
-		bosses[0].IDarmorDrop = -203;
-		bosses[0].IDpotionDrop = -301;
-		bosses[0].IDweaponDrop = -104;
-		bosses[0].ability = findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities);
-		bosses[0].ID = BANDIT_LEADER;
-		bosses[0].texture = generateTextureFromPNG("Textures\\BanditLeader.png");
-		bosses[0].position = { 68, 37 };
-	}
+	Enemy* newBosses;
 
-	return bosses;
+	newBosses = (Enemy*)malloc(BOSSES_AMOUNT_1 * sizeof(Enemy));
+	newBosses[0].health = 100;
+	newBosses[0].mana = 100;
+	newBosses[0].stamina = 100;
+	newBosses[0].status = NORMAL;
+	newBosses[0].damage = 20;
+	newBosses[0].armor = 10;
+	newBosses[0].expDrop = 100;
+	newBosses[0].moneyDrop = 1000;
+	newBosses[0].lvl = 5;
+	newBosses[0].name[0] = 'L';
+	newBosses[0].name[1] = 'e';
+	newBosses[0].name[2] = 'a';
+	newBosses[0].name[3] = 'd';
+	newBosses[0].name[4] = 'e';
+	newBosses[0].name[5] = 'r';
+	newBosses[0].name[6] = '\0';
+	newBosses[0].IDarmorDrop = -203;
+	newBosses[0].IDpotionDrop = -301;
+	newBosses[0].IDweaponDrop = -104;
+	newBosses[0].ability = findInAbilitiesList(ALLAbilitiesList, -501, qountOfAbilities);
+	newBosses[0].ID = BANDIT_LEADER;
+	newBosses[0].texture = generateTextureFromPNG("Textures\\BanditLeader.png");
+	newBosses[0].position = { 68, 37 };
+	newBosses[0].location = 1;
+
+	return newBosses;
 }
-QuestChest* createChests(int location) {
-	QuestChest* chests = NULL;
+QuestChest* createChests() {
 
 	int questItemsCount;
 
 	QuestItem* ALLQuestItemsList = createAllQuestItems(questItemsCount);
+	QuestChest* newChests;
 
-	if (location == 1) {
-		chests = (QuestChest*)malloc(CHESTS_AMOUNT_1 * sizeof(QuestChest));
-		chests[0].position = {68, 36};
-		chests[0].item = findInQuestItemsList(ALLQuestItemsList, -900, questItemsCount);
-		
-	}
+
+	newChests = (QuestChest*)malloc(CHESTS_AMOUNT_1 * sizeof(QuestChest));
+	newChests[0].position = { 68, 36 };
+	newChests[0].location = 1;
+	newChests[0].item = findInQuestItemsList(ALLQuestItemsList, -900, questItemsCount);
+
 
 	free(ALLQuestItemsList);
-	return chests;
+	return newChests;
 }
 
 Weapon createEmptyWeapon() {

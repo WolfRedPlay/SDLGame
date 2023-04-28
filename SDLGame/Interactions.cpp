@@ -211,20 +211,20 @@ void inkeeper(Player& player, char** map) {
 	}
 }
 
-bool checkForNPCInteraction(NPC& npc) {
+bool checkForNPCInteraction(NPC& npc, Player player) {
 	for (int i = 0; i < NPC_AMOUNT_1; i++) {
-		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY1) 
+		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY1 && NPCs[i].location == player.currentLocation) 
 		{
 			npc = NPCs[i];
 			return true;
 		}
-		if (NPCs[i].position.X == tempX2 && NPCs[i].position.Y == tempY1)
+		if (NPCs[i].position.X == tempX2 && NPCs[i].position.Y == tempY1 && NPCs[i].location == player.currentLocation)
 		{
 			npc = NPCs[i];
 			return true;
 
 		}
-		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY2)
+		if (NPCs[i].position.X == tempX1 && NPCs[i].position.Y == tempY2 && NPCs[i].location == player.currentLocation)
 		{
 			npc = NPCs[i];
 			return true;
@@ -232,20 +232,20 @@ bool checkForNPCInteraction(NPC& npc) {
 	}
 	return false;
 }
-bool checkForQuestNPCInteraction(int& index) {
+bool checkForQuestNPCInteraction(int& index, Player player) {
 	for (int i = 0; i < QUEST_NPC_AMOUNT_1; i++) {
-		if (questNPCs[i].position.X == tempX1 && questNPCs[i].position.Y == tempY1)
+		if (questNPCs[i].position.X == tempX1 && questNPCs[i].position.Y == tempY1 && questNPCs[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
 		}
-		if (questNPCs[i].position.X == tempX2 && questNPCs[i].position.Y == tempY1)
+		if (questNPCs[i].position.X == tempX2 && questNPCs[i].position.Y == tempY1 && questNPCs[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
 
 		}
-		if (questNPCs[i].position.X == tempX1 && questNPCs[i].position.Y == tempY2)
+		if (questNPCs[i].position.X == tempX1 && questNPCs[i].position.Y == tempY2 && questNPCs[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
@@ -253,20 +253,20 @@ bool checkForQuestNPCInteraction(int& index) {
 	}
 	return false;
 }
-bool checkForBossInteraction(int& index) {
+bool checkForBossInteraction(int& index, Player player) {
 	for (int i = 0; i < BOSSES_AMOUNT_1; i++) {
-		if (bosses[i].position.X == tempX1 && bosses[i].position.Y == tempY1)
+		if (bosses[i].position.X == tempX1 && bosses[i].position.Y == tempY1 && bosses[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
 		}
-		if (bosses[i].position.X == tempX2 && bosses[i].position.Y == tempY1)
+		if (bosses[i].position.X == tempX2 && bosses[i].position.Y == tempY1 && bosses[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
 
 		}
-		if (bosses[i].position.X == tempX1 && bosses[i].position.Y == tempY2)
+		if (bosses[i].position.X == tempX1 && bosses[i].position.Y == tempY2 && bosses[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
@@ -274,20 +274,20 @@ bool checkForBossInteraction(int& index) {
 	}
 	return false;
 }
-bool checkForChestInteraction(int& index) {
+bool checkForChestInteraction(int& index, Player player) {
 	for (int i = 0; i < CHESTS_AMOUNT_1; i++) {
-		if (chests[i].position.X == tempX1 && chests[i].position.Y == tempY1)
+		if (chests[i].position.X == tempX1 && chests[i].position.Y == tempY1 && chests[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
 		}
-		if (chests[i].position.X == tempX2 && chests[i].position.Y == tempY1)
+		if (chests[i].position.X == tempX2 && chests[i].position.Y == tempY1 && chests[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
 
 		}
-		if (chests[i].position.X == tempX1 && chests[i].position.Y == tempY2)
+		if (chests[i].position.X == tempX1 && chests[i].position.Y == tempY2 && chests[i].location == player.currentLocation)
 		{
 			index = i;
 			return true;
@@ -308,13 +308,13 @@ void interact(char** map, Player& player) {
 		tempX1 = floorf(player.position.X);
 		tempX2 = ceilf(player.position.X);
 
-		if (checkForNPCInteraction(npc)) NPCDialog(npc);
-		if (checkForQuestNPCInteraction(npcIndex)) QuestDialog(questNPCs[npcIndex], player);
-		if (checkForBossInteraction(bossIndex))
+		if (checkForNPCInteraction(npc, player)) NPCDialog(npc);
+		if (checkForQuestNPCInteraction(npcIndex, player)) QuestDialog(questNPCs[npcIndex], player);
+		if (checkForBossInteraction(bossIndex, player))
 		{
 			if(BossDialog(bosses[bossIndex])) startBattle(player, bosses[bossIndex]);
 		}
-		if (checkForChestInteraction(chestIndex)) openQuestChest(player, chests[chestIndex]);
+		if (checkForChestInteraction(chestIndex, player)) openQuestChest(player, chests[chestIndex]);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY1][tempX2] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY1][tempX2] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY1][tempX2] == POTION_SELLER) potionSeller(player, 1, map);
@@ -331,13 +331,13 @@ void interact(char** map, Player& player) {
 		tempY1 = floorf(player.position.Y);
 		tempY2 = ceilf(player.position.Y);
 
-		if (checkForNPCInteraction(npc)) NPCDialog(npc);
-		if (checkForQuestNPCInteraction(npcIndex)) QuestDialog(questNPCs[npcIndex], player);
-		if (checkForBossInteraction(bossIndex))
+		if (checkForNPCInteraction(npc, player)) NPCDialog(npc);
+		if (checkForQuestNPCInteraction(npcIndex, player)) QuestDialog(questNPCs[npcIndex], player);
+		if (checkForBossInteraction(bossIndex, player))
 		{
 			if (BossDialog(bosses[bossIndex])) startBattle(player, bosses[bossIndex]);
 		}
-		if (checkForChestInteraction(chestIndex)) openQuestChest(player, chests[chestIndex]);
+		if (checkForChestInteraction(chestIndex, player)) openQuestChest(player, chests[chestIndex]);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);
@@ -356,13 +356,13 @@ void interact(char** map, Player& player) {
 		tempY1 = floorf(player.position.Y);
 		tempY2 = ceilf(player.position.Y);
 
-		if (checkForNPCInteraction(npc)) NPCDialog(npc);
-		if (checkForQuestNPCInteraction(npcIndex)) QuestDialog(questNPCs[npcIndex], player);
-		if (checkForBossInteraction(bossIndex))
+		if (checkForNPCInteraction(npc, player)) NPCDialog(npc);
+		if (checkForQuestNPCInteraction(npcIndex, player)) QuestDialog(questNPCs[npcIndex], player);
+		if (checkForBossInteraction(bossIndex, player))
 		{
 			if (BossDialog(bosses[bossIndex])) startBattle(player, bosses[bossIndex]);
 		}
-		if (checkForChestInteraction(chestIndex)) openQuestChest(player, chests[chestIndex]);
+		if (checkForChestInteraction(chestIndex, player)) openQuestChest(player, chests[chestIndex]);
 		if (map[tempY1][tempX1] == WEAPON_SELLER || map[tempY2][tempX1] == WEAPON_SELLER) weaponSeller(player, 1, map);
 		if (map[tempY1][tempX1] == ARMOR_SELLER || map[tempY2][tempX1] == ARMOR_SELLER) armorSeller(player, 1, map);
 		if (map[tempY1][tempX1] == POTION_SELLER || map[tempY2][tempX1] == POTION_SELLER) potionSeller(player, 1, map);

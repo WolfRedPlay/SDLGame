@@ -19,12 +19,13 @@ extern char** map;
 
 extern bool inGlobal;
 
+
 void drawScreen(Coordinates playerPos);
 void drawPlayer(Coordinates playerPosition, int diraction, int frame);
-void drawNPCs(NPC* npcs, Coordinates playerPos);
-void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos);
-void drawBosses(Enemy* bosses, Coordinates playerPos);
-void drawChests(QuestChest* chests, Coordinates playerPos);
+void drawNPCs(NPC* npcs, Player players);
+void drawQuestNPCs(QuestNPC* NPCs, Player player);
+void drawBosses(Enemy* bosses, Player player);
+void drawChests(QuestChest* chests, Player player);
 
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney);
 void drawChestOpenning(Weapon givedWeapon, Armor givedArmor, Potion givedPotion, int givedMoney, QuestItem item);

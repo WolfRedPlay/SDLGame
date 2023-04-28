@@ -109,7 +109,7 @@ void drawScreen(Coordinates playerPos) {
 
 	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
 		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
-		leftBorder += (window_width / UNIT_SIZE_X);
+		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
 		playerPos.Y -= window_height / UNIT_SIZE_Y;
@@ -243,6 +243,10 @@ void drawScreen(Coordinates playerPos) {
 				if (map[uppperBorder + i][leftBorder + j] == STONE_WALL) {
 					SDL_RenderCopy(ren, stoneWall, NULL, &unit);
 				}
+				if (map[uppperBorder + i][leftBorder + j] == LOCATION) {
+					SDL_SetRenderDrawColor(ren, 255,0,0,255);
+					SDL_RenderDrawRect(ren, &unit);
+				}
 
 			}
 			/*SDL_SetRenderDrawColor(ren, 255,0,0,255);
@@ -268,79 +272,82 @@ void drawScreen(Coordinates playerPos) {
 
 }
 
-void drawNPCs(NPC* NPCs, Coordinates playerPos) {
+void drawNPCs(NPC* NPCs, Player player) {
 	SDL_FRect npcRect = { 0,0,40,70 };
 	SDL_Rect npcFrame = { 40,0,40,70 };
 	int leftBorder = 0, upperBorder = 0;
 	int rightBorder = 0, downBorder = 0;
 
-	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
-		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+	while (player.position.X >= (window_width / UNIT_SIZE_X) - 1) {
+		player.position.X -= (window_width / UNIT_SIZE_X) - 1;
 		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
-	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
-		playerPos.Y -= window_height / UNIT_SIZE_Y;
+	while (player.position.Y >= window_height / UNIT_SIZE_Y) {
+		player.position.Y -= window_height / UNIT_SIZE_Y;
 		upperBorder += window_height / UNIT_SIZE_Y;
 	}
 	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
-	for (int i = 0; i < 4; i++) {
+	for (int i = 0; i < NPC_AMOUNT_1; i++) {
 		if (NPCs[i].position.X > leftBorder && NPCs[i].position.X < rightBorder &&
-			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder && inGlobal) {
+			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder && 
+			inGlobal && NPCs[i].location == player.currentLocation) {
 			npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
 			npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
 			SDL_RenderCopyF(ren, NPCs[i].texture, &npcFrame, &npcRect);
 		}
 	}
 }
-void drawQuestNPCs(QuestNPC* NPCs, Coordinates playerPos) {
+void drawQuestNPCs(QuestNPC* NPCs, Player player) {
 	SDL_FRect npcRect = { 0,0,40,70 };
 
 	int leftBorder = 0, upperBorder = 0;
 	int rightBorder = 0, downBorder = 0;
 
 
-	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
-		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+	while (player.position.X >= (window_width / UNIT_SIZE_X) - 1) {
+		player.position.X -= (window_width / UNIT_SIZE_X) - 1;
 		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
-	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
-		playerPos.Y -= window_height / UNIT_SIZE_Y;
+	while (player.position.Y >= window_height / UNIT_SIZE_Y) {
+		player.position.Y -= window_height / UNIT_SIZE_Y;
 		upperBorder += window_height / UNIT_SIZE_Y;
 	}
 	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < QUEST_NPC_AMOUNT_1; i++) {
 		if (NPCs[i].position.X > leftBorder && NPCs[i].position.X < rightBorder &&
-			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder && inGlobal) {
+			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder &&
+			inGlobal && NPCs[i].location == player.currentLocation) {
 			npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
 			npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
 			SDL_RenderCopyF(ren, NPCs[i].texture, NULL, &npcRect);
 		}
 	}
 }
-void drawBosses(Enemy* bosses, Coordinates playerPos) {
+void drawBosses(Enemy* bosses, Player player) {
 	SDL_FRect npcRect = { 0,0,40,70 };
 
 	int leftBorder = 0, upperBorder = 0;
 	int rightBorder = 0, downBorder = 0;
 
 
-	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
-		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+	while (player.position.X >= (window_width / UNIT_SIZE_X) - 1) {
+		player.position.X -= (window_width / UNIT_SIZE_X) - 1;
 		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
-	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
-		playerPos.Y -= window_height / UNIT_SIZE_Y;
+	while (player.position.Y >= window_height / UNIT_SIZE_Y) {
+		player.position.Y -= window_height / UNIT_SIZE_Y;
 		upperBorder += window_height / UNIT_SIZE_Y;
 	}
 	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < BOSSES_AMOUNT_1; i++) {
 		if (bosses[i].position.X > leftBorder && bosses[i].position.X < rightBorder &&
-			bosses[i].position.Y > upperBorder && bosses[i].position.Y < downBorder && inGlobal) {
+			bosses[i].position.Y > upperBorder && bosses[i].position.Y < downBorder && 
+			inGlobal && bosses[i].location == player.currentLocation) {
 			float x = bosses[i].position.X;
 			float y = bosses[i].position.Y;
 			while (x >= (window_width / UNIT_SIZE_X) - 1) {
@@ -355,7 +362,7 @@ void drawBosses(Enemy* bosses, Coordinates playerPos) {
 		}
 	}
 }
-void drawChests(QuestChest* chests, Coordinates playerPos) {
+void drawChests(QuestChest* chests, Player player) {
 	SDL_FRect chestRect = { 0,0,UNIT_SIZE_X,UNIT_SIZE_Y };
 
 	SDL_Texture* goldChest = generateTextureFromPNG("Textures\\Golden_chest.png");
@@ -364,20 +371,21 @@ void drawChests(QuestChest* chests, Coordinates playerPos) {
 	int rightBorder = 0, downBorder = 0;
 
 
-	while (playerPos.X >= (window_width / UNIT_SIZE_X) - 1) {
-		playerPos.X -= (window_width / UNIT_SIZE_X) - 1;
+	while (player.position.X >= (window_width / UNIT_SIZE_X) - 1) {
+		player.position.X -= (window_width / UNIT_SIZE_X) - 1;
 		leftBorder += (window_width / UNIT_SIZE_X) - 1;
 	}
 	rightBorder = leftBorder + window_width / UNIT_SIZE_X;
-	while (playerPos.Y >= window_height / UNIT_SIZE_Y) {
-		playerPos.Y -= window_height / UNIT_SIZE_Y;
+	while (player.position.Y >= window_height / UNIT_SIZE_Y) {
+		player.position.Y -= window_height / UNIT_SIZE_Y;
 		upperBorder += window_height / UNIT_SIZE_Y;
 	}
 	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
 
-	for (int i = 0; i < 1; i++) {
+	for (int i = 0; i < CHESTS_AMOUNT_1; i++) {
 		if (chests[i].position.X > leftBorder && chests[i].position.X < rightBorder &&
-			chests[i].position.Y > upperBorder && chests[i].position.Y < downBorder && inGlobal) {
+			chests[i].position.Y > upperBorder && chests[i].position.Y < downBorder && 
+			inGlobal && chests[i].location == player.currentLocation) {
 			float x = chests[i].position.X;
 			float y = chests[i].position.Y;
 			while (x >= (window_width / UNIT_SIZE_X) - 1) {

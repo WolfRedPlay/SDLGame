@@ -13,7 +13,7 @@ extern int window_height;
 #define UNIT_SIZE_X 40 //(window_width/48) //40
 #define UNIT_SIZE_Y 40 //(window_height/20) //549
 
-#define NPC_AMOUNT_1 4
+#define NPC_AMOUNT_1 5
 #define QUEST_NPC_AMOUNT_1 1
 #define BOSSES_AMOUNT_1 1
 #define CHESTS_AMOUNT_1 1
@@ -211,6 +211,7 @@ struct Enemy {
 	int lvl;
 	SDL_Texture* texture;
 	Coordinates position;
+	int location;
 };
 
 struct EnemiesSquad {
@@ -221,15 +222,18 @@ struct NPC {
 	Coordinates position;
 	SDL_Texture* texture;
 	int phrase;
+	int location;
 };
 struct QuestNPC {
 	Coordinates position;
 	SDL_Texture* texture;
 	Quest quest;
+	int location;
 };
 struct QuestChest {
 	QuestItem item;
 	Coordinates position;
+	int location;
 };
 
 struct SellerOfWeapons {
@@ -260,10 +264,10 @@ SDL_Texture* generateTextureFromPNG(const char* file);
 void readMap(char** map, const char* fileName, int size_x, int size_y);
 void deleteObject(char** map, int x, int y);
 
-NPC* createNPCs(int location);
-QuestNPC* createQuestNPCs(int location);
-Enemy* createBosses(int location);
-QuestChest* createChests(int location);
+NPC* createNPCs();
+QuestNPC* createQuestNPCs();
+Enemy* createBosses();
+QuestChest* createChests();
 
 void clearWeaponInventory(Weapon* weapons);
 void clearArmorInventory(Armor* armors);
@@ -304,4 +308,8 @@ QuestItem takeQuestItemFromInventory(QuestItem* items, int itemIndex);
 Ability takeAbilityFromList(Ability* abilities, int abilityIndex);
 
 extern int qountOfAbilities;
+extern int qountOfQusts;
 extern Ability* ALLAbilitiesList;
+extern Quest* questsList;
+
+
