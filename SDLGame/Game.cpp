@@ -10,8 +10,8 @@
 
 float speed = 2.f;
 
-#define MAX_ENEMY_COUNTER 1000000
-#define MIN_ENEMY_COUNTER 500000
+#define MAX_ENEMY_COUNTER 100000
+#define MIN_ENEMY_COUNTER 50000
 
 SDL_Window* win = NULL;
 SDL_Renderer* ren = NULL;

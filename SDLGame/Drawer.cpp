@@ -244,7 +244,7 @@ void drawScreen(Coordinates playerPos) {
 					SDL_RenderCopy(ren, stoneWall, NULL, &unit);
 				}
 				if (map[uppperBorder + i][leftBorder + j] == LOCATION) {
-					SDL_SetRenderDrawColor(ren, 255,0,0,255);
+					SDL_SetRenderDrawColor(ren, 255, 0, 0, 255);
 					SDL_RenderDrawRect(ren, &unit);
 				}
 
@@ -290,7 +290,7 @@ void drawNPCs(NPC* NPCs, Player player) {
 	downBorder = upperBorder + window_height / UNIT_SIZE_Y;
 	for (int i = 0; i < NPC_AMOUNT_1; i++) {
 		if (NPCs[i].position.X > leftBorder && NPCs[i].position.X < rightBorder &&
-			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder && 
+			NPCs[i].position.Y > upperBorder && NPCs[i].position.Y < downBorder &&
 			inGlobal && NPCs[i].location == player.currentLocation) {
 			npcRect.x = NPCs[i].position.X * UNIT_SIZE_X;
 			npcRect.y = NPCs[i].position.Y * UNIT_SIZE_Y;
@@ -346,7 +346,7 @@ void drawBosses(Enemy* bosses, Player player) {
 
 	for (int i = 0; i < BOSSES_AMOUNT_1; i++) {
 		if (bosses[i].position.X > leftBorder && bosses[i].position.X < rightBorder &&
-			bosses[i].position.Y > upperBorder && bosses[i].position.Y < downBorder && 
+			bosses[i].position.Y > upperBorder && bosses[i].position.Y < downBorder &&
 			inGlobal && bosses[i].location == player.currentLocation) {
 			float x = bosses[i].position.X;
 			float y = bosses[i].position.Y;
@@ -384,7 +384,7 @@ void drawChests(QuestChest* chests, Player player) {
 
 	for (int i = 0; i < CHESTS_AMOUNT_1; i++) {
 		if (chests[i].position.X > leftBorder && chests[i].position.X < rightBorder &&
-			chests[i].position.Y > upperBorder && chests[i].position.Y < downBorder && 
+			chests[i].position.Y > upperBorder && chests[i].position.Y < downBorder &&
 			inGlobal && chests[i].location == player.currentLocation) {
 			float x = chests[i].position.X;
 			float y = chests[i].position.Y;
@@ -2142,7 +2142,7 @@ void drawInkeeperReject() {
 
 void drawChoosingRect(int type, int coursorPosition) {
 	SDL_Rect choosingRect = { 0,0,75, 100 };
-	if (type == 2) choosingRect.x = window_width - 300;
+	if (type == 2) choosingRect.x = window_width - 275;
 	if (type == 0) choosingRect.x = 200;
 
 	choosingRect.y = 250 + (coursorPosition * 150);
@@ -2403,9 +2403,10 @@ void attackAnimation(Player player, EnemiesSquad enemies, int attacker, int defe
 	int posX = 0, posY = 0;
 	int tempX = 0, tempY = 0;
 
-	int frameTime = 1000 / 8;
+	int frameTime = 1000 / 14;
 	int currentTime = 0;
 	int frame = 0;
+	int frameCount = 0;
 
 	int dt = 0;
 	int lasttime = SDL_GetTicks();
@@ -2441,24 +2442,24 @@ void attackAnimation(Player player, EnemiesSquad enemies, int attacker, int defe
 
 
 			}
-		/*	if (i == defender && frame >= 2)
-			{
-				unsigned char r, g, b;
-				SDL_GetTextureColorMod(enemies.enemies[i].texture, &r,&g,&b);
-				if (frame < 4){
-					g -= 20;
-					b -= 20;
-				}
-				else
+			/*	if (i == defender && frame >= 2)
 				{
-					g +=20;
-					b +=20;
+					unsigned char r, g, b;
+					SDL_GetTextureColorMod(enemies.enemies[i].texture, &r,&g,&b);
+					if (frame < 4){
+						g -= 20;
+						b -= 20;
+					}
+					else
+					{
+						g +=20;
+						b +=20;
+					}
+					SDL_SetTextureColorMod(enemies.enemies[i].texture, r,g,b);
+					SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
 				}
-				SDL_SetTextureColorMod(enemies.enemies[i].texture, r,g,b);
-				SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
-			}
-			else*/
-				SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
+				else*/
+			SDL_RenderCopy(ren, enemies.enemies[i].texture, NULL, &charRect);
 			charRect.y += charRect.h + 50;
 		}
 
@@ -2488,16 +2489,57 @@ void attackAnimation(Player player, EnemiesSquad enemies, int attacker, int defe
 			}
 			charRect.y += charRect.h + 50;
 		}
-		SDL_Texture* weapon = generateTextureFromPNG("Textures\\sword.png");
+		SDL_Texture* weapon;
 		SDL_Rect weaponFrameRect = { 0,0,75,100 };
-		SDL_Rect weaponRect = { posX + 20,posY,75,100 };
+		SDL_Rect weaponRect = { posX + 25,posY,150,100 };
+		if (player.team[attacker].heroClass == KNIGHT)
+		{
+			weapon = generateTextureFromPNG("Textures\\sword.png");
+			frameCount = 8;
+			weaponFrameRect.w = 100;
+			weaponRect.w = 150;
+			weaponRect.x = posX + 35;
+			weaponRect.y = posY + 5;
+		}
+		else if (player.team[attacker].heroClass == ROGUE)
+		{
+			weapon = generateTextureFromPNG("Textures\\knife.png");
+			frameCount = 8;
+			weaponFrameRect.w = 100;
+			weaponRect.w = 75;
+			weaponRect.h = 75;
+			weaponRect.x = posX + 55;
+			weaponRect.y = posY + 15;
+		}
+		else if (player.team[attacker].heroClass == MAGE)
+		{
+			weapon = generateTextureFromPNG("Textures\\staff.png");
+			frameCount = 9;
+			weaponFrameRect.w = 75;
+			weaponRect.w = 150;
+			weaponRect.h = 150;
+			weaponRect.x = posX + 25;
+			weaponRect.y = posY - 10;
+		}
+		else
+		{
+			weapon = generateTextureFromPNG("Textures\\wand.png");
+			frameCount = 7;
+			weaponFrameRect.w = 70;
+			weaponRect.w = 75;
+			weaponRect.h = 100;
+			weaponRect.x = posX + 45;
+			weaponRect.y = posY + 5;
+		}
+
+
 		currentTime += dt;
 		if (currentTime >= frameTime) {
 			currentTime = 0;
 			frame++;
 		}
-		if (frame == 6) return;
-		weaponFrameRect.x = frame * 75;
+		if (frame == frameCount) return;
+		weaponFrameRect.x = frame * weaponFrameRect.w;
 		weaponFrameRect.y = 0;
 		SDL_RenderCopy(ren, weapon, &weaponFrameRect, &weaponRect);
 		SDL_DestroyTexture(weapon);

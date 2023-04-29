@@ -95,7 +95,7 @@ QuestNPC* createQuestNPCs() {
 
 	return newNPCs;
 }
-Enemy* createBosses()	 {
+Enemy* createBosses() {
 
 	Enemy* newBosses;
 
@@ -504,8 +504,11 @@ Enemy* createAllEnemies(int& amount) {
 		fscanf_s(file, "%d ", &enemiesList[i].ability.ID, sizeof(int));
 		enemiesList[i].status = NORMAL;
 		enemiesList[i].ability = findInAbilitiesList(ALLAbilitiesList, enemiesList[i].ability.ID, qountOfAbilities);
-		enemiesList[i].texture = generateTextureFromPNG("Textures\\Older.png");
+		if (enemiesList[i].ID == -400) enemiesList[i].texture = generateTextureFromPNG("Textures\\Older.png");
+		if (enemiesList[i].ID == -401) enemiesList[i].texture = generateTextureFromPNG("Textures\\Orc.png");
+		if (enemiesList[i].ID == -402) enemiesList[i].texture = generateTextureFromPNG("Textures\\Demon.png");
 	}
+
 
 	fclose(file);
 	return enemiesList;

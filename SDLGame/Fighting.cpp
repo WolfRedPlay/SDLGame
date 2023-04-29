@@ -296,7 +296,7 @@ int playerAct(Player& player, EnemiesSquad& enemies) {
 								if (coursorPosition != 0) coursorPosition--;
 								break;
 							case SDL_SCANCODE_DOWN:
-								if (coursorPosition != 4) coursorPosition++;
+								if (coursorPosition != 3) coursorPosition++;
 								break;
 							case SDL_SCANCODE_RETURN:
 								if (enemies.enemies[coursorPosition].status != DEAD && enemies.enemies[coursorPosition].status != ESCAPED)
